@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全场景电网数字孪生 · 发输变配用一体化三维可视化</title>
+<meta name="description" content="发电、输电、变电、配电、用户全场景三维电网数字孪生与设备拓扑可视化">
+<style>
+:root{--c:#35d6ff;--bg:rgba(6,22,48,.74);--bd:rgba(53,214,255,.35);--o:#ff9f2e;--r:#ff4d4d;--g:#3dff9e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#020814;color:#cfe8ff;font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;user-select:none}
+#c3d{position:fixed;inset:0}#labels{position:fixed;inset:0;pointer-events:none}
+.vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,6,20,.8) 100%)}
+header{position:fixed;top:0;left:0;right:0;height:64px;pointer-events:none;display:flex;justify-content:center;background:linear-gradient(180deg,rgba(2,12,32,.95),rgba(2,12,32,0))}
+.title{margin-top:6px;width:640px;height:50px;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,transparent,rgba(26,140,255,.35),transparent);clip-path:polygon(0 0,100% 0,92% 100%,8% 100%)}
+.title:after{content:"";position:absolute;left:8%;right:8%;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);box-shadow:0 0 12px var(--c)}
+.title h1{font-size:23px;letter-spacing:5px;color:#eaf8ff;text-shadow:0 0 12px #2fb4ff}
+.kpis{position:fixed;top:10px;display:flex;gap:16px;font-size:12px;color:#8fc6ee}
+.kpis.l{left:20px}.kpis.r{right:20px}
+.kpis div{text-align:center}.kpis b{display:block;font-family:Consolas,monospace;font-size:17px;color:#7fe7ff;text-shadow:0 0 8px #18b8ff}
+.crumb{position:fixed;top:72px;left:322px;font-size:12px;padding:5px 12px;background:var(--bg);border:1px solid var(--bd)}
+.crumb span{color:var(--c);cursor:pointer}
+.side{position:fixed;top:72px;bottom:90px;width:292px;display:flex;flex-direction:column;gap:10px;transition:transform .6s,opacity .6s}
+.side.l{left:16px}.side.r{right:16px}
+.panel{background:var(--bg);border:1px solid var(--bd);position:relative;padding:34px 12px 10px;backdrop-filter:blur(4px);box-shadow:inset 0 0 24px rgba(26,140,255,.18)}
+.panel:before,.panel:after{content:"";position:absolute;width:10px;height:10px;border:2px solid var(--c)}
+.panel:before{left:-1px;top:-1px;border-right:0;border-bottom:0}.panel:after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.ph{position:absolute;left:0;top:0;right:0;height:28px;display:flex;align-items:center;padding-left:30px;font-size:14px;font-weight:bold;color:#fff;background:linear-gradient(90deg,rgba(255,159,46,.35),rgba(26,140,255,.15) 40%,transparent)}
+.ph:before{content:"";position:absolute;left:9px;width:12px;height:12px;border-radius:50%;background:var(--o);box-shadow:0 0 10px var(--o)}
+.ph em{font-style:normal;font-weight:normal;font-size:11px;color:#8fc6ee;margin-left:auto;margin-right:10px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.kv div{border:1px solid rgba(53,214,255,.25);background:rgba(10,40,80,.5);padding:5px 7px;font-size:11px;color:#9cc6ea}
+.kv b{display:block;font-family:Consolas,monospace;font-size:16px;color:#7fe7ff;text-shadow:0 0 8px #18b8ff;margin-top:2px}
+.kv b.warn{color:#ff6b6b;text-shadow:0 0 8px #ff3030}.kv b.ok{color:var(--g);text-shadow:0 0 8px var(--g)}
+.kv small{font-size:10px;color:#7aa9cc;margin-left:3px}
+.ctl{font-size:12px}
+.ctl .r{display:flex;align-items:center;gap:8px;margin:6px 0}
+.ctl label{width:44px;color:#9cc6ea}
+.ctl input[type=range]{flex:1;accent-color:#35d6ff}
+.ctl .val{width:58px;text-align:right;font-family:Consolas,monospace;color:#7fe7ff}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.btn{padding:6px 0;text-align:center;cursor:pointer;border:1px solid var(--bd);background:linear-gradient(180deg,rgba(26,140,255,.35),rgba(6,22,48,.8));font-size:12px;border-radius:3px}
+.btn:hover{border-color:var(--c);color:#fff}.btn.red{border-color:rgba(255,90,90,.6);background:linear-gradient(180deg,rgba(255,60,60,.35),rgba(60,6,6,.8))}
+.btn.on{background:linear-gradient(180deg,rgba(255,159,46,.7),rgba(120,50,0,.7));border-color:var(--o);color:#fff}
+.chart{width:100%;height:150px}
+.events{overflow:hidden;font-size:11px}
+.ev{display:flex;gap:6px;justify-content:space-between;padding:5px 6px;margin:2px 0;background:rgba(26,140,255,.12);cursor:pointer;animation:slideIn .5s}
+.ev:hover{background:rgba(53,214,255,.3)}.ev.al{color:#ff8a8a;background:rgba(255,60,60,.15)}.ev.ok{color:#8affc4;background:rgba(61,255,158,.1)}
+.ev span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ev span:last-child{color:#8fc6ee}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}}
+.vbtns{position:fixed;right:322px;top:72px;display:flex;flex-direction:column;gap:8px}
+.vbtn{width:92px;padding:7px 0;text-align:center;font-size:12px;cursor:pointer;color:#bfe9ff;border:1px solid var(--bd);background:linear-gradient(180deg,rgba(26,140,255,.35),rgba(6,22,48,.8));border-radius:4px;box-shadow:0 0 10px rgba(26,140,255,.35)}
+.vbtn:hover{color:#fff;border-color:var(--c)}
+.vbtn.on{background:linear-gradient(180deg,rgba(255,159,46,.7),rgba(120,50,0,.7));border-color:var(--o);color:#fff;box-shadow:0 0 14px var(--o)}
+nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:16px;padding:6px 24px 4px;background:linear-gradient(0deg,rgba(26,140,255,.25),transparent);border-bottom:2px solid var(--c)}
+.nb{display:flex;flex-direction:column;align-items:center;cursor:pointer;font-size:12px;color:#bfe0ff;gap:3px}
+.nb .o{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#2a7fe0,#0a2b5c);border:2px solid #3aa6ff;box-shadow:0 0 14px rgba(53,166,255,.7);transition:.25s}
+.nb svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8}
+.nb:hover .o,.nb.on .o{background:radial-gradient(circle at 50% 35%,#ffb547,#a64b00);border-color:#ffc56b;box-shadow:0 0 18px #ff9f2e;transform:translateY(-4px)}
+.nb.on{color:#ffd59a}
+#topo2d{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);width:min(780px,calc(100vw - 680px));padding:30px 8px 4px;transition:opacity .4s}
+#topo2d.min svg{display:none}#topo2d.min{padding-bottom:0}
+#topo2d svg{width:100%;height:auto;display:block}
+#topo2d .n{cursor:pointer}#topo2d .n circle{stroke-width:2}#topo2d .n:hover circle{stroke:#fff}
+#topo2d text{font-size:11px;fill:#cfe8ff;text-anchor:middle;pointer-events:none}
+#topo2d .e{stroke-width:3;fill:none}
+#topo2d .e.on{stroke-dasharray:8 6;animation:dash 1s linear infinite}#topo2d .e.on.rev{animation-direction:reverse}
+#topo2d .e.off{stroke:#3a4656!important}#topo2d .e.open{stroke:#5d6b7c!important;stroke-dasharray:3 5}
+#topo2d .e.fault{stroke:#ff3030!important;animation:blink .4s infinite alternate}
+@keyframes dash{to{stroke-dashoffset:-28}}
+.tag{pointer-events:auto;cursor:pointer;padding:3px 9px;font-size:12px;color:#fff;white-space:nowrap;background:linear-gradient(180deg,rgba(40,120,255,.85),rgba(10,50,130,.85));border:1px solid #6fc6ff;border-radius:2px;box-shadow:0 0 10px rgba(53,166,255,.6);position:relative;transform:translateY(-14px)}
+.tag:after{content:"";position:absolute;left:50%;top:100%;width:1px;height:14px;background:linear-gradient(#6fc6ff,transparent)}
+.tag.big{font-size:20px;padding:6px 20px;letter-spacing:3px;background:linear-gradient(180deg,rgba(30,90,200,.75),rgba(5,30,90,.8))}
+.tag.zone{font-size:22px;padding:8px 22px;letter-spacing:4px;background:linear-gradient(180deg,rgba(255,159,46,.85),rgba(120,50,0,.85));border-color:#ffc56b;box-shadow:0 0 20px rgba(255,159,46,.7)}
+.tag.zone:after{background:linear-gradient(#ffc56b,transparent);height:40px}
+.tag.small{font-size:11px;padding:2px 6px;opacity:.92}
+.tag.topo{background:rgba(5,20,45,.85);border-color:var(--c);font-size:12px}
+.tag.alarm,.tag.fault{background:linear-gradient(180deg,#ff4d4d,#8a0000);border-color:#ffb3b3;box-shadow:0 0 16px #ff3030;animation:blink .6s infinite alternate}
+.tag.off{background:rgba(40,48,58,.9);border-color:#6b7888;color:#aab}
+@keyframes blink{to{opacity:.45}}
+#tip{position:fixed;pointer-events:none;padding:4px 10px;background:rgba(5,25,60,.9);border:1px solid var(--c);font-size:12px;display:none;z-index:9}
+#info{position:fixed;left:322px;top:112px;width:300px;display:none;z-index:5}
+#info .x{position:absolute;right:8px;top:4px;cursor:pointer;color:#9fd8ff;font-size:16px;z-index:2}
+.irow{display:flex;justify-content:space-between;font-size:12px;padding:5px 4px;border-bottom:1px dashed rgba(53,214,255,.2)}
+.irow b{font-family:Consolas,monospace;color:#7fe7ff}
+.badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;background:rgba(61,255,158,.2);color:var(--g);border:1px solid var(--g)}
+.badge.al{background:rgba(255,77,77,.2);color:var(--r);border-color:var(--r)}.badge.off{background:rgba(120,130,140,.2);color:#aab;border-color:#889}
+.ibtn{margin-top:8px;display:flex;gap:6px}
+.ibtn div{flex:1;text-align:center;padding:5px;font-size:12px;cursor:pointer;border:1px solid var(--bd);background:rgba(26,140,255,.25)}
+.ibtn div:hover{border-color:var(--c);color:#fff}
+#loading{position:fixed;inset:0;background:#020814;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;transition:opacity .8s}
+#loading .bar{width:340px;height:4px;background:#0b2a4a;margin-top:18px;overflow:hidden}
+#loading .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1a8cff,#35d6ff);box-shadow:0 0 10px #35d6ff}
+#loading h2{letter-spacing:8px;color:#bfe9ff;text-shadow:0 0 14px #2fb4ff;font-weight:normal}
+.toast{position:fixed;top:118px;left:50%;transform:translateX(-50%);padding:8px 22px;background:rgba(120,0,0,.78);border:1px solid #ff6b6b;color:#fff;font-size:13px;box-shadow:0 0 20px rgba(255,50,50,.6);display:none;z-index:9}
+.toast.ok{background:rgba(0,90,50,.8);border-color:#3dff9e;box-shadow:0 0 20px rgba(61,255,158,.5)}
+.flash{position:fixed;inset:0;background:rgba(200,220,255,.0);pointer-events:none;z-index:4;transition:background .05s}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+<div id="loading"><h2>全场景电网数字孪生 加载中</h2><div class="bar"><i id="lb"></i></div><p id="lt" style="margin-top:10px;font-size:12px;color:#6f9cc2">初始化三维引擎…</p></div>
+<div id="c3d"></div><div id="labels"></div><div class="vignette"></div><div class="flash" id="flash"></div>
+<header><div class="title"><h1>全场景电网数字孪生 · 发输变配用</h1></div></header>
+<div class="kpis l"><div>总发电出力<b id="kGen">--</b></div><div>全网负荷<b id="kLoad">--</b></div><div>新能源占比<b id="kRen">--</b></div></div>
+<div class="kpis r"><div>线损率<b id="kLoss">--</b></div><div>供电可靠率<b id="kRel">99.998%</b></div><div>模拟时间<b id="kTime">--:--</b></div></div>
+<div class="crumb" id="crumb"></div>
+
+<div class="side l" id="L">
+ <div class="panel"><div class="ph" id="zTitle">全网概览</div><div class="kv" id="zKpi"></div></div>
+ <div class="panel ctl"><div class="ph">仿真控制台<em>时间 / 气象 / 故障</em></div>
+  <div class="r"><label>时间</label><input type="range" id="sTime" min="0" max="23.99" step="0.05"><span class="val" id="vTime"></span></div>
+  <div class="r"><label>风速</label><input type="range" id="sWind" min="0" max="28" step="0.5" value="9"><span class="val" id="vWind"></span></div>
+  <div class="r"><label>云量</label><input type="range" id="sCloud" min="0" max="100" step="1" value="15"><span class="val" id="vCloud"></span></div>
+  <div class="btns"><div class="btn" id="bPlay">▶ 时间流逝</div><div class="btn" id="bDR">📉 需求响应</div><div class="btn red" id="bLight">⚡ 线路雷击</div><div class="btn red" id="bFeeder">⚠ 馈线故障自愈</div></div>
+ </div>
+ <div class="panel" style="flex:1;min-height:0"><div class="ph" id="zChartT">实时曲线</div><div class="chart" id="chZone" style="height:calc(100% - 2px);min-height:100px"></div></div>
+</div>
+<div class="side r" id="R">
+ <div class="panel"><div class="ph">电源结构<em>实时出力 MW</em></div><div class="chart" id="chMix" style="height:150px"></div></div>
+ <div class="panel"><div class="ph">24h 负荷与新能源出力</div><div class="chart" id="chDay" style="height:150px"></div></div>
+ <div class="panel" style="flex:1;min-height:0"><div class="ph">全网事件告警</div><div class="events" id="evs" style="height:calc(100% - 2px)"></div></div>
+</div>
+
+<div class="vbtns" id="vb">
+ <div class="vbtn on" data-v="flow">潮流动画</div>
+ <div class="vbtn" data-v="topo">三维拓扑</div>
+ <div class="vbtn" data-v="drone">无人机巡线</div>
+ <div class="vbtn" data-v="patrol">机器人巡视</div>
+ <div class="vbtn" data-v="roam">自动漫游</div>
+ <div class="vbtn" data-v="xray">透视模式</div>
+ <div class="vbtn on" data-v="label">设备标签</div>
+</div>
+<div class="panel" id="topo2d"><div class="ph" style="cursor:pointer" id="topoH">电网设备拓扑（单线图）<em>点击节点定位 · 红合绿分 · 点此折叠</em></div><svg id="svg" viewBox="0 -14 1000 192"></svg></div>
+<nav id="nav">
+ <div class="nb" data-n="all"><div class="o"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></div>全景</div>
+ <div class="nb" data-n="gen"><div class="o"><svg viewBox="0 0 24 24"><path d="M4 21V11l5 3V9l5 3V5l6 4v12z"/></svg></div>发电</div>
+ <div class="nb" data-n="trans"><div class="o"><svg viewBox="0 0 24 24"><path d="M12 2l-5 20M12 2l5 20M8 8h8M6 14h12M9 4h6"/></svg></div>输电</div>
+ <div class="nb" data-n="sub"><div class="o"><svg viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="12"/><path d="M8 7V3M12 7V3M16 7V3M8 11h8M8 15h8"/></svg></div>变电</div>
+ <div class="nb" data-n="dist"><div class="o"><svg viewBox="0 0 24 24"><path d="M6 21V5M18 21V5M3 7h6M15 7h6M6 7c4 3 8 3 12 0"/></svg></div>配电</div>
+ <div class="nb" data-n="user"><div class="o"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/><path d="M9 20v-6h6v6"/></svg></div>用户</div>
+ <div class="nb" data-n="room"><div class="o"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="6" height="18"/><rect x="14" y="3" width="6" height="18"/><path d="M6 7h2M6 11h2M16 7h2M16 11h2"/></svg></div>配电室</div>
+</nav>
+<div id="info"><div class="panel"><div class="x" id="ix">✕</div><div class="ph" id="iTitle">设备</div><div id="iBody"></div><div class="chart" id="chInfo" style="height:100px"></div><div class="ibtn" id="iBtns"></div></div></div>
+<div id="tip"></div><div class="toast" id="toast"></div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const V3 = THREE.Vector3, PI = Math.PI, $ = s => document.querySelector(s);
+const rnd = (a, b) => a + Math.random() * (b - a), clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const prog = (p, t) => { $('#lb').style.width = p + '%'; $('#lt').textContent = t; };
+
+/* ---------- renderer ---------- */
+const W = () => innerWidth, H = () => innerHeight;
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', logarithmicDepthBuffer: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75)); renderer.setSize(W(), H());
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+$('#c3d').appendChild(renderer.domElement);
+const labelR = new CSS2DRenderer(); labelR.setSize(W(), H()); $('#labels').appendChild(labelR.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x020814); scene.fog = new THREE.Fog(0x020814, 600, 2200);
+const pmrem = new THREE.PMREMGenerator(renderer); scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(42, W() / H(), 1, 9000); camera.position.set(1100, 900, 800);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.07; controls.maxPolarAngle = 1.48; controls.minDistance = 8; controls.maxDistance = 2600; controls.target.set(200, 0, -300); controls.autoRotateSpeed = 0.5;
+const hemi = new THREE.HemisphereLight(0xa8ccff, 0x0b1830, 0.9); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 1.7); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -260, right: 260, top: 260, bottom: -260, near: 10, far: 1400 }); sun.shadow.bias = -0.0006; scene.add(sun); scene.add(sun.target);
+const fill = new THREE.DirectionalLight(0x5aa0ff, 0.45); fill.position.set(-150, 80, -100); scene.add(fill);
+const rt = new THREE.WebGLRenderTarget(W(), H(), { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt); composer.addPass(new RenderPass(scene, camera));
+const outline = new OutlinePass(new THREE.Vector2(W(), H()), scene, camera);
+Object.assign(outline, { edgeStrength: 5, edgeGlow: 0.8, edgeThickness: 1.5, pulsePeriod: 2 }); outline.visibleEdgeColor.set(0x38f3ff); outline.hiddenEdgeColor.set(0x0d5f88); composer.addPass(outline);
+const bloom = new UnrealBloomPass(new THREE.Vector2(W(), H()), 0.55, 0.5, 0.82); composer.addPass(bloom); composer.addPass(new OutputPass());
+
+/* ---------- materials & geometry ---------- */
+const M = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: .55, metalness: .2, envMapIntensity: .6, ...o });
+const MAT = {
+  concrete: M(0x8a929b, { roughness: .9, metalness: 0 }), steel: M(0x9fadbb, { metalness: .7, roughness: .35 }), tank: M(0x8796a4, { metalness: .55, roughness: .42 }),
+  porcelain: M(0xe2e6eb, { roughness: .22, metalness: .05 }), alum: M(0xd9e0e8, { metalness: .9, roughness: .22 }), gis: M(0xc9d2dc, { metalness: .35, roughness: .32 }),
+  dark: M(0x37424f, { metalness: .4, roughness: .6 }), gravel: M(0x222a33, { roughness: 1, metalness: 0 }), wall: M(0xa7aeb6, { roughness: .85, metalness: 0 }),
+  coil: M(0x4f5c69, { metalness: .3, roughness: .5 }), orange: M(0xc8662e, { roughness: .6 }), blueRoof: M(0x2463d0, { roughness: .35, metalness: .35 }),
+  roofGray: M(0x5f6a77, { roughness: .8 }), white: M(0xe8eef5, { roughness: .6 }), road: M(0x161e29, { roughness: .95, metalness: 0 }), cableCover: M(0x55606c, { roughness: .9 }),
+  tower: M(0xdfe4ea, { roughness: .7, metalness: 0 }), coal: M(0x15181c, { roughness: 1, metalness: 0 }), green: M(0x1f6b5a, { roughness: .9, metalness: 0 }),
+  trunk: M(0x4a3a2c, { roughness: 1 }), glass: M(0x1c3b66, { metalness: .8, roughness: .15 }), red2: M(0xb8322a, { roughness: .6 }),
+  lamp: new THREE.MeshBasicMaterial({ color: 0xfff0c0 }), cyan: new THREE.MeshBasicMaterial({ color: 0x35e0ff }), red: new THREE.MeshBasicMaterial({ color: 0xff3b3b }),
+  greenL: new THREE.MeshBasicMaterial({ color: 0x3dff9e }), screen: new THREE.MeshBasicMaterial({ color: 0x3dff9e }),
+};
+const LINE = new THREE.LineBasicMaterial({ color: 0xcfdcec, transparent: true, opacity: .92 });
+const WIRE = new THREE.LineBasicMaterial({ color: 0x9fb8d2, transparent: true, opacity: .75 });
+const G = { box: new THREE.BoxGeometry(1, 1, 1), cyl: new THREE.CylinderGeometry(1, 1, 1, 18), sph: new THREE.SphereGeometry(1, 16, 12), pole: new THREE.CylinderGeometry(.14, .24, 1, 10), cone: new THREE.ConeGeometry(1, 1, 8) };
+G.ins = (() => { const p = [new THREE.Vector2(0.001, 0), new THREE.Vector2(.4, 0)];
+  for (let i = 0; i < 12; i++) { const y = .04 + i * .08; p.push(new THREE.Vector2(.4, y), new THREE.Vector2(1, y + .015), new THREE.Vector2(.92, y + .032), new THREE.Vector2(.4, y + .055)); }
+  p.push(new THREE.Vector2(.4, 1), new THREE.Vector2(.001, 1)); return new THREE.LatheGeometry(p, 12); })();
+class MB { constructor() { this.m = {}; }
+  add(k, geo, x = 0, y = 0, z = 0, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0) { const g = geo.clone(); g.applyMatrix4(new THREE.Matrix4().compose(new V3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, ry, rz)), new V3(sx, sy, sz))); (this.m[k] ??= []).push(g); return this; }
+  box(k, x, y, z, w, h, d, ry = 0) { return this.add(k, G.box, x, y, z, w, h, d, 0, ry, 0); }
+  cyl(k, x, y, z, r, h, rx = 0, rz = 0) { return this.add(k, G.cyl, x, y, z, r, h, r, rx, 0, rz); }
+  ins(x, y, z, h, r = .35, rx = 0) { return this.add('porcelain', G.ins, x, y, z, r, h, r, rx); }
+  build(parent, shadow = true) { for (const k in this.m) { const mesh = new THREE.Mesh(mergeGeometries(this.m[k]), MAT[k]); mesh.castShadow = mesh.receiveShadow = shadow; parent.add(mesh); } return parent; } }
+
+/* ---------- textures ---------- */
+function canvasTex(w, h, draw, rep) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; if (rep) t.repeat.set(...rep); return t; }
+const WIN = canvasTex(128, 128, g => { g.fillStyle = '#e6ecf3'; g.fillRect(0, 0, 128, 128); g.fillStyle = '#1d4f96'; g.fillRect(14, 30, 100, 58); g.fillStyle = '#5fa8ff'; g.fillRect(18, 34, 44, 50); g.fillRect(66, 34, 44, 50); g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(18, 34, 44, 12); g.fillStyle = '#c3ccd6'; g.fillRect(0, 112, 128, 5); });
+const WIN_E = canvasTex(128, 128, g => { g.fillStyle = '#000'; g.fillRect(0, 0, 128, 128); g.fillStyle = '#4a90ff'; g.fillRect(18, 34, 44, 50); g.fillRect(66, 34, 44, 50); });
+const RWIN = canvasTex(128, 128, g => { g.fillStyle = '#d9d4cc'; g.fillRect(0, 0, 128, 128); g.fillStyle = '#2b3a4f'; g.fillRect(16, 26, 40, 60); g.fillRect(72, 26, 40, 60); g.fillStyle = '#b9b2a6'; g.fillRect(0, 100, 128, 10); });
+const RWIN_E = canvasTex(128, 128, g => { g.fillStyle = '#000'; g.fillRect(0, 0, 128, 128); for (const x of [16, 72]) { g.fillStyle = Math.random() < .75 ? '#ffcf7a' : '#111'; g.fillRect(x, 26, 40, 60); } });
+const winMats = [];
+function bMat(rx, ry, res = false) { const t = (res ? RWIN : WIN).clone(), e = (res ? RWIN_E : WIN_E).clone(); t.repeat.set(rx, ry); e.repeat.set(rx, ry); t.needsUpdate = e.needsUpdate = true;
+  const m = new THREE.MeshStandardMaterial({ map: t, emissiveMap: e, emissive: 0xffffff, emissiveIntensity: .35, roughness: .55, metalness: .1, envMapIntensity: .5 }); winMats.push(m); return m; }
+const GLOW = canvasTex(64, 64, g => { const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(255,255,255,.8)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 64, 64); });
+const SMOKE = canvasTex(64, 64, g => { const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,.55)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 64, 64); });
+const FLOOR = canvasTex(256, 256, g => { g.fillStyle = '#1b2735'; g.fillRect(0, 0, 256, 256); g.strokeStyle = 'rgba(90,170,255,.22)'; g.lineWidth = 2; g.strokeRect(0, 0, 256, 256); g.strokeStyle = 'rgba(90,170,255,.08)'; g.lineWidth = 1; for (let i = 32; i < 256; i += 32) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 256); g.moveTo(0, i); g.lineTo(256, i); g.stroke(); } }, [.0625, .0625]);
+const CAB = canvasTex(128, 256, g => { g.fillStyle = '#c4ccd6'; g.fillRect(0, 0, 128, 256); g.strokeStyle = '#8a96a3'; g.lineWidth = 3; g.strokeRect(6, 6, 116, 244); g.strokeRect(6, 6, 116, 80); g.fillStyle = '#0b1f3a'; g.fillRect(20, 20, 50, 34); g.fillStyle = '#39e58c'; g.fillRect(80, 22, 10, 10); g.fillStyle = '#ff4a4a'; g.fillRect(96, 22, 10, 10); g.fillStyle = '#ffd24a'; g.fillRect(80, 40, 10, 10); g.fillStyle = '#9aa6b3'; for (let i = 0; i < 6; i++) g.fillRect(20, 110 + i * 20, 88, 6); g.fillStyle = '#5a6673'; g.fillRect(100, 160, 8, 40); });
+const PVT = canvasTex(128, 64, g => { g.fillStyle = '#0d2350'; g.fillRect(0, 0, 128, 64); g.strokeStyle = '#6f9be8'; g.lineWidth = 1.5; for (let x = 0; x <= 128; x += 16) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 64); g.stroke(); } for (let y = 0; y <= 64; y += 16) { g.beginPath(); g.moveTo(0, y); g.lineTo(128, y); g.stroke(); } g.strokeStyle = '#c9d6e8'; g.lineWidth = 4; g.strokeRect(0, 0, 128, 64); });
+const STRIPE = canvasTex(64, 256, g => { for (let i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#e9e9e9' : '#c8382f'; g.fillRect(0, i * 32, 64, 32); } });
+
+/* ---------- labels ---------- */
+const labels = [];
+function label(parent, text, y, cls = '', obj, md = 520) { const d = document.createElement('div'); d.className = 'tag ' + cls; d.textContent = text;
+  const l = new CSS2DObject(d); l.position.set(0, y, 0); l.userData.md = md; parent.add(l); labels.push(l);
+  d.addEventListener('click', e => { e.stopPropagation(); const t = obj || parent; if (t.userData.info) focus(t); else if (t.userData.zone) goZone(t.userData.zone); }); return l; }
+
+/* ---------- flow particles ---------- */
+class Flow { constructor(color, size) { this.p = []; this.color = color; this.size = size; }
+  add(pts, n, v = 14, tag) { const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + pts[i].distanceTo(pts[i - 1]));
+    const p = { pts, cum, len: cum.at(-1), n: n ?? clamp(Math.round(cum.at(-1) / 7), 3, 40), v, off: Math.random(), tag }; this.p.push(p); return p; }
+  build(parent) { const tot = this.p.reduce((a, b) => a + b.n, 0); this.geo = new THREE.BufferGeometry(); this.pos = new Float32Array(tot * 3);
+    this.geo.setAttribute('position', new THREE.BufferAttribute(this.pos, 3));
+    this.obj = new THREE.Points(this.geo, new THREE.PointsMaterial({ size: this.size, map: GLOW, color: this.color, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    this.obj.frustumCulled = false; parent.add(this.obj); return this; }
+  update(t, gate) { let i = 0; for (const p of this.p) { const g = gate ? gate(p) : 1;
+      for (let k = 0; k < p.n; k++) { if (!g) { this.pos[i++] = 0; this.pos[i++] = -9999; this.pos[i++] = 0; continue; }
+        let u = ((k / p.n) + t * p.v * Math.abs(g) / p.len + p.off) % 1; if (g < 0) u = 1 - u; const d = u * p.len;
+        let j = 1; while (j < p.cum.length - 1 && p.cum[j] < d) j++; const a = p.pts[j - 1], b = p.pts[j], f = (d - p.cum[j - 1]) / ((p.cum[j] - p.cum[j - 1]) || 1);
+        this.pos[i++] = a.x + (b.x - a.x) * f; this.pos[i++] = a.y + (b.y - a.y) * f; this.pos[i++] = a.z + (b.z - a.z) * f; } }
+    this.geo.attributes.position.needsUpdate = true; } }
+const flowHV = new Flow(0x4fe3ff, 1.6), flowCable = new Flow(0xffa53a, 1.3), flowGen = new Flow(0xfff27a, 1.4), flowFeeder = new Flow(0x7dff9a, 1.1), flowLV = new Flow(0x5fe9ff, .9);
+
+/* ---------- world & registry ---------- */
+const world = new THREE.Group(); scene.add(world);
+const pickables = [], equip = {}, ZONES = {};
+function reg(g, info, key) { g.userData.info = info; pickables.push(g); if (key) (equip[key] ??= []).push(g); return g; }
+const grid = new THREE.GridHelper(6000, 300, 0x0f5a96, 0x0a2a4a); grid.position.y = -1.4; grid.material.transparent = true; grid.material.opacity = .4; scene.add(grid);
+const gplane = new THREE.Mesh(new THREE.PlaneGeometry(9000, 9000), new THREE.MeshStandardMaterial({ color: 0x030b18, roughness: 1 })); gplane.rotation.x = -PI / 2; gplane.position.y = -1.5; gplane.receiveShadow = true; scene.add(gplane);
+function pad(poly, edgeColor = 0x35d6ff) { const shape = new THREE.Shape(poly.map(([x, z]) => new THREE.Vector2(x, -z)));
+  const g = new THREE.ExtrudeGeometry(shape, { depth: 1.2, bevelEnabled: false }); g.rotateX(-PI / 2); g.translate(0, -1.2, 0);
+  const m = new THREE.Mesh(g, [new THREE.MeshStandardMaterial({ map: FLOOR, roughness: .85, metalness: .1 }), new THREE.MeshStandardMaterial({ color: 0x0e2a4c, emissive: 0x0a3a7a, emissiveIntensity: .6 })]); m.receiveShadow = true; world.add(m);
+  world.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: edgeColor }))); return m; }
+const dashPts = [];
+function road(x0, z0, x1, z1, w = 7) { const L = Math.hypot(x1 - x0, z1 - z0), a = Math.atan2(z1 - z0, x1 - x0);
+  const r = new THREE.Mesh(G.box, MAT.road); r.scale.set(L + w, .06, w); r.position.set((x0 + x1) / 2, .03, (z0 + z1) / 2); r.rotation.y = -a; r.receiveShadow = true; world.add(r);
+  for (let s = 2; s < L - 2; s += 6) { const t = s / L, t2 = t + 3 / L; dashPts.push(x0 + (x1 - x0) * t, .08, z0 + (z1 - z0) * t, x0 + (x1 - x0) * t2, .08, z0 + (z1 - z0) * t2); } }
+function fence(poly, color = 0x7fb2dd, closed = true) { const pts = []; const posts = [];
+  const n = closed ? poly.length : poly.length - 1;
+  for (let i = 0; i < n; i++) { const a = poly[i], b = poly[(i + 1) % poly.length]; const L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    for (let s = 0; s < L; s += 5) { const t = s / L; posts.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); } for (const y of [.9, 2.2]) pts.push(a[0], y, a[1], b[0], y, b[1]); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); world.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color })));
+  const im = new THREE.InstancedMesh(G.cyl, MAT.steel, posts.length); const m = new THREE.Matrix4(); posts.forEach(([x, z], i) => { m.compose(new V3(x, 1.2, z), new THREE.Quaternion(), new V3(.08, 2.4, .08)); im.setMatrixAt(i, m); }); world.add(im); }
+function zoneLabel(x, y, z, text, zone) { const g = new THREE.Group(); g.position.set(x, 0, z); g.userData.zone = zone; world.add(g); label(g, text, y, 'zone', null, 99999); return g; }
+function segs(P, mat = LINE) { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); const o = new THREE.LineSegments(g, mat); world.add(o); return o; }
+
+/* ---------- lattice / towers / wires ---------- */
+function lattice(h, bw, tw, arms = [], peak = 0) {
+  const P = [], seg = Math.max(4, Math.round(h / 3)), w = y => bw + (tw - bw) * (y / h);
+  const C = y => { const s = w(y) / 2; return [[-s, y, -s], [s, y, -s], [s, y, s], [-s, y, s]]; }, L = (a, b) => P.push(...a, ...b);
+  for (let i = 0; i < seg; i++) { const a = C(h * i / seg), b = C(h * (i + 1) / seg); for (let k = 0; k < 4; k++) { const k2 = (k + 1) % 4; L(a[k], b[k]); L(a[k], a[k2]); L(a[k], b[k2]); L(a[k2], b[k]); } }
+  const top = C(h); for (let k = 0; k < 4; k++) L(top[k], top[(k + 1) % 4]); if (peak) for (const c of top) L(c, [0, h + peak, 0]);
+  const attach = [];
+  for (const { y, len } of arms) { const s = w(y) / 2;
+    for (const sg of [-1, 1]) { const tip = [sg * len, y, 0]; L([sg * s, y, -s], tip); L([sg * s, y, s], tip); L([sg * s, y + 2, -s], tip); L([sg * s, y + 2, s], tip);
+      for (let j = 1; j < 4; j++) { const t = j / 4, x = sg * (s + (len - s) * t), zz = s * (1 - t); L([x, y, -zz], [x, y, zz]); L([x, y, -zz], [x, y + 2 * (1 - t), zz]); }
+      L(tip, [sg * len, y - 3.2, 0]); attach.push(new V3(sg * len, y - 3.2, 0)); } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); return { geo: g, attach }; }
+const towersAll = [];
+function tower(x, z, ry = 0, h = 50, yb = -1.4, name) {
+  const { geo, attach } = lattice(h, 11, 2.2, [{ y: 31, len: 7.5 }, { y: 38, len: 10 }, { y: 45, len: 7.5 }], 5);
+  const o = new THREE.LineSegments(geo, LINE); o.position.set(x, yb, z); o.rotation.y = ry; world.add(o); o.updateMatrixWorld(true);
+  const wa = attach.map(v => v.clone().applyMatrix4(o.matrixWorld));
+  const fb = new MB(); for (const sx of [-1, 1]) for (const sz of [-1, 1]) fb.box('concrete', sx * 5.5, .4, sz * 5.5, 1.6, .8, 1.6);
+  fb.box('cyan', 0, h + 5.4, 0, .5, .5, .5);
+  const fg = new THREE.Group(); fb.build(fg); fg.position.copy(o.position); fg.rotation.y = ry; world.add(fg);
+  const hit = new THREE.Mesh(new THREE.BoxGeometry(11, h, 11), new THREE.MeshBasicMaterial({ visible: false })); hit.position.y = h / 2; fg.add(hit);
+  const t = { left: [wa[0], wa[2], wa[4]], right: [wa[1], wa[3], wa[5]], peak: new V3(0, h + 5, 0).applyMatrix4(o.matrixWorld), g: fg };
+  if (name) { reg(fg, { name, type: 'tower' }, 'tower'); towersAll.push(t); }
+  return t; }
+const wirePts = [];
+function catenary(a, b, sag, n = 30) { const pts = []; for (let i = 0; i <= n; i++) { const t = i / n; pts.push(new V3().lerpVectors(a, b, t).add(new V3(0, -sag * 4 * t * (1 - t), 0))); } return pts; }
+function wire(a, b, sag = 3, flow = flowHV, n = 30, arr = wirePts, tag) { const pts = catenary(a, b, sag, n);
+  for (let i = 0; i < n; i++) arr.push(pts[i].x, pts[i].y, pts[i].z, pts[i + 1].x, pts[i + 1].y, pts[i + 1].z);
+  if (flow) flow.add(pts, undefined, 14, tag); return pts; }
+function gantry(z, xs, h = 24, name, parent = world) {
+  for (const x of xs) { const { geo } = lattice(h, 2.6, 1.4); const o = new THREE.LineSegments(geo, LINE); o.position.set(x, 0, z); parent.add(o); }
+  const P = [], s = .8, x0 = xs[0], x1 = xs.at(-1); const c = x => [[x, h - s, z - s], [x, h + s, z - s], [x, h + s, z + s], [x, h - s, z + s]];
+  for (let x = x0; x < x1; x += 2) { const a = c(x), b = c(Math.min(x + 2, x1)); for (let k = 0; k < 4; k++) P.push(...a[k], ...b[k], ...a[k], ...a[(k + 1) % 4], ...a[k], ...b[(k + 1) % 4]); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); parent.add(new THREE.LineSegments(g, LINE));
+  if (name) { const lg = new THREE.Group(); lg.position.set((x0 + x1) / 2, 0, z); parent.add(lg); label(lg, name, h + 3, 'small', null, 300); } }
+function strings(pts, parent = world) { const P = []; for (const p of pts) P.push(p.x, p.y, p.z, p.x, p.y + 2.2, p.z); const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); parent.add(new THREE.LineSegments(g, LINE)); }
+const PH = [-2.5, 0, 2.5];
+function transformer(x, z, name, s = 1, type = 'transformer', key = 'transformer') {
+  const g = new THREE.Group(), B = new MB();
+  B.box('gravel', 0, .05, 0, 14, .1, 10); B.box('concrete', 0, .3, 0, 11, .6, 7); B.box('tank', 0, 3.1, 0, 9, 5, 4.6); B.box('tank', 0, 5.75, 0, 9.4, .3, 5);
+  for (let i = 0; i < 7; i++) { const fx = -3.6 + i * 1.2; for (const sd of [-1, 1]) B.box('tank', fx, 3, sd * 3.3, .16, 4, 1.6); }
+  for (const sd of [-1, 1]) for (const y of [1.1, 5]) B.cyl('steel', 0, y, sd * 3.3, .14, 8.2, 0, PI / 2);
+  B.cyl('tank', -1, 8.2, -1.6, .75, 5.2, 0, PI / 2); B.box('steel', -3, 7, -1.6, .2, 2.4, .2); B.box('steel', 1, 7, -1.6, .2, 2.4, .2);
+  for (const p of PH) { B.cyl('dark', p, 6.2, 1, .45, .6); B.ins(p, 6.4, 1, 4.6, .36); B.cyl('alum', p, 11.1, 1, .22, .3); }
+  for (const p of PH) B.ins(p * .8, 5.9, -.6, 1.6, .24);
+  B.ins(3.8, 5.9, -.6, 1.2, .2); B.box('wall', 4.9, 2, 2.6, 1, 2.4, .6); B.box('dark', -4.9, 2.8, 2.1, .3, 1.6, 1);
+  B.build(g); g.scale.setScalar(s); g.position.set(x, 0, z); world.add(g); label(g, name, 13.5, s < 1 ? 'small' : '', g, 380);
+  return reg(g, { name, type }, key); }
+function building(x, z, w, h, d, roof, name, type, cls = '', res = false, md = 450) {
+  const g = new THREE.Group(), side = bMat(d / 4, h / 3.6, res), front = bMat(w / 4, h / 3.6, res), top = MAT[roof] || MAT.roofGray;
+  const m = new THREE.Mesh(G.box, [side, side, top, top, front, front]); m.scale.set(w, h, d); m.position.y = h / 2; m.castShadow = m.receiveShadow = true; g.add(m);
+  const e = new THREE.LineSegments(new THREE.EdgesGeometry(G.box), new THREE.LineBasicMaterial({ color: 0x8fd8ff, transparent: true, opacity: .45 })); e.scale.copy(m.scale); e.position.copy(m.position); g.add(e);
+  g.position.set(x, 0, z); world.add(g); if (name) label(g, name, h + (cls === 'big' ? 9 : 2.5), cls, g, md); return reg(g, { name, type }, type); }
+
+/* =================== 变电: 500kV 枢纽变电站 (origin) =================== */
+prog(12, '构建 500kV 枢纽变电站…');
+const subPoly = [[-90, -60], [90, -60], [90, 15], [55, 60], [-90, 60]];
+pad(subPoly); fence(subPoly);
+for (const [a, b] of [[[-88, 45], [52, 45]], [[-35, -15], [-35, 45]], [[-88, -15], [88, -15]], [[70, -15], [70, 25]], [[70, 25], [50, 45]]]) road(a[0], a[1], b[0], b[1]);
+const GZ1 = -52, GZ2 = -24, GH = 24, bayX = [-65, -35, -5, 25, 55];
+gantry(GZ1, [-80, -50, -20, 10, 40, 70], GH, '500kV Ⅰ段母线构架'); gantry(GZ2, [-80, -50, -20, 10, 40, 70], GH, '500kV Ⅱ段母线构架');
+function bay(x, z, id) { const g = new THREE.Group(), B = new MB();
+  for (const p of PH) {
+    for (const zz of [-8, -6, 6, 8]) { B.box('concrete', p, .2, zz, .9, .4, .9); B.box('steel', p, 1.45, zz, .32, 2.5, .32); B.ins(p, 2.7, zz, 2, .3); }
+    B.box('alum', p, 4.75, -7, .12, .12, 2.2); B.box('alum', p, 4.75, 7, .12, .12, 2.2);
+    B.box('concrete', p, .2, -2, 1, .4, 1); B.box('steel', p, 1.45, -2, .4, 2.5, .4); B.ins(p, 2.7, -2, 3, .38); B.cyl('dark', p, 6.3, -2, .38, 1.2); B.cyl('alum', p, 7, -2, .2, .3);
+    B.box('concrete', p, .2, 3, 1, .4, 1); B.box('steel', p, 1.45, 3, .4, 2.5, .4); B.cyl('coil', p, 3.4, 3, .5, 1.4); B.ins(p, 4.1, 3, 2.4, .36); B.cyl('dark', p, 6.85, 3, .55, .7);
+    B.cyl('alum', p, 6.6, 0, .07, 14, PI / 2); }
+  B.box('steel', 0, .4, -2, 7, .2, .6); B.box('steel', 0, .4, 3, 7, .2, .6); B.box('wall', 4.8, .8, -2, .9, 1.6, .6); B.box('wall', 4.8, .8, 3, .9, 1.6, .6);
+  B.build(g); g.position.set(x, 0, z); world.add(g); label(g, id + ' 间隔', 9, 'small', g, 250); return reg(g, { name: '500kV ' + id + ' 间隔', type: 'bay' }, 'bay'); }
+bayX.forEach((x, i) => { bay(x, -38, '50' + (11 + i));
+  const t1 = PH.map(p => new V3(x + p, GH - 3, GZ1)), t2 = PH.map(p => new V3(x + p, GH - 3, GZ2)); strings(t1); strings(t2);
+  PH.forEach((p, k) => { wire(t1[k], new V3(x + p, 6.6, -45), 1.2); wire(new V3(x + p, 6.6, -31), t2[k], 1.2); }); });
+for (const z of [GZ1, GZ2]) for (const p of [-1.5, 1.5]) wire(new V3(-80, GH + 1.2, z + p), new V3(70, GH + 1.2, z + p), 1.4, null, 60);
+const TXS = [[-12, 8, '1#主变压器 500kV'], [18, 8, '2#主变压器 500kV']];
+for (const [x, z, n] of TXS) { transformer(x, z, n); PH.forEach(p => wire(new V3(x + p, 11.2, 9), new V3(x + p, GH - 3, GZ2), 3.5)); strings(PH.map(p => new V3(x + p, GH - 3, GZ2))); }
+{ const B = new MB(); for (const x of [-27, 3, 33]) B.box('wall', x, 4, 8, .6, 8, 9); const g = new THREE.Group(); B.build(g); world.add(g); }
+// GIS
+let gisTops = [];
+{ const g = new THREE.Group(), B = new MB(), GX = 80, zs = [-6, 0, 6, 12];
+  B.cyl('gis', GX - 2.5, 1.6, 3, .55, 25, PI / 2); B.cyl('gis', GX - 1, 1.6, 3, .55, 25, PI / 2);
+  for (const z of zs) { B.box('concrete', GX, .2, z, 9, .4, 4.6); B.cyl('gis', GX - .2, 1.6, z, .4, 4.4, 0, PI / 2); B.cyl('gis', GX + 1.5, 2.6, z, .8, 4); B.add('gis', G.sph, GX + 1.5, 4.6, z, .8, .5, .8);
+    B.cyl('gis', GX + 3.3, 4.4, z, .5, 1.6, 0, PI / 2); B.cyl('gis', GX + 4.2, 4.4, z, .55, 2.4); B.box('dark', GX - 4, 1.4, z + 1.6, 1, 2.4, .8);
+    for (const [dz, th] of [[-1.2, -.28], [0, 0], [1.2, .28]]) { B.ins(GX + 4.2, 5.5, z + dz, 6, .42, th); gisTops.push(new V3(GX + 4.2, 5.5 + 6 * Math.cos(th) + .2, z + dz + 6 * Math.sin(th))); } }
+  B.build(g); world.add(g); const lg = new THREE.Group(); lg.position.set(GX, 0, 3); g.add(lg); label(lg, '220kV GIS 设备区', 14, '', g, 380); reg(g, { name: '220kV GIS 组合电器', type: 'gis' }, 'gis'); }
+function capBank(x, z, name) { const g = new THREE.Group(), B = new MB(); B.box('concrete', 0, .2, 0, 8, .4, 4);
+  for (const [sx, sz] of [[-3, -1.5], [3, -1.5], [-3, 1.5], [3, 1.5]]) { B.ins(sx, .4, sz, 1.2, .25); B.box('steel', sx, 3.6, sz, .15, 4.8, .15); }
+  for (let t = 0; t < 3; t++) { const y = 1.9 + t * 1.5; B.box('steel', 0, y - .1, 0, 6.6, .1, 3.4); for (let i = 0; i < 8; i++) for (const sz of [-.8, .8]) B.box('white', -2.8 + i * .8, y + .4, sz, .5, .8, .35); }
+  B.build(g); g.position.set(x, 0, z); world.add(g); label(g, name, 8, 'small', g, 250); return reg(g, { name, type: 'cap' }, 'cap'); }
+function reactor(x, z, name) { const g = new THREE.Group(), B = new MB();
+  for (let i = 0; i < 3; i++) { const y = .3 + i * 2.6; for (let k = 0; k < 6; k++) { const a = k / 6 * PI * 2; B.ins(Math.cos(a) * 1.1, y, Math.sin(a) * 1.1, .9, .14); } B.cyl('coil', 0, y + 1.7, 0, 1.4, 1.6); B.cyl('dark', 0, y + 2.55, 0, 1.45, .1); }
+  B.box('concrete', 0, .15, 0, 4, .3, 4); B.build(g); g.position.set(x, 0, z); world.add(g); label(g, name, 10, 'small', g, 250); return reg(g, { name, type: 'reactor' }, 'reactor'); }
+capBank(-75, -2, '1#电容器组'); capBank(-58, -2, '2#电容器组'); reactor(-75, 12, '1#电抗器'); reactor(-58, 12, '2#电抗器');
+function groundT(x, z, name) { const g = new THREE.Group(), B = new MB(); B.box('concrete', 0, .2, 0, 5, .4, 4); B.box('tank', 0, 1.9, 0, 3, 3, 2.4);
+  for (let i = 0; i < 5; i++) for (const sd of [-1, 1]) B.box('tank', -1.2 + i * .6, 1.9, sd * 1.5, .1, 2.4, .6);
+  for (const p of [-.8, 0, .8]) B.ins(p, 3.4, 0, 1.3, .2); B.build(g); g.position.set(x, 0, z); world.add(g); label(g, name, 6, 'small', g, 200); return reg(g, { name, type: 'ground' }, 'ground'); }
+groundT(44, 22, '1#接地变'); groundT(52, 22, '2#接地变');
+const mainCtl = building(-60, 32, 28, 13, 13, 'roofGray', '主控室', 'control', 'big');
+{ const roof = new THREE.Mesh(new THREE.CylinderGeometry(6.9, 6.9, 28.6, 40, 1, false, 0, PI), MAT.blueRoof); roof.rotation.z = PI / 2; roof.scale.set(.42, 1, 1); roof.position.y = 13; roof.castShadow = true; mainCtl.add(roof);
+  const sign = canvasTex(512, 96, g2 => { g2.fillStyle = '#123a7a'; g2.fillRect(0, 0, 512, 96); g2.fillStyle = '#fff'; g2.font = 'bold 54px Microsoft YaHei, sans-serif'; g2.textAlign = 'center'; g2.fillText('智慧变电站 · 主控楼', 256, 68); });
+  const sp = new THREE.Mesh(new THREE.PlaneGeometry(12, 2.25), new THREE.MeshBasicMaterial({ map: sign })); sp.position.set(0, 11.2, 6.55); mainCtl.add(sp); }
+building(-15, 30, 10, 5, 8, 'orange', '1#保护小室', 'protect', 'small');
+const distRoom = building(20, 32, 30, 6.5, 10, 'roofGray', '35kV 配电室（双击进入）', 'dist', 'small'); distRoom.userData.info.enter = true;
+const lampMats = [];
+{ const B = new MB(); for (const [x, z] of [[-88, -58], [88, -58], [-88, -18], [88, -18], [0, -58], [-40, 18], [62, 15], [-5, -18]]) { B.add('steel', new THREE.CylinderGeometry(.06, .4, 1, 8), x, 15, z, 1, 30, 1); B.box('concrete', x, .3, z, 1.4, .6, 1.4); }
+  const lamps = []; for (let x = -80; x <= 50; x += 22) lamps.push([x, 49.5]); for (let x = -80; x <= 85; x += 24) lamps.push([x, -19.5]);
+  for (const [x, z] of lamps) { B.cyl('steel', x, 5, z, .12, 10); B.box('steel', x, 10, z - .6, .15, .15, 1.4); }
+  const g = new THREE.Group(); B.build(g); world.add(g); const lb = new MB(); for (const [x, z] of lamps) lb.box('lamp', x, 9.85, z - 1.2, .6, .12, .4); lb.build(world, false); }
+const cableMat = new THREE.MeshBasicMaterial({ color: 0xff8a1f, transparent: true, opacity: .25 });
+function cableRun(pts, flow = flowCable, mat = cableMat, tag, y = .25) { const P = pts.map(a => new V3(a[0], y, a[1]));
+  for (let i = 1; i < P.length; i++) { const a = P[i - 1], b = P[i], m = new THREE.Mesh(G.box, mat); m.scale.set(Math.abs(b.x - a.x) + .9, .12, Math.abs(b.z - a.z) + .9); m.position.lerpVectors(a, b, .5); world.add(m);
+    const c = new THREE.Mesh(G.box, MAT.cableCover); c.scale.set(Math.abs(b.x - a.x) + 1.1, .1, Math.abs(b.z - a.z) + 1.1); c.position.lerpVectors(a, b, .5); c.position.y = y - .19; c.receiveShadow = true; world.add(c); }
+  if (flow) flow.add(P.map(v => v.clone().setY(y + .25)), undefined, 9, tag); }
+for (const p of [[[20, 26.5], [5, 26.5], [5, -11], [-65, -11], [-65, -6]], [[5, -11], [75, -11], [75, -6]], [[-46, 30], [-30, 30], [-30, 22], [5, 22]], [[-12, 4], [-12, -11]], [[18, 4], [18, -11]], [[48, 18], [48, -11]]]) cableRun(p);
+const cableHub = new THREE.Group(); cableHub.position.set(5, 0, 5); world.add(cableHub); reg(cableHub, { name: '变电站电缆沟网络', type: 'cable' });
+// patrol robot
+const robot = new THREE.Group(); { const B = new MB(); B.box('white', 0, .9, 0, 1.3, .9, 1.9); B.box('blueRoof', 0, .9, 0, 1.32, .25, 1.92); B.box('white', 0, 1.6, .4, .7, .5, .6);
+  for (const sx of [-.7, .7]) for (const sz of [-.6, .6]) B.cyl('dark', sx, .38, sz, .38, .25, 0, PI / 2); B.build(robot);
+  const lid = new THREE.Mesh(G.cyl, MAT.cyan); lid.scale.set(.25, .25, .25); lid.position.set(0, 2, .4); robot.add(lid); robot.userData.lid = lid;
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(6, 14, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0x35d6ff, transparent: true, opacity: .08, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })); cone.rotation.x = -PI / 2; cone.position.set(0, 1.5, 7.5); robot.add(cone); }
+robot.scale.setScalar(1.5); world.add(robot); label(robot, '巡检机器人', 3.5, 'small', robot, 200); reg(robot, { name: '智能巡检机器人 R-01', type: 'robot' });
+const patrolPath = new THREE.CurvePath(); { const pp = [[-35, 45], [-35, -15], [70, -15], [70, 25], [50, 45], [-35, 45]].map(([x, z]) => new V3(x, .05, z)); for (let i = 1; i < pp.length; i++) patrolPath.add(new THREE.LineCurve3(pp[i - 1], pp[i])); }
+const patrolLen = patrolPath.getLength();
+const alarmRing = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), new THREE.MeshBasicMaterial({ color: 0xff3030, transparent: true, side: THREE.DoubleSide, depthWrite: false })); alarmRing.rotation.x = -PI / 2; alarmRing.visible = false; scene.add(alarmRing);
+// scan ring shader (re-usable)
+const scanMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uT: { value: 0 } },
+  vertexShader: 'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader: 'uniform float uT;varying vec2 vUv;void main(){vec2 p=(vUv-.5)*2.;float d=length(p);float r=fract(uT*.1);float a=smoothstep(r-.08,r,d)*(1.-smoothstep(r,r+.006,d));a*=(1.-r);gl_FragColor=vec4(.2,.8,1.,a*.9*step(d,1.));}' });
+for (const [x, z, s] of [[0, 0, 420], [0, -640, 900], [560, 20, 760]]) { const m = new THREE.Mesh(new THREE.PlaneGeometry(s, s), scanMat); m.rotation.x = -PI / 2; m.position.set(x, .12, z); world.add(m); }
+
+/* ---- 配电室内部 ---- */
+const room = new THREE.Group(); room.visible = false; scene.add(room);
+const RW = 56, RD = 22, RH = 6;
+{ const fl = new THREE.Mesh(new THREE.BoxGeometry(RW, .3, RD), new THREE.MeshStandardMaterial({ map: FLOOR.clone(), color: 0x6aa0ff, roughness: .7 })); fl.material.map.repeat.set(RW / 4, RD / 4); fl.material.map.needsUpdate = true; fl.position.y = -.15; fl.receiveShadow = true; room.add(fl);
+  const gm = new THREE.MeshPhysicalMaterial({ color: 0x2b7cff, transparent: true, opacity: .16, roughness: .1, metalness: .1, depthWrite: false, side: THREE.DoubleSide }); const em = new THREE.LineBasicMaterial({ color: 0x4fc9ff });
+  const wall = (x, z, w, d) => { const m = new THREE.Mesh(G.box, gm); m.scale.set(w, RH, d); m.position.set(x, RH / 2, z); room.add(m); const e = new THREE.LineSegments(new THREE.EdgesGeometry(G.box), em); e.scale.copy(m.scale); e.position.copy(m.position); room.add(e); };
+  wall(0, -RD / 2, RW, .3); wall(0, RD / 2, RW, .3); wall(-RW / 2, 0, .3, RD); wall(RW / 2, 0, .3, RD); wall(-20, 6, .3, 10); wall(-24, 1, 8, .3); wall(20, -6, .3, 10); wall(24, -1, 8, .3);
+  const wm = new THREE.MeshBasicMaterial({ color: 0x3fa9ff, transparent: true, opacity: .55 });
+  for (let x = -24; x <= 24; x += 8) for (const z of [-RD / 2, RD / 2]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.6), wm); w.position.set(x, 3.6, z + (z < 0 ? .2 : -.2)); room.add(w); }
+  const B = new MB(); for (const [cx, cz] of [[-24, 6], [24, -6]]) for (const dx of [-2, 2]) { B.box('white', cx + dx, .75, cz, 2.6, .08, 1.2); B.box('dark', cx + dx, .37, cz - .5, .1, .74, .1); B.box('dark', cx + dx, 1.1, cz - .3, .9, .6, .06); B.box('blueRoof', cx + dx, .5, cz + 1, .6, .1, .6); B.box('blueRoof', cx + dx, .8, cz + 1.3, .6, .6, .08); } B.build(room);
+  const sb = new MB(); for (let x = -26; x <= 26; x += 6.5) for (const z of [-RD / 2 + .3, RD / 2 - .3]) sb.add('red', G.sph, x, 4.6, z, .18, .18, .18); sb.build(room, false); }
+const cabRows = [{ z: -6.5, n: 30, x0: -16, f: 0, r: 'A' }, { z: -.5, n: 28, x0: -15, f: 0, r: 'B' }, { z: 5.5, n: 24, x0: -12, f: PI, r: 'C' }];
+const cabCount = cabRows.reduce((a, b) => a + b.n, 0);
+const cabMat = new THREE.MeshStandardMaterial({ map: CAB, roughness: .5, metalness: .3 }), cabSide = new THREE.MeshStandardMaterial({ color: 0xaab4c0, roughness: .5, metalness: .4 });
+const cabs = new THREE.InstancedMesh(G.box, [cabSide, cabSide, cabSide, cabSide, cabMat, cabSide], cabCount); cabs.castShadow = cabs.receiveShadow = true;
+const cabInfo = []; { const m = new THREE.Matrix4(); let i = 0; for (const r of cabRows) for (let k = 0; k < r.n; k++) { m.compose(new V3(r.x0 + k * 1.05, 1.15, r.z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, r.f, 0)), new V3(.98, 2.3, .85)); cabs.setMatrixAt(i, m); cabs.setColorAt(i, new THREE.Color(0xffffff)); cabInfo.push({ id: `${r.r}${String(k + 1).padStart(2, '0')}`, pos: new V3(r.x0 + k * 1.05, 1.15, r.z) }); i++; } }
+room.add(cabs); cabs.userData.cab = true; pickables.push(cabs);
+const ALARM_CAB = 42;
+{ const B = new MB(); for (const z of [-3.6, -3.2]) B.box('steel', 0, 5.2, z, 40, .1, .1); B.build(room); }
+const railBot = new THREE.Group(); { const b = new THREE.Mesh(G.box, MAT.white); b.scale.set(.8, .6, .7); railBot.add(b); const e = new THREE.Mesh(G.sph, MAT.cyan); e.scale.setScalar(.15); e.position.set(0, -.35, .3); railBot.add(e);
+  const c = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4.6, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0x35d6ff, transparent: true, opacity: .1, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })); c.position.y = -2.6; railBot.add(c); }
+railBot.position.set(0, 4.8, -3.4); room.add(railBot); label(railBot, '挂轨巡检机器人', 1.2, 'small', null, 200);
+const roomFlow = new Flow(0xff6060, .5); roomFlow.add([new V3(0, 4.8, -3.4), cabInfo[ALARM_CAB].pos.clone().setY(2.4)], 6, 4); roomFlow.build(room);
+label(room, '35kV 配电室（室内）', 8.5, 'big', null, 9999);
+
+/* =================== 输电: 500kV 输电走廊 =================== */
+prog(30, '架设 500kV 输电走廊…');
+function pole(x, z, dir = 'x', o = {}) { const h = o.h ?? 13, g = new THREE.Group(), B = new MB(), yb = o.yb ?? 0;
+  B.add('concrete', G.pole, 0, h / 2, 0, 1, h, 1);
+  const perp = dir === 'x' ? new V3(0, 0, 1) : new V3(1, 0, 0);
+  if (dir === 'x') B.box('steel', 0, h - .4, 0, .15, .15, 3.2); else B.box('steel', 0, h - .4, 0, 3.2, .15, .15);
+  for (const off of [-1.3, 0, 1.3]) B.ins(perp.x * off, h - .3, perp.z * off, .5, .12);
+  if (o.tx) { const d = dir === 'x' ? new V3(2.6, 0, 0) : new V3(0, 0, 2.6); B.add('concrete', G.pole, d.x, (h - 2) / 2, d.z, 1, h - 2, 1);
+    B.box('steel', d.x / 2, 4.6, d.z / 2, dir === 'x' ? 3.4 : 1.6, .15, dir === 'x' ? 1.6 : 3.4); B.box('tank', d.x / 2, 5.6, d.z / 2, 1.5, 1.8, 1.3);
+    for (let i = -2; i <= 2; i++) B.box('tank', d.x / 2 + (dir === 'x' ? i * .3 : .75), 5.6, d.z / 2 + (dir === 'x' ? .75 : i * .3), .06, 1.4, .06);
+    for (const off of [-.45, 0, .45]) B.ins(d.x / 2 + perp.x * off, 6.5, d.z / 2 + perp.z * off, .45, .1);
+    B.box('dark', d.x / 2, 2.4, d.z / 2, .8, 1.1, .5); }
+  if (o.sw) B.box('dark', perp.x * .45, h - 2.2, perp.z * .45, .7, .8, .5);
+  B.build(g); g.position.set(x, yb, z); world.add(g);
+  if (o.sw) { const ind = new THREE.Mesh(G.sph, new THREE.MeshBasicMaterial({ color: 0xff3b3b })); ind.scale.setScalar(.35); ind.position.set(perp.x * .8, h - 1.4, perp.z * .8); g.add(ind); g.userData.ind = ind; }
+  g.userData.tops = [-1.3, 0, 1.3].map(off => new V3(x + perp.x * off, yb + h + .25, z + perp.z * off)); return g; }
+function poleLine(pts, dir, opts = {}, flow = null, tag, mat) { const poles = pts.map(([x, z], i) => pole(x, z, dir, { ...opts, ...(opts.at?.[i] || {}) })); const arr = [];
+  for (let i = 1; i < poles.length; i++) for (let k = 0; k < 3; k++) wire(poles[i - 1].userData.tops[k], poles[i].userData.tops[k], .6, k === 1 ? flow : null, 12, arr, tag);
+  if (mat !== false) segs(arr, mat || WIRE); return poles; }
+const chainZ = [-112, -215, -330, -440], chainX = [-50, 10, 55], chain = chainZ.map((z, zi) => chainX.map((x, xi) => tower(x, z, 0, 50, -1.4, `500kV 输电线路 N${zi * 3 + xi + 1}# 杆塔`)));
+const T = chain[0];
+const feed = [[0, 'left', 0], [0, 'right', 1], [1, 'left', 2], [1, 'right', 3], [2, 'right', 4]];
+for (const [ti, side, bi] of feed) T[ti][side].forEach((a, k) => wire(a, new V3(bayX[bi] + PH[k], GH - 3, GZ1), 5));
+for (let i = 1; i < chain.length; i++) chain[i].forEach((t, j) => { ['left', 'right'].forEach(s => t[s].forEach((a, k) => wire(a, chain[i - 1][j][s][k], 6.5))); wire(t.peak, chain[i - 1][j].peak, 5, null); });
+T.forEach(t => wire(t.peak, new V3(t.peak.x, GH + .8, GZ1), 4, null));
+// river
+const riverMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { uT: { value: 0 } },
+  vertexShader: 'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader: 'uniform float uT;varying vec2 vUv;void main(){float w=sin(vUv.x*400.-uT*2.+sin(vUv.y*20.)*3.)*.5+.5;float e=smoothstep(0.,.15,vUv.y)*smoothstep(1.,.85,vUv.y);vec3 c=mix(vec3(.02,.12,.28),vec3(.1,.45,.8),w*.35);gl_FragColor=vec4(c+pow(w,8.)*.25,.85*e);}' });
+{ const r = new THREE.Mesh(new THREE.PlaneGeometry(3200, 60), riverMat); r.rotation.x = -PI / 2; r.position.set(200, -1.3, -272); scene.add(r); }
+zoneLabel(10, 95, -280, '输电 · 500kV 输电走廊', 'trans');
+// drone
+const drone = new THREE.Group(); { const B = new MB(); B.box('dark', 0, 0, 0, 1.4, .5, 1.4); for (const a of [PI / 4, 3 * PI / 4]) B.box('dark', 0, .1, 0, 4.2, .15, .25, a); B.box('white', 0, -.45, .2, .5, .4, .5); B.build(drone, false);
+  drone.userData.rot = []; for (const [x, z] of [[1.5, 1.5], [-1.5, 1.5], [1.5, -1.5], [-1.5, -1.5]]) { const r = new THREE.Mesh(new THREE.BoxGeometry(1.8, .04, .18), MAT.white); r.position.set(x, .35, z); drone.add(r); drone.userData.rot.push(r); }
+  const led = new THREE.Mesh(G.sph, MAT.cyan); led.scale.setScalar(.25); led.position.set(0, -.2, .8); drone.add(led);
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(5, 14, 20, 1, true), new THREE.MeshBasicMaterial({ color: 0x35d6ff, transparent: true, opacity: .08, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })); cone.position.y = -7; drone.add(cone); }
+drone.scale.setScalar(1.6); world.add(drone); label(drone, '巡线无人机 UAV-01', 3, 'small', drone, 600); reg(drone, { name: '巡线无人机 UAV-01', type: 'drone' });
+// lightning bolt
+const boltMat = new THREE.LineBasicMaterial({ color: 0xd8ecff, transparent: true }); const bolt = new THREE.Line(new THREE.BufferGeometry(), boltMat); bolt.visible = false; scene.add(bolt);
+function makeBolt(to) { const P = []; let p = new V3(to.x + rnd(-40, 40), 420, to.z + rnd(-40, 40)); for (let i = 0; i <= 14; i++) { const t = i / 14; const q = new V3().lerpVectors(p, to, t); if (i && i < 14) q.add(new V3(rnd(-12, 12), 0, rnd(-12, 12))); P.push(q); } bolt.geometry.setFromPoints(P); }
+
+/* =================== 发电: 火电 + 风电 + 光伏 + 储能 =================== */
+prog(45, '建设发电侧：火电厂…');
+const genPoly = [[-410, -492], [180, -492], [180, -770], [-410, -770]]; pad(genPoly, 0xffb347);
+zoneLabel(-60, 190, -640, '发电 · 火电 / 风电 / 光伏 / 储能', 'gen');
+road(-400, -490, 175, -490, 8); road(-170, -490, -170, -765, 7); road(100, -490, 100, -765, 7);
+const SYZ = -505; gantry(SYZ, [-70, -40, -10, 20, 50, 80], 26, '500kV 升压站出线构架');
+chain[3].forEach(t => ['left', 'right'].forEach(s => t[s].forEach(a => { const b = new V3(a.x, 23, SYZ); strings([b]); wire(a, b, 4); })));
+const gsu = [transformer(-10, -530, '1#升压变 20/500kV', 1, 'gsu', 'gsu'), transformer(40, -530, '2#升压变 20/500kV', 1, 'gsu', 'gsu')];
+for (const x of [-10, 40]) { PH.forEach(p => wire(new V3(x + p, 11.2, -529), new V3(x + p, 23, SYZ), 2.5)); const d = new THREE.Mesh(G.box, MAT.gis); d.scale.set(1.6, 1.6, 34); d.position.set(x, 6, -550); d.castShadow = true; world.add(d); }
+const syHub = new THREE.Group(); syHub.position.set(15, 0, -515); world.add(syHub); reg(syHub, { name: '500kV 升压站', type: 'sy' });
+const units = [];
+const hall = building(15, -582, 120, 26, 30, 'blueRoof', '汽机房', 'turbine', '', false, 900);
+for (const [i, x] of [[0, -20], [1, 50]]) { const b = building(x, -628, 30, 62, 30, 'roofGray', `${i + 1}#机组 660MW 超超临界`, 'unit', 'big', false, 1500); b.userData.info.idx = i; units.push(b);
+  const P = []; for (let y = 0; y <= 62; y += 8) P.push(x - 15.5, y, -643.5, x + 15.5, y, -643.5, x - 15.5, y, -612.5, x + 15.5, y, -612.5); for (const xx of [-15.5, 15.5]) for (const zz of [-15.5, 15.5]) P.push(x + xx, 0, -628 + zz, x + xx, 66, -628 + zz); segs(P, LINE);
+  const e = new MB(); e.box('wall', x, 9, -668, 26, 18, 18); e.box('steel', x, 20, -668, 3, 4, 26); e.box('gis', x, 14, -690, 14, 28, 14); e.build(world); }
+// chimney
+const chim = new THREE.Group(); { const c = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 4.6, 160, 28), new THREE.MeshStandardMaterial({ map: STRIPE, roughness: .7 })); c.position.y = 80; c.castShadow = true; chim.add(c);
+  chim.userData.lights = []; for (const y of [158, 110, 60]) { const l = new THREE.Mesh(G.sph, MAT.red); l.scale.setScalar(1); l.position.set(3, y, 0); chim.add(l); chim.userData.lights.push(l); } }
+chim.position.set(15, 0, -715); world.add(chim); label(chim, '240m 烟囱 · CEMS 在线监测', 165, 'small', chim, 1500); reg(chim, { name: '烟囱 CEMS 排放监测', type: 'chim' });
+// cooling towers
+const coolT = [];
+{ const prof = []; for (let i = 0; i <= 30; i++) { const y = i / 30 * 68; prof.push(new THREE.Vector2(15 * Math.sqrt(1 + ((y - 48) / 26) ** 2), y)); }
+  const geo = new THREE.LatheGeometry(prof, 48), mat = M(0xbcc3cb, { side: THREE.DoubleSide, roughness: .9, metalness: 0 });
+  for (const [i, [x, z]] of [[-110, -600], [-110, -680]].entries()) { const g = new THREE.Group(); const m = new THREE.Mesh(geo, mat); m.castShadow = m.receiveShadow = true; g.add(m);
+    const P = []; for (let k = 0; k < 36; k++) { const a = k / 36 * PI * 2, r = 15 * Math.sqrt(1 + (48 / 26) ** 2); P.push(Math.cos(a) * r, 0, Math.sin(a) * r, Math.cos(a + .17) * r * .97, 6, Math.sin(a + .17) * r * .97); }
+    const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.add(new THREE.LineSegments(lg, LINE));
+    g.position.set(x, 0, z); world.add(g); label(g, `${i + 1}# 冷却塔`, 75, 'small', g, 1200); reg(g, { name: `${i + 1}# 自然通风冷却塔`, type: 'cool' }); coolT.push(g); } }
+// steam & smoke
+class Steam { constructor(origin, top, n, spread, size, color = 0xffffff, op = .35) { this.o = origin; this.top = top; this.n = n; this.sp = spread; const g = new THREE.BufferGeometry(); this.pos = new Float32Array(n * 3); this.life = new Float32Array(n);
+    for (let i = 0; i < n; i++) { this.life[i] = Math.random(); } g.setAttribute('position', new THREE.BufferAttribute(this.pos, 3)); this.g = g;
+    this.obj = new THREE.Points(g, new THREE.PointsMaterial({ size, map: SMOKE, color, transparent: true, opacity: op, depthWrite: false })); this.obj.frustumCulled = false; world.add(this.obj); this.seed = Array.from({ length: n }, () => [rnd(-1, 1), rnd(-1, 1)]); }
+  update(dt, wind, k = 1) { for (let i = 0; i < this.n; i++) { this.life[i] += dt * .12 * k; if (this.life[i] > 1) this.life[i] = 0; const l = this.life[i], s = this.seed[i];
+      this.pos[i * 3] = this.o.x + s[0] * this.sp * (1 + l * 2) + wind * l * 40; this.pos[i * 3 + 1] = this.o.y + l * this.top; this.pos[i * 3 + 2] = this.o.z + s[1] * this.sp * (1 + l * 2); }
+    this.g.attributes.position.needsUpdate = true; } }
+const steams = [new Steam(new V3(-110, 66, -600), 90, 220, 9, 22), new Steam(new V3(-110, 66, -680), 90, 220, 9, 22), new Steam(new V3(15, 160, -715), 70, 90, 2, 10, 0xcfd6de, .25)];
+// coal yard & conveyor
+{ const B = new MB(); for (const [x, z] of [[135, -630], [135, -675], [135, -720]]) B.add('coal', G.cone, x, 6, z, 18, 12, 14); B.box('steel', 120, 4, -675, 2, 8, 110); B.build(world);
+  const conv = (a, b) => { const m = new THREE.Mesh(G.box, MAT.wall); m.position.lerpVectors(a, b, .5); m.lookAt(b); m.scale.set(3.2, 3.2, a.distanceTo(b)); m.castShadow = true; world.add(m); };
+  conv(new V3(120, 6, -650), new V3(70, 48, -640)); conv(new V3(70, 48, -640), new V3(0, 48, -640));
+  const yard = new THREE.Group(); yard.position.set(135, 0, -675); world.add(yard); label(yard, '储煤场 · 35 万吨', 18, 'small', yard, 900); reg(yard, { name: '储煤场 / 输煤系统', type: 'coal' }); }
+// 35kV collector switch stations
+building(-80, -520, 12, 6, 9, 'orange', '35kV 集电开关站 (西)', 'sw35', 'small'); building(88, -520, 12, 6, 9, 'orange', '35kV 集电开关站 (东)', 'sw35', 'small');
+
+prog(58, '建设发电侧：光伏 / 储能 / 风电…');
+const pvMat = new THREE.MeshStandardMaterial({ map: PVT, metalness: .6, roughness: .25, emissive: 0x0a2a6a, emissiveIntensity: .25, envMapIntensity: 1 });
+const pvPos = []; for (let r = 0; r < 34; r++) for (let c = 0; c < 36; c++) { const x = -395 + c * 5.1, z = -575 - r * 5.6; if (Math.abs(x + 300) < 4) continue; pvPos.push([x, z]); }
+const pv = new THREE.InstancedMesh(G.box, pvMat, pvPos.length); { const m = new THREE.Matrix4(), q = new THREE.Quaternion().setFromEuler(new THREE.Euler(.5, 0, 0)); pvPos.forEach(([x, z], i) => { m.compose(new V3(x, 1.8, z), q, new V3(4.8, .08, 3)); pv.setMatrixAt(i, m); }); }
+pv.castShadow = pv.receiveShadow = true; world.add(pv); reg(pv, { name: '200MW 集中式光伏电站', type: 'pv' });
+{ const g = new THREE.Group(); g.position.set(-300, 0, -665); world.add(g); label(g, '200MW 光伏电站', 14, '', pv, 1500);
+  const B = new MB(); for (let i = 0; i < 6; i++) { const z = -585 - i * 32; B.box('white', -300, 1.5, z, 3, 3, 6); B.box('dark', -300, 3.2, z, 3.2, .3, 6.2); } B.build(world); }
+const genCable = new THREE.MeshBasicMaterial({ color: 0xffd23a, transparent: true, opacity: .55 });
+cableRun([[-300, -585], [-300, -560], [-150, -560], [-150, -528], [-86, -528]], flowGen, genCable, 'PV');
+const es = new THREE.Group(); { const B = new MB(); for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) { B.box('white', -215 + i * 14, 1.6, -515 - j * 7, 12, 3.2, 3.2); B.box('blueRoof', -215 + i * 14, 2.6, -515 - j * 7, 12.05, .5, 3.25); } B.box('dark', -230, 1.5, -526, 4, 3, 3); B.build(es); }
+world.add(es); label(es, '储能电站 100MW/200MWh', 8, 'small', es, 900); es.position.set(0, 0, 0); reg(es, { name: '电化学储能电站 100MW/200MWh', type: 'es' });
+{ const lg = es.children.find(c => c.isCSS2DObject); lg.position.set(-195, 8, -518); }
+cableRun([[-190, -518], [-150, -518], [-150, -524], [-86, -524]], flowGen, genCable, 'ES');
+// wind farm terrain
+const hill = (x, z) => { const dx = (x - 330) / 150, dz = (z - 660 * -1) / 170; const f = clamp(1 - Math.max(Math.abs(dx), Math.abs(dz)), 0, 1); return (14 + 9 * Math.sin(x / 37) * Math.cos(z / 41) + 6 * Math.sin((x + z) / 23)) * Math.min(1, f * 3) - 1.4; };
+{ const geo = new THREE.PlaneGeometry(300, 340, 90, 100); geo.rotateX(-PI / 2); const p = geo.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i) + 330, z = p.getZ(i) - 660; p.setY(i, hill(x, z)); } geo.computeVertexNormals();
+  const t = new THREE.Mesh(geo, M(0x123a3a, { roughness: .95, metalness: 0, flatShading: true })); t.position.set(330, 0, -660); t.receiveShadow = true; world.add(t);
+  const w = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.PlaneGeometry(300, 340, 30, 34).rotateX(-PI / 2)), new THREE.LineBasicMaterial({ color: 0x2bd6b0, transparent: true, opacity: .12 }));
+  { const pp = w.geometry.attributes.position; for (let i = 0; i < pp.count; i++) pp.setY(i, hill(pp.getX(i) + 330, pp.getZ(i) - 660) + .3); } w.position.set(330, 0, -660); world.add(w); }
+const turbines = [];
+const bladeGeo = (() => { const s = new THREE.Shape(); s.moveTo(-.8, 0); s.lineTo(.9, 0); s.lineTo(.5, 30); s.lineTo(-.1, 31); s.lineTo(-.6, 8); s.closePath(); return new THREE.ExtrudeGeometry(s, { depth: .4, bevelEnabled: false }); })();
+const wpos = [[230, -545], [290, -560], [360, -548], [430, -570], [250, -630], [330, -640], [410, -655], [260, -720], [345, -735], [425, -760]];
+wpos.forEach(([x, z], i) => { const y0 = hill(x, z), g = new THREE.Group(); g.position.set(x, y0, z);
+  const tw = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 2.3, 72, 18), MAT.white); tw.position.y = 36; tw.castShadow = true; g.add(tw);
+  const head = new THREE.Group(); head.position.y = 72.5; g.add(head); const na = new THREE.Mesh(G.box, MAT.white); na.scale.set(3.8, 3.8, 10); na.position.z = -2; na.castShadow = true; head.add(na);
+  const hub = new THREE.Mesh(G.sph, MAT.white); hub.scale.set(1.8, 1.8, 2.4); hub.position.z = 3.4; head.add(hub);
+  const rotor = new THREE.Group(); rotor.position.z = 3.8; head.add(rotor); for (let k = 0; k < 3; k++) { const b = new THREE.Mesh(bladeGeo, MAT.white); b.rotation.z = k * PI * 2 / 3; b.castShadow = true; rotor.add(b); }
+  const led = new THREE.Mesh(G.sph, MAT.red); led.scale.setScalar(.5); led.position.set(0, 2.3, -5); head.add(led);
+  const bx = new THREE.Mesh(G.box, MAT.tank); bx.scale.set(2.6, 2.4, 2); bx.position.set(5, 1.2, 0); g.add(bx);
+  head.rotation.y = -PI / 2 + .3; rotor.rotation.z = rnd(0, 6); world.add(g); label(g, `${i + 1}# 风机`, 108, 'small', g, 700);
+  reg(g, { name: `${i + 1}# 风电机组 5MW`, type: 'wind', idx: i }, 'wind'); turbines.push({ g, rotor, led });
+  const P = [new V3(x + 5, y0 + .5, z)]; const mid = [205, -512]; for (let s = 1; s <= 24; s++) { const t = s / 24; const px = x + 5 + (mid[0] - x - 5) * t, pz = z + (mid[1] - z) * t; P.push(new V3(px, Math.max(hill(px, pz), 0) + .6, pz)); }
+  const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(P), new THREE.LineBasicMaterial({ color: 0xffd23a, transparent: true, opacity: .6 })); world.add(l); flowGen.add(P, 6, 12, 'WF'); });
+zoneLabel(330, 140, -650, '风电场 · 10×5MW', 'gen');
+const wfLine = poleLine([[205, -512], [180, -512], [155, -512], [130, -512], [105, -512]], 'x', { h: 14, yb: 0 }, flowGen, 'WF');
+{ const a = wfLine.at(-1).userData.tops; a.forEach((p, k) => wire(p, new V3(94, 6, -518 + (k - 1) * 1.5), .5, null, 6)); }
+for (const x of [-80, 88]) wire(new V3(x + (x < 0 ? 6 : -6), 5, -520), new V3(x < 0 ? -10 : 40, 4, -548), 3, flowGen, 20, wirePts, x < 0 ? 'PV' : 'WF');
+// distant mountains
+{ const mm = new THREE.MeshBasicMaterial({ color: 0x0b2440, wireframe: true, transparent: true, opacity: .35 }); for (let i = 0; i < 18; i++) { const a = -PI * .1 - i / 18 * PI * .8, r = 1700 + rnd(0, 300); const m = new THREE.Mesh(new THREE.ConeGeometry(rnd(150, 320), rnd(120, 300), 7, 3), mm); m.position.set(200 + Math.cos(a) * r, 40, -300 + Math.sin(a) * r); scene.add(m); } }
+
+
+/* =================== 变电 → 配电 联络线 =================== */
+prog(70, '构建配电网与智慧社区…');
+zoneLabel(0, 78, 0, '变电 · 500kV 枢纽变电站', 'sub');
+const TE = tower(138, 3, PI / 2, 50, -1.4, '220kV 出线 E1# 杆塔'), TE2 = tower(240, 3, PI / 2, 50, -1.4, '220kV 出线 E2# 杆塔');
+TE.right.forEach((a, k) => wire(gisTops[k], a, 3, k === 1 ? flowHV : null, 30, wirePts, 'SUB-DS'));
+TE.left.forEach((a, k) => wire(gisTops[9 + k], a, 3, k === 1 ? flowHV : null, 30, wirePts, 'SUB-DS'));
+for (const s of ['left', 'right']) TE[s].forEach((a, k) => wire(a, TE2[s][k], 5, k === 1 ? flowHV : null, 30, wirePts, 'SUB-DS'));
+wire(TE.peak, TE2.peak, 4, null);
+// 110kV / 10kV 配电站
+const distPoly = [[300, -150], [840, -150], [840, 210], [300, 210]]; pad(distPoly, 0x3dff9e);
+fence([[302, -26], [396, -26], [396, 30], [302, 30]]);
+{ const dg = new THREE.Group(); dg.position.set(318, 0, 3); dg.rotation.y = PI / 2; world.add(dg); gantry(0, [-20, -7, 7, 20], 20, null, dg); }
+const dtx = [transformer(350, -12, '1#主变 220/10kV', .7, 'dtx', 'dtx'), transformer(350, 16, '2#主变 220/10kV', .7, 'dtx', 'dtx')];
+for (const [s, tz] of [['right', -12], ['left', 16]]) TE2[s].forEach((a, k) => { const b = new V3(318, 17, a.z); strings([b]); wire(a, b, 3, k === 1 ? flowHV : null, 24, wirePts, 'SUB-DS'); wire(b, new V3(350 + PH[k] * .7, 7.9, tz + .7), 2, k === 1 ? flowHV : null, 16, wirePts, 'SUB-DS'); });
+const dsB = building(385, 2, 16, 8, 30, 'roofGray', '10kV 开关站', 'ds', 'small', false, 700);
+cableRun([[355, -12], [370, -12], [370, -6], [377, -6]], flowCable, cableMat, 'SUB-DS'); cableRun([[355, 16], [370, 16], [370, 10], [377, 10]], flowCable, cableMat, 'SUB-DS');
+zoneLabel(420, 85, 20, '配电 · 220/10kV 配电网', 'dist');
+road(300, -32, 840, -32, 8); road(300, 58, 840, 58, 8); road(545, -150, 545, 210, 8);
+
+/* ---- 10kV 架空馈线 ---- */
+const edgeMat = {}, feederObj = {};
+const fx = []; for (let x = 410; x <= 800; x += 30) fx.push(x);
+const fA = fx.map(x => pole(x, -20, 'x', { h: 13, sw: x === 440 }));
+const fB = fx.map(x => pole(x, 70, 'x', { h: 13, sw: x === 440, tx: x === 560 || x === 680 }));
+const tieP = pole(800, 25, 'z', { h: 13, sw: true });
+function fWire(id, pairs) { const arr = [], P = []; const mat = edgeMat[id] ??= new THREE.LineBasicMaterial({ color: 0xa8ffc8, transparent: true, opacity: .85 });
+  pairs.forEach(([a, b], i) => { for (let k = 0; k < 3; k++) { const pts = wire(a.userData.tops[k], b.userData.tops[k], .6, null, 12, arr); if (k === 1) P.push(...(i ? pts.slice(1) : pts)); } });
+  feederObj[id] = segs(arr, mat); flowFeeder.add(P, undefined, 12, id); }
+const span = (L, i0, i1) => { const r = []; for (let i = i0 + 1; i <= i1; i++) r.push([L[i - 1], L[i]]); return r; };
+fWire('DS-A1', span(fA, 0, 1)); fWire('A1-EVT', span(fA, 1, 3)); fWire('EVT-BT', span(fA, 3, 5)); fWire('BT-AE', span(fA, 5, 13));
+fWire('DS-B1', span(fB, 0, 1)); fWire('B1-T1', span(fB, 1, 5)); fWire('T1-T2', span(fB, 5, 9)); fWire('T2-BE', span(fB, 9, 13));
+fWire('AE-TIE', [[fA[13], tieP]]); fWire('TIE-BE', [[tieP, fB[13]]]);
+const fCable = new THREE.MeshBasicMaterial({ color: 0x3dff9e, transparent: true, opacity: .45 });
+cableRun([[393, -8], [402, -8], [402, -20], [410, -20]], flowFeeder, fCable, 'DS-A1'); cableRun([[393, 12], [402, 12], [402, 70], [410, 70]], flowFeeder, fCable, 'DS-B1');
+const swPoles = { A1: fA[1], B1: fB[1], TIE: tieP };
+for (const [k, p] of Object.entries(swPoles)) { const g = new THREE.Group(); g.position.set(p.position.x, 0, p.position.z); world.add(g); label(g, { A1: '1# 分段开关', B1: '2# 分段开关', TIE: '联络开关（常开）' }[k], 16, 'small', p, 420); reg(p, { name: { A1: '10kV 甲线 智能分段开关 A1', B1: '10kV 乙线 智能分段开关 B1', TIE: '10kV 甲乙联络开关 TIE' }[k], type: 'switch', key: k }); }
+reg(fB[5], { name: 'T1 柱上变压器 400kVA', type: 'poletx', key: 'T1' }); reg(fB[9], { name: 'T2 柱上变压器 400kVA', type: 'poletx', key: 'T2' });
+{ for (const [p, n] of [[fB[5], 'T1 柱上变 400kVA'], [fB[9], 'T2 柱上变 400kVA']]) label(p, n, 15, 'small', p, 420);
+  const g1 = new THREE.Group(); g1.position.set(600, 0, -20); world.add(g1); label(g1, '10kV 甲线', 18, 'small', null, 650);
+  const g2 = new THREE.Group(); g2.position.set(600, 0, 70); world.add(g2); label(g2, '10kV 乙线', 18, 'small', null, 650); }
+
+/* ---- 箱式变压器 ---- */
+function boxTx(x, z, name, key) { const g = new THREE.Group(), B = new MB(); B.box('concrete', 0, .25, 0, 6, .5, 4.4); B.box('white', 0, 2, 0, 5, 3, 3.4); B.box('roofGray', 0, 3.7, 0, 5.6, .4, 4);
+  for (let i = 0; i < 6; i++) B.box('dark', -1.8 + i * .7, 2, 1.72, .35, 2, .05); B.box('orange', 0, 3.1, -1.72, 1.2, .5, .05); B.build(g);
+  g.position.set(x, 0, z); world.add(g); label(g, name, 6, 'small', g, 420); return reg(g, { name, type: 'boxtx', key }, 'boxtx'); }
+const lvMat = new THREE.MeshBasicMaterial({ color: 0x35e0ff, transparent: true, opacity: .4 });
+const EVT = boxTx(500, -8, 'EVT 充电站箱变', 'EVT'), BTx = boxTx(560, -40, 'BT 小区箱变 1250kVA', 'BT');
+cableRun([[500, -20], [500, -10]], flowFeeder, fCable, 'A1-EVT'); cableRun([[560, -20], [560, -37]], flowFeeder, fCable, 'EVT-BT');
+
+/* ---- 电动汽车充电站 ---- */
+const carMats = [0xe8eef5, 0x2a5fd0, 0xc8322a, 0x222a33, 0x9aa4ae, 0x1f8a6a].map(c => M(c, { metalness: .7, roughness: .3 }));
+function car(c) { const g = new THREE.Group(); const b = new THREE.Mesh(G.box, carMats[c % carMats.length]); b.scale.set(4.4, 1.1, 2); b.position.y = .85; b.castShadow = true; g.add(b);
+  const t = new THREE.Mesh(G.box, MAT.glass); t.scale.set(2.4, .8, 1.8); t.position.set(-.2, 1.8, 0); g.add(t);
+  for (const sz of [-.7, .7]) { const l = new THREE.Mesh(G.box, MAT.lamp); l.scale.set(.1, .25, .4); l.position.set(2.22, .95, sz); g.add(l); const r = new THREE.Mesh(G.box, MAT.red); r.scale.set(.1, .2, .4); r.position.set(-2.22, .95, sz); g.add(r); }
+  return g; }
+const evSt = new THREE.Group(); evSt.position.set(500, 0, 28); world.add(evSt);
+{ const B = new MB(); B.box('concrete', 0, .1, 0, 40, .2, 22); B.box('white', 0, 6.2, 0, 36, .5, 14); B.box('cyan', 0, 5.9, 7.05, 36, .3, .1); for (const x of [-15, -5, 5, 15]) B.box('steel', x, 3, 0, .5, 6, .5);
+  for (let i = 0; i < 8; i++) { const x = -15.75 + i * 4.5; B.box('white', x, 1, -1, .9, 2, .6); B.box('screen', x, 1.5, -.69, .6, .4, .02); } B.build(evSt); }
+const evLeds = []; for (let i = 0; i < 8; i++) { const x = -15.75 + i * 4.5; if (i % 3 !== 2) { const c = car(i); c.rotation.y = PI / 2; c.position.set(x, 0, 3.4); evSt.add(c); }
+  const l = new THREE.Mesh(G.sph, MAT.greenL.clone()); l.scale.setScalar(.22); l.position.set(x, 2.25, -1); evSt.add(l); evLeds.push(l); }
+label(evSt, 'EV 超充站 · 8×120kW', 9, 'small', evSt, 600); reg(evSt, { name: '电动汽车超充站（V2G）8×120kW', type: 'evs' });
+cableRun([[500, -5], [500, 20]], flowLV, lvMat, 'EVT-EV');
+
+/* ---- 高层住宅小区 ---- */
+const hrs = []; [[590, -72], [630, -72], [670, -72], [710, -72], [590, -118], [630, -118], [670, -118], [710, -118]].forEach(([x, z], i) => {
+  const h = [54, 72, 63, 48, 66, 81, 57, 69][i]; const b = building(x, z, 22, h, 16, 'roofGray', i === 1 ? '智慧社区 · 高层住宅 8 栋' : null, 'hr', 'small', true, 900);
+  b.userData.info.name = `${i + 1}# 高层住宅楼（${Math.round(h / 3)} 层）`; b.userData.info.idx = i; hrs.push(b);
+  const r = new THREE.Mesh(G.box, MAT.dark); r.scale.set(6, 3, 5); r.position.set(0, h + 1.5, 0); b.add(r); });
+for (const x of [590, 630, 670, 710]) { cableRun([[563, -43], [563, -52], [x, -52], [x, -64]], flowLV, lvMat, 'BT-HR', .3); cableRun([[563, -52], [563, -95], [x, -95], [x, -110]], flowLV, lvMat, 'BT-HR', .3); }
+zoneLabel(660, 120, 20, '用户 · 智慧社区', 'user');
+
+/* ---- 低压台区 · 别墅区 ---- */
+const villaPos = []; for (const z of [104, 128, 152, 176]) for (let x = 520; x <= 792; x += 22) { if (Math.abs(x - 545) < 12) continue; villaPos.push([x, z, x < 635 ? 0 : 1]); }
+const vBody = new THREE.InstancedMesh(G.box, bMat(3, 2, true), villaPos.length), vRoof = new THREE.InstancedMesh(new THREE.ConeGeometry(8.6, 4, 4).rotateY(PI / 4), M(0x8a3a2a, { roughness: .8 }), villaPos.length);
+const winGeo = new THREE.PlaneGeometry(1.6, 1.4), vWinMat = new THREE.MeshBasicMaterial({ color: 0xffc860 });
+const vWin = [0, 1].map(() => new THREE.InstancedMesh(winGeo, vWinMat, villaPos.filter(v => v).length * 4)); vWin.forEach(w => w.count = 0);
+const vPV = new THREE.InstancedMesh(G.box, pvMat, villaPos.length);
+{ const m = new THREE.Matrix4(), q0 = new THREE.Quaternion(), qp = new THREE.Quaternion().setFromEuler(new THREE.Euler(.46, 0, 0)); let np = 0;
+  villaPos.forEach(([x, z, g], i) => { m.compose(new V3(x, 3.5, z), q0, new V3(12, 7, 9)); vBody.setMatrixAt(i, m); m.compose(new V3(x, 9, z), q0, new V3(1, 1, .75)); vRoof.setMatrixAt(i, m);
+    for (const [dx, dy] of [[-3, 2], [3, 2], [-3, 5], [3, 5]]) { if (Math.random() < .25) continue; m.compose(new V3(x + dx, dy, z + 4.53), q0, new V3(1, 1, 1)); vWin[g].setMatrixAt(vWin[g].count++, m); }
+    if (i % 3 === 0) { m.compose(new V3(x, 9.1, z + 2.6), qp, new V3(8, .12, 3.2)); vPV.setMatrixAt(np++, m); } }); vPV.count = np; }
+for (const o of [vBody, vRoof, vPV]) { o.castShadow = o.receiveShadow = true; world.add(o); } vWin.forEach(w => world.add(w));
+reg(vBody, { name: '低压居民用户（独栋住宅）', type: 'villa' });
+{ const g1 = new THREE.Group(); g1.position.set(575, 0, 140); world.add(g1); label(g1, 'V1 台区 · 60 户', 16, 'small', null, 650);
+  const g2 = new THREE.Group(); g2.position.set(715, 0, 140); world.add(g2); label(g2, 'V2 台区 · 84 户', 16, 'small', null, 650); }
+cableRun([[562, 74], [562, 90], [520, 90]], flowLV, lvMat, 'T1-V1', .3); cableRun([[562, 90], [630, 90]], flowLV, lvMat, 'T1-V1', .3);
+cableRun([[682, 74], [682, 90], [640, 90]], flowLV, lvMat, 'T2-V2', .3); cableRun([[682, 90], [792, 90]], flowLV, lvMat, 'T2-V2', .3);
+for (const x of [530, 610, 660, 760]) cableRun([[x, 90], [x, 186]], flowLV, lvMat, x < 635 ? 'T1-V1' : 'T2-V2', .3);
+
+/* ---- 树木 / 路灯 / 车辆 ---- */
+{ const tp = []; for (let x = 404; x <= 535; x += 11) tp.push([x, -42]); for (let z = 95; z <= 205; z += 12) tp.push([536, z], [554, z]);
+  for (let x = 310; x <= 830; x += 13) tp.push([x, 203]); for (let i = 0; i < 70; i++) tp.push([rnd(312, 515), rnd(90, 195)]); for (let x = 580; x <= 830; x += 14) tp.push([x, -142]);
+  for (let i = 0; i < 40; i++) tp.push([rnd(740, 830), rnd(-135, -45)]);
+  const tr = new THREE.InstancedMesh(G.cyl, MAT.trunk, tp.length), cr = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), M(0x1f7a4a, { roughness: .9, metalness: 0, flatShading: true }), tp.length), m = new THREE.Matrix4(), q = new THREE.Quaternion();
+  tp.forEach(([x, z], i) => { const s = rnd(.8, 1.4); m.compose(new V3(x, 1.5 * s, z), q, new V3(.3 * s, 3 * s, .3 * s)); tr.setMatrixAt(i, m); m.compose(new V3(x, 4.6 * s, z), q, new V3(2.6 * s, 3 * s, 2.6 * s)); cr.setMatrixAt(i, m); });
+  tr.castShadow = cr.castShadow = true; world.add(tr, cr);
+  const lp = []; for (let x = 310; x <= 830; x += 36) lp.push([x, 53]); for (let z = -140; z <= 200; z += 36) lp.push([550, z]); for (let x = 410; x <= 830; x += 36) lp.push([x, -37]);
+  const B = new MB(), L = new MB(); for (const [x, z] of lp) { B.cyl('steel', x, 4, z, .1, 8); L.box('lamp', x, 8, z, .7, .2, .5); } B.build(world); L.build(world, false);
+  const pond = new THREE.Mesh(new THREE.CircleGeometry(30, 40), riverMat); pond.rotation.x = -PI / 2; pond.position.set(420, .15, 150); world.add(pond); }
+const cars = []; for (let i = 0; i < 14; i++) { const c = car(i + 2); world.add(c); const r = i % 3; cars.push({ c, r, off: rnd(0, 1), v: rnd(.035, .06) * (i % 2 ? 1 : -1) }); }
+function updCars(t) { for (const k of cars) { let u = (t * k.v + k.off) % 1; if (u < 0) u += 1;
+  if (k.r === 0) { k.c.position.set(300 + u * 540, 0, k.v > 0 ? -34 : -30); k.c.rotation.y = k.v > 0 ? 0 : PI; }
+  else if (k.r === 1) { k.c.position.set(300 + u * 540, 0, k.v > 0 ? 56 : 60); k.c.rotation.y = k.v > 0 ? 0 : PI; }
+  else { k.c.position.set(k.v > 0 ? 543 : 547, 0, -150 + u * 360); k.c.rotation.y = k.v > 0 ? -PI / 2 : PI / 2; } } }
+
+
+/* =================== 拓扑模型 =================== */
+prog(84, '生成电网设备拓扑…');
+const NODES = {
+  TH: { n: '火电 2×660MW', p: [15, -628], s: [60, 25], kv: 20, o: units[0] }, WF: { n: '风电场 50MW', p: [330, -640], s: [60, 60], kv: 35, o: turbines[5].g },
+  PV: { n: '光伏 200MW', p: [-300, -665], s: [60, 95], kv: 35, o: pv }, ES: { n: '储能 100MW', p: [-200, -520], s: [60, 130], kv: 35, o: es },
+  SY: { n: '500kV 升压站', p: [15, -515], s: [170, 78], kv: 500, o: syHub }, SUB: { n: '500kV 枢纽变', p: [0, 0], s: [330, 78], kv: 500, o: equip.transformer[0] },
+  DS: { n: '10kV 开关站', p: [370, 2], s: [470, 78], kv: 220, o: dsB }, A1: { n: '分段 A1', p: [440, -20], s: [560, 40], kv: 10, o: swPoles.A1, sw: 1 },
+  EVT: { n: 'EVT 箱变', p: [500, -8], s: [640, 40], kv: 10, o: EVT }, BT: { n: 'BT 箱变', p: [560, -40], s: [720, 40], kv: 10, o: BTx },
+  AE: { n: '甲线末端', p: [800, -20], s: [820, 40], kv: 10, o: fA[13] }, B1: { n: '分段 B1', p: [440, 70], s: [560, 116], kv: 10, o: swPoles.B1, sw: 1 },
+  T1: { n: 'T1 柱上变', p: [560, 70], s: [640, 116], kv: 10, o: fB[5] }, T2: { n: 'T2 柱上变', p: [680, 70], s: [720, 116], kv: 10, o: fB[9] },
+  BE: { n: '乙线末端', p: [800, 70], s: [820, 116], kv: 10, o: fB[13] }, TIE: { n: '联络开关', p: [800, 25], s: [900, 78], kv: 10, o: tieP, sw: 1 },
+  EV: { n: 'EV 充电站', p: [500, 28], s: [640, 12], kv: .4, o: evSt }, HR: { n: '高层住宅', p: [650, -95], s: [720, 12], kv: .4, o: hrs[1] },
+  V1: { n: 'V1 台区', p: [575, 140], s: [640, 152], kv: .4, o: vBody }, V2: { n: 'V2 台区', p: [715, 140], s: [720, 152], kv: .4, o: vBody } };
+const EDGES = [['TH', 'SY', 20], ['WF', 'SY', 35], ['PV', 'SY', 35], ['ES', 'SY', 35], ['SY', 'SUB', 500], ['SUB', 'DS', 220], ['DS', 'A1', 10], ['A1', 'EVT', 10], ['EVT', 'BT', 10], ['BT', 'AE', 10], ['AE', 'TIE', 10], ['TIE', 'BE', 10],
+  ['DS', 'B1', 10], ['B1', 'T1', 10], ['T1', 'T2', 10], ['T2', 'BE', 10], ['EVT', 'EV', .4], ['BT', 'HR', .4], ['T1', 'V1', .4], ['T2', 'V2', .4]].map(([a, b, kv]) => ({ id: a + '-' + b, a, b, kv, st: 'ok', dir: 1, gen: ['TH', 'WF', 'PV', 'ES'].includes(a) }));
+const E = Object.fromEntries(EDGES.map(e => [e.id, e])); E['TIE-BE'].st = 'open';
+const KVC = { 500: '#ff6b3d', 220: '#ffb347', 35: '#ffe066', 20: '#ffe066', 10: '#3dff9e', .4: '#35d6ff' };
+const powered = {};
+function solve() { for (const k in NODES) powered[k] = false;
+  const gOut = { TH: S.th, WF: S.windP, PV: S.solar, ES: S.esP };
+  for (const e of EDGES) if (e.gen) { const v = gOut[e.a]; e.dir = v > .5 ? 1 : v < -.5 ? -1 : 0; if (e.dir) { powered.SY = true; powered[e.a] = true; } }
+  const q = powered.SY ? ['SY'] : [];
+  while (q.length) { const n = q.shift(); for (const e of EDGES) { if (e.gen || e.st !== 'ok') continue; const o = e.a === n ? e.b : e.b === n ? e.a : null; if (!o || powered[o]) continue; powered[o] = true; e.dir = e.a === n ? 1 : -1; q.push(o); } }
+  for (const e of EDGES) if (!e.gen && (e.st !== 'ok' || !powered[e.a] || !powered[e.b])) e.dir = 0;
+  for (const e of EDGES) if (!e.gen && e.st === 'ok' && powered[e.a] && powered[e.b] && e.dir === 0) e.dir = 0; }
+const gateOf = id => (E[id] ? E[id].dir : 1);
+
+// 3D topology overlay
+const topoG = new THREE.Group(); topoG.visible = false; scene.add(topoG); const topoFlow = new Flow(0xffffff, 3.2);
+const N3 = k => { const [x, z] = NODES[k].p; return new V3(x, NODES[k].kv >= 20 ? 150 : 95, z); };
+for (const k in NODES) { const nd = NODES[k], p = N3(k), c = new THREE.Color(KVC[nd.kv]);
+  const s = new THREE.Mesh(nd.sw ? G.box : G.sph, new THREE.MeshBasicMaterial({ color: c })); s.scale.setScalar(nd.sw ? 6 : 5); s.position.copy(p); topoG.add(s); nd.m3 = s;
+  const h = new THREE.Mesh(new THREE.RingGeometry(7, 8, 32), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .6, side: THREE.DoubleSide })); h.position.copy(p); h.rotation.x = -PI / 2; topoG.add(h);
+  const dl = new THREE.Line(new THREE.BufferGeometry().setFromPoints([p, new V3(p.x, 0, p.z)]), new THREE.LineDashedMaterial({ color: c, dashSize: 3, gapSize: 3, transparent: true, opacity: .5 })); dl.computeLineDistances(); topoG.add(dl);
+  const l = label(topoG, nd.n, 0, 'topo', nd.o, 99999); l.position.copy(p).add(new V3(0, 9, 0)); l.element.style.setProperty('--c', KVC[nd.kv]); l.userData.topo = true; }
+for (const e of EDGES) { const a = N3(e.a), b = N3(e.b), mid = a.clone().lerp(b, .5); mid.y += a.distanceTo(b) * .08; const pts = new THREE.QuadraticBezierCurve3(a, mid, b).getPoints(30);
+  e.mat3 = new THREE.LineBasicMaterial({ color: KVC[e.kv], transparent: true, opacity: .9 }); topoG.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), e.mat3)); topoFlow.add(pts, Math.max(4, Math.round(a.distanceTo(b) / 18)), 40, e.id); }
+topoFlow.build(topoG);
+
+// 2D single-line diagram
+const svg = $('#svg'), SN = 'http://www.w3.org/2000/svg';
+const sEl = (t, a, p = svg) => { const e = document.createElementNS(SN, t); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+for (const e of EDGES) { const [x1, y1] = NODES[e.a].s, [x2, y2] = NODES[e.b].s; const d = (y1 === y2 || x1 === x2) ? `M${x1},${y1}L${x2},${y2}` : `M${x1},${y1}L${(x1 + x2) / 2},${y1}L${(x1 + x2) / 2},${y2}L${x2},${y2}`;
+  e.svg = sEl('path', { d, class: 'e on', stroke: KVC[e.kv] }); }
+for (const k in NODES) { const nd = NODES[k], [x, y] = nd.s, g = sEl('g', { class: 'n' });
+  nd.sv = nd.sw ? sEl('rect', { x: x - 8, y: y - 8, width: 16, height: 16, fill: '#081a33', stroke: KVC[nd.kv] }, g) : sEl('circle', { cx: x, cy: y, r: 8, fill: '#081a33', stroke: KVC[nd.kv] }, g);
+  const t = sEl('text', { x, y: y + (y < 20 ? -11 : 21) }, g); t.textContent = nd.n; g.addEventListener('click', () => focus(nd.o)); }
+{ const lg = [[500, '500kV'], [220, '220kV'], [20, '20/35kV'], [10, '10kV'], [.4, '0.4kV']]; lg.forEach(([kv, n], i) => { sEl('rect', { x: 230 + i * 70, y: 152, width: 14, height: 4, fill: KVC[kv] }); const t = sEl('text', { x: 268 + i * 70, y: 158 }); t.textContent = n; }); }
+function drawTopo() { for (const e of EDGES) { const c = e.st === 'fault' ? 'fault' : e.st === 'open' || e.st === 'trip' ? 'open' : e.dir === 0 ? 'off' : e.dir < 0 ? 'on rev' : 'on'; e.svg.setAttribute('class', 'e ' + c);
+    e.mat3.color.set(e.st === 'fault' ? '#ff3030' : e.dir === 0 ? '#3a4656' : KVC[e.kv]); if (edgeMat[e.id]) edgeMat[e.id].color.set(e.st === 'fault' ? 0xff3030 : e.dir === 0 ? 0x4a5666 : 0xa8ffc8); }
+  for (const k in NODES) { const nd = NODES[k]; let c = KVC[nd.kv], f = '#081a33';
+    if (nd.sw) { const closed = k === 'TIE' ? E['TIE-BE'].st === 'ok' : k === 'A1' ? E['A1-EVT'].st === 'ok' : E['B1-T1'].st === 'ok'; c = closed ? '#ff4d4d' : '#3dff9e'; f = closed ? '#5a1010' : '#0d4a2a'; if (nd.o.userData.ind) nd.o.userData.ind.material.color.set(closed ? 0xff3b3b : 0x3dff9e); }
+    else if (!powered[k]) { c = '#5d6b7c'; f = '#1a222c'; }
+    nd.sv.setAttribute('stroke', c); nd.sv.setAttribute('fill', f); nd.m3.material.color.set(powered[k] || nd.sw ? c : '#3a4656'); } }
+
+/* =================== 功率模型 =================== */
+const S = { h: 16.2, wind: 9, cloud: .15, dr: false, play: true, solar: 0, windP: 0, esP: 0, th: 0, load: 0, loss: 0, wt: [], ev: 0, hr: 0, v1: 0, v2: 0, soc: 62 };
+const LOADF = h => 820 + 260 * Math.exp(-((h - 10) ** 2) / 6) + 360 * Math.exp(-((h - 19.5) ** 2) / 5) - 180 * Math.exp(-((h - 3.5) ** 2) / 8);
+const SOLF = (h, cl) => 200 * Math.max(0, Math.sin(PI * (h - 6) / 12)) * (1 - cl * .8);
+const wtSeed = turbines.map((_, i) => .85 + .3 * ((i * 37 % 10) / 10));
+const WTP = v => v < 3 || v > 25 ? 0 : v >= 12 ? 5 : 5 * ((v - 3) / 9) ** 3;
+const WINDF = (h, w) => turbines.reduce((a, _, i) => a + WTP(w * wtSeed[i] * (1 + .12 * Math.sin(h * .9 + i))), 0);
+const ESF = (h, sol) => h >= 10 && h < 15 && sol > 60 ? -60 : h >= 18 && h < 21.5 ? 80 : 0;
+function model() { const h = S.h; S.solar = SOLF(h, S.cloud); S.wt = turbines.map((_, i) => WTP(S.wind * wtSeed[i] * (1 + .12 * Math.sin(h * .9 + i)))); S.windP = S.wt.reduce((a, b) => a + b, 0);
+  S.esP = ESF(h, S.solar); S.load = LOADF(h) * (S.dr ? .9 : 1); S.loss = S.load * .021; S.th = clamp(S.load + S.loss - S.solar - S.windP - S.esP, 400, 1320);
+  const day = Math.max(0, Math.sin(PI * (h - 6) / 12)), eve = Math.exp(-((h - 20) ** 2) / 6);
+  S.ev = powered.EV ? 0.25 + .7 * Math.exp(-((h - 13) ** 2) / 10) + .5 * eve : 0; S.hr = powered.HR ? 1.6 + 1.8 * eve + .6 * day : 0;
+  S.v1 = powered.V1 ? .12 + .22 * eve - .08 * day * (1 - S.cloud) : 0; S.v2 = powered.V2 ? .16 + .3 * eve - .1 * day * (1 - S.cloud) : 0;
+  S.soc = clamp(S.soc - S.esP * .00012, 8, 96); S.gen = S.th + S.solar + S.windP + Math.max(0, S.esP); }
+const fmt = (v, d = 1) => (+v).toFixed(d);
+const hhmm = h => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.floor((h % 1) * 60)).padStart(2, '0')}`;
+
+/* =================== 图表 =================== */
+const EC = window.echarts; const chs = {};
+const ax = { axisLine: { lineStyle: { color: '#2a5a8a' } }, axisLabel: { color: '#8fc6ee', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(53,214,255,.08)' } } };
+if (EC) { chs.mix = EC.init($('#chMix')); chs.day = EC.init($('#chDay')); chs.zone = EC.init($('#chZone')); chs.info = EC.init($('#chInfo'));
+  chs.mix.setOption({ tooltip: { trigger: 'item' }, legend: { orient: 'vertical', right: 0, top: 'middle', textStyle: { color: '#9cc6ea', fontSize: 11 }, itemWidth: 10, itemHeight: 10 },
+    series: [{ type: 'pie', radius: ['48%', '74%'], center: ['34%', '50%'], label: { show: false }, itemStyle: { borderColor: '#061630', borderWidth: 2 }, color: ['#ff8a3d', '#3dd6ff', '#ffe066', '#a77bff'], data: [] }] });
+  const hrsX = Array.from({ length: 48 }, (_, i) => i / 2);
+  chs.day.setOption({ grid: { left: 36, right: 8, top: 22, bottom: 20 }, tooltip: { trigger: 'axis' }, legend: { top: 0, textStyle: { color: '#9cc6ea', fontSize: 10 }, itemWidth: 12, itemHeight: 6 },
+    xAxis: { type: 'category', data: hrsX.map(h => hhmm(h)), ...ax, axisLabel: { ...ax.axisLabel, interval: 11 } }, yAxis: { type: 'value', ...ax },
+    series: [{ name: '负荷', type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#35d6ff' }, areaStyle: { color: 'rgba(53,214,255,.15)' }, data: [] },
+      { name: '光伏', type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#ffe066' }, areaStyle: { color: 'rgba(255,224,102,.18)' }, data: [] },
+      { name: '风电', type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#3dff9e' }, data: [] }] });
+  chs.zone.setOption({ grid: { left: 40, right: 10, top: 14, bottom: 20 }, tooltip: { trigger: 'axis' }, xAxis: { type: 'category', data: [], ...ax }, yAxis: { type: 'value', scale: true, ...ax }, series: [] });
+  chs.info.setOption({ grid: { left: 34, right: 6, top: 8, bottom: 18 }, xAxis: { type: 'category', data: [], ...ax }, yAxis: { type: 'value', scale: true, ...ax }, series: [{ type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#ffb347' }, areaStyle: { color: 'rgba(255,179,71,.2)' }, data: [] }] }); }
+function updDay() { if (!EC) return; const xs = Array.from({ length: 48 }, (_, i) => i / 2);
+  chs.day.setOption({ series: [{ data: xs.map(h => Math.round(LOADF(h) * (S.dr ? .9 : 1))), markLine: { symbol: 'none', silent: true, label: { show: false }, lineStyle: { color: '#ff9f2e', type: 'solid' }, data: [{ xAxis: Math.floor(S.h * 2) }] } }, { data: xs.map(h => Math.round(SOLF(h, S.cloud))) }, { data: xs.map(h => Math.round(WINDF(h, S.wind))) }] }); }
+const hist = { t: [] }, ZSER = {
+  all: [['全网负荷 MW', () => S.load, '#35d6ff'], ['新能源 MW', () => S.solar + S.windP, '#3dff9e']], gen: [['火电 MW', () => S.th, '#ff8a3d'], ['风电 MW', () => S.windP, '#3dd6ff'], ['光伏 MW', () => S.solar, '#ffe066']],
+  trans: [['500kV 线路潮流 MW', () => E['SY-SUB'].dir ? S.load * .62 : 0, '#ff6b3d']], sub: [['主变负载率 %', () => E['SY-SUB'].dir ? S.load * .62 / 2000 * 100 : 0, '#ffb347']],
+  dist: [['甲线电流 A', () => feederI('A'), '#3dff9e'], ['乙线电流 A', () => feederI('B'), '#ffe066']], user: [['高层 MW', () => S.hr, '#35d6ff'], ['EV MW', () => S.ev, '#3dff9e'], ['低压台区 MW', () => S.v1 + S.v2, '#ffe066']],
+  room: [['A 排温度 ℃', () => 28 + Math.sin(clk.elapsedTime * .3) * 1.5, '#35d6ff'], ['告警柜温度 ℃', () => 61 + Math.sin(clk.elapsedTime * .9) * 3, '#ff4d4d']] };
+const feederI = f => { const p = f === 'A' ? (E['DS-A1'].dir ? S.ev + S.hr + (E['TIE-BE'].st === 'ok' ? S.v1 * (powered.V1 ? 1 : 0) + S.v2 : 0) : 0) : (E['DS-B1'].dir ? (E['B1-T1'].dir ? S.v1 : 0) + (E['T1-T2'].dir > 0 ? S.v2 : 0) : 0); return p * 1000 / (1.732 * 10.5); };
+function sample() { hist.t.push(hhmm(S.h)); for (const z in ZSER) ZSER[z].forEach((s, i) => { const k = z + i; (hist[k] ??= []).push(+s[1]().toFixed(2)); if (hist[k].length > 60) hist[k].shift(); }); if (hist.t.length > 60) hist.t.shift(); }
+function updZoneChart() { if (!EC) return; const z = curZone; chs.zone.setOption({ xAxis: { data: hist.t }, legend: { top: -4, textStyle: { color: '#9cc6ea', fontSize: 10 }, itemWidth: 10, itemHeight: 6 }, grid: { top: 22 },
+  series: ZSER[z].map((s, i) => ({ name: s[0], type: 'line', smooth: true, symbol: 'none', lineStyle: { color: s[2], width: 2 }, itemStyle: { color: s[2] }, areaStyle: i ? undefined : { color: s[2] + '22' }, data: hist[z + i] })) }, { replaceMerge: ['series'] }); }
+
+/* =================== 面板 KPI =================== */
+const ZT = { all: '全网概览 · 发输变配用', gen: '发电侧 · 多能互补电源', trans: '输电 · 500kV 输电走廊', sub: '变电 · 500kV 枢纽变电站', dist: '配电 · 10kV 配电网自愈', user: '用户 · 智慧社区用能', room: '35kV 配电室 · 室内' };
+const ZK = {
+  all: () => [['总发电', S.gen, 'MW'], ['全网负荷', S.load, 'MW'], ['新能源出力', S.solar + S.windP, 'MW'], ['储能', S.esP, S.esP < 0 ? 'MW 充' : 'MW 放'], ['在线设备', 1846, '台', 0], ['告警', alarms, '条', 0, alarms ? 'warn' : 'ok']],
+  gen: () => [['火电', S.th, 'MW'], ['风电', S.windP, 'MW'], ['光伏', S.solar, 'MW'], ['储能 SOC', S.soc, '%'], ['风速', S.wind, 'm/s'], ['在运风机', S.wt.filter(v => v > 0).length, '/10', 0]],
+  trans: () => [['线路潮流', E['SY-SUB'].dir ? S.load * .62 : 0, 'MW'], ['导线温度', 32 + S.load / 90, '℃'], ['弧垂裕度', 3.2, 'm'], ['杆塔', 14, '基', 0], ['覆冰', 0, 'mm'], ['状态', E['SY-SUB'].st === 'ok' ? '运行' : '跳闸', '', 0, E['SY-SUB'].st === 'ok' ? 'ok' : 'warn']],
+  sub: () => [['主变负载率', E['SY-SUB'].dir ? S.load * .62 / 20 : 0, '%'], ['油温', 48 + S.load / 140, '℃'], ['母线电压', E['SY-SUB'].dir ? 525.3 : 0, 'kV'], ['频率', 50 + Math.sin(clk.elapsedTime) * .012, 'Hz', 3], ['间隔', 5, '个', 0], ['巡检', '进行中', '', 0, 'ok']],
+  dist: () => [['甲线电流', feederI('A'), 'A'], ['乙线电流', feederI('B'), 'A'], ['自愈状态', fault ? '处理中' : '正常', '', 0, fault ? 'warn' : 'ok'], ['联络开关', E['TIE-BE'].st === 'ok' ? '合' : '分', '', 0], ['配变数', 4, '台', 0], ['供电率', Object.keys(NODES).filter(k => powered[k]).length / Object.keys(NODES).length * 100, '%']],
+  user: () => [['社区负荷', S.ev + S.hr + S.v1 + S.v2, 'MW', 2], ['EV 充电', S.ev, 'MW', 2], ['在充车辆', powered.EV ? 5 : 0, '辆', 0], ['屋顶光伏', SOLF(S.h, S.cloud) * .0045, 'MW', 2], ['停电户数', (powered.V1 ? 0 : 60) + (powered.V2 ? 0 : 84), '户', 0, powered.V1 && powered.V2 ? 'ok' : 'warn'], ['需求响应', S.dr ? '执行中' : '待命', '', 0]],
+  room: () => [['开关柜', cabCount, '面', 0], ['告警柜', 1, '面', 0, 'warn'], ['室温', 26.4, '℃'], ['湿度', 48, '%', 0], ['SF6', 0, 'ppm', 0, 'ok'], ['挂轨机器人', '巡视', '', 0, 'ok']] };
+function updPanel() { $('#zTitle').textContent = ZT[curZone]; $('#zKpi').innerHTML = ZK[curZone]().map(([k, v, u, d = 1, c = '']) => `<div>${k}<b class="${c}">${typeof v === 'number' ? fmt(v, d) : v}<small>${u}</small></b></div>`).join('');
+  $('#zChartT').textContent = '实时曲线 · ' + ZT[curZone].split(' · ')[0];
+  $('#kGen').textContent = fmt(S.gen, 0) + ' MW'; $('#kLoad').textContent = fmt(S.load, 0) + ' MW'; $('#kRen').textContent = fmt((S.solar + S.windP) / S.gen * 100) + '%'; $('#kLoss').textContent = fmt(2.1 + (S.load - 900) / 5000, 2) + '%';
+  $('#kTime').textContent = hhmm(S.h); $('#kRel').textContent = fault || E['SY-SUB'].st !== 'ok' ? '99.991%' : '99.998%';
+  if (EC) chs.mix.setOption({ series: [{ data: [{ name: '火电', value: Math.round(S.th) }, { name: '风电', value: Math.round(S.windP) }, { name: '光伏', value: Math.round(S.solar) }, { name: '储能', value: Math.round(Math.max(0, S.esP)) }] }] }); }
+
+/* =================== 事件 =================== */
+let alarms = 0;
+function pushEv(t, cls = '', obj) { const d = document.createElement('div'); d.className = 'ev ' + cls; d.innerHTML = `<span>${t}</span><span>${hhmm(S.h)}</span>`; if (obj) d.onclick = () => focus(obj); const ev = $('#evs'); ev.prepend(d); while (ev.children.length > 30) ev.lastChild.remove(); }
+let toastT; function toast(t, ok) { const e = $('#toast'); e.textContent = t; e.className = 'toast' + (ok ? ' ok' : ''); e.style.display = 'block'; clearTimeout(toastT); toastT = setTimeout(() => e.style.display = 'none', 3200); }
+const later = (s, f) => setTimeout(f, s * 1000);
+
+/* =================== 时间 / 光照 =================== */
+const cDay = new THREE.Color(0x16345e), cNight = new THREE.Color(0x020814), cDusk = new THREE.Color(0x3a2440), tmpC = new THREE.Color();
+let night = false;
+function light() { const h = S.h, el = Math.sin(PI * (h - 6) / 12), d = clamp(el * 1.6 + .1, 0, 1), dusk = Math.exp(-((h - 18.3) ** 2) / .8) + Math.exp(-((h - 5.8) ** 2) / .8);
+  tmpC.copy(cNight).lerp(cDay, d).lerp(cDusk, clamp(dusk * .5, 0, .5)); scene.background.copy(tmpC); scene.fog.color.copy(tmpC);
+  sun.intensity = .15 + 1.7 * d; hemi.intensity = .3 + .65 * d; fill.intensity = .25 + .25 * d; sun.color.setHSL(.1, .6 * (1 - d) + .1, .65 + .3 * d);
+  const a = PI * (h - 6) / 12; sun.userData.dir = new V3(Math.cos(a) * 500, Math.max(80, Math.sin(Math.abs(a)) * 600), 260).normalize();
+  night = d < .35; for (const m of winMats) m.emissiveIntensity = night ? 1.1 : .25; MAT.lamp.color.set(night ? 0xfff0c0 : 0x8a8a80);
+  vWin.forEach((w, i) => w.visible = night && powered[i ? 'V2' : 'V1']); renderer.toneMappingExposure = .95 + .2 * d; bloom.strength = night ? .8 : .5; }
+
+/* =================== 故障仿真 =================== */
+let fault = false, busy = false;
+function lightning() { if (busy) return toast('仿真进行中，请稍候'); busy = true; goZone('trans'); const tw = chain[2][1]; const to = tw.peak.clone();
+  later(1.2, () => { pushEv('⚡ 雷电定位系统：N8# 杆塔附近落雷 168kA', 'al', tw.g); let n = 0; const fl = setInterval(() => { makeBolt(to); bolt.visible = n % 2 === 0; boltMat.opacity = 1; $('#flash').style.background = n % 2 ? 'rgba(200,220,255,0)' : 'rgba(200,220,255,.35)'; if (++n > 7) { clearInterval(fl); bolt.visible = false; $('#flash').style.background = 'rgba(200,220,255,0)'; } }, 70);
+    E['SY-SUB'].st = 'trip'; toast('500kV 线路 A 相接地故障 · 保护动作跳闸'); pushEv('500kV 输电线路 距离Ⅰ段保护动作 跳闸', 'al', tw.g); alarms++;
+    later(1.6, () => { E['SY-SUB'].st = 'ok'; toast('重合闸成功 · 线路恢复送电', true); pushEv('500kV 线路 0.8s 单相重合闸成功', 'ok', tw.g); alarms--; busy = false; }); }); }
+function feederFault() { if (busy) return toast('仿真进行中，请稍候'); busy = true; fault = true; goZone('dist');
+  later(1.4, () => { E['B1-T1'].st = 'fault'; E['DS-B1'].st = 'trip'; alarms++; toast('10kV 乙线 B1–T1 段发生永久性短路故障'); pushEv('10kV 乙线 出口断路器 过流Ⅰ段跳闸', 'al', fB[3]);
+    later(2.5, () => { pushEv('FA 主站：故障定位于 B1–T1 区段，B1/T1 两侧开关分闸隔离', '', swPoles.B1); E['DS-B1'].st = 'ok'; pushEv('乙线出口断路器重合 · 非故障区段 DS–B1 恢复', 'ok', dsB); });
+    later(5, () => { E['TIE-BE'].st = 'ok'; toast('联络开关 TIE 合闸 · 负荷转供成功（自愈用时 3.6s）', true); pushEv('TIE 联络开关合闸 · T1/T2 台区由甲线转供', 'ok', tieP); });
+    later(28, () => { E['B1-T1'].st = 'ok'; E['TIE-BE'].st = 'open'; fault = false; busy = false; alarms--; pushEv('B1–T1 抢修完成 · 恢复正常运行方式，TIE 分闸', 'ok', swPoles.B1); toast('抢修完成，恢复正常运行方式', true); }); }); }
+function demandResp() { if (S.dr) return; S.dr = true; $('#bDR').classList.add('on'); pushEv('📉 需求响应启动：可调负荷削减 10%（空调/EV 有序充电）', 'ok', evSt); toast('需求响应执行中 · 削峰 10%', true); updDay();
+  later(60, () => { S.dr = false; $('#bDR').classList.remove('on'); pushEv('需求响应结束', '', null); updDay(); }); }
+
+/* =================== 交互 =================== */
+let curZone = 'all', inRoom = false, follow = null, anim = null, labelsOn = true, flowOn = true, xray = false;
+const ease = t => t < .5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+function flyTo(pos, tgt, dur = 1.6) { anim = { p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: tgt, s: performance.now(), d: dur * 1000 }; }
+const PRE = { all: [[1100, 900, 800], [200, 0, -300]], gen: [[300, 260, -330], [0, 0, -640]], trans: [[230, 140, -180], [10, 20, -280]], sub: [[150, 120, 170], [0, 0, -5]], dist: [[480, 130, 190], [420, 0, 20]], user: [[830, 210, 290], [650, 0, 20]] };
+function setZone(z) { curZone = z; document.querySelectorAll('.nb').forEach(n => n.classList.toggle('on', n.dataset.n === z)); $('#crumb').innerHTML = `<span data-z="all">全网</span>${z !== 'all' ? ' / ' + ZT[z].split(' · ')[0] : ''}`; $('#crumb span').onclick = () => goZone('all'); updPanel(); updZoneChart(); }
+function goZone(z) { follow = null; setVB('drone', false); setVB('patrol', false); if (z === 'room') return enterRoom(); if (inRoom) leaveRoom(); setZone(z); const [p, t] = PRE[z]; flyTo(new V3(...p), new V3(...t)); hideInfo(); }
+function enterRoom() { inRoom = true; world.visible = false; topoG.visible = false; grid.visible = false; room.visible = true; setZone('room'); camera.position.set(0, 30, 36); controls.target.set(0, 0, 0); controls.maxDistance = 90; anim = null; scene.fog.near = 200; scene.fog.far = 900; toast('已进入 35kV 配电室 · 红色闪烁为告警开关柜', true); $('#topo2d').style.opacity = 0; }
+function leaveRoom() { inRoom = false; world.visible = true; grid.visible = true; room.visible = false; topoG.visible = vbOn('topo'); controls.maxDistance = 2600; $('#topo2d').style.opacity = 1; }
+function centerOf(o) { const b = new THREE.Box3().setFromObject(o); if (o.isInstancedMesh && o !== pv && o !== vBody) return null; return { c: b.getCenter(new V3()), r: Math.max(8, b.getSize(new V3()).length() / 2) }; }
+function focus(o) { if (!o) return; if (inRoom && !room.children.includes(o)) leaveRoom(); const cr = centerOf(o); if (!cr) return; const { c, r } = cr; const rr = Math.min(r, 260);
+  const dir = camera.position.clone().sub(controls.target).setY(0).normalize(); if (!isFinite(dir.x)) dir.set(1, 0, 1).normalize();
+  flyTo(c.clone().add(dir.multiplyScalar(rr * 2.4 + 12)).add(new V3(0, rr * 1.3 + 10, 0)), c); showInfo(o); outline.selectedObjects = [o]; }
+const badge = (t, c = '') => `<span class="badge ${c}">${t}</span>`;
+const pw = k => powered[k] ? badge('带电运行') : badge('失电', 'al');
+const FIELDS = {
+  unit: o => [['额定容量', '660 MW'], ['实时出力', fmt(S.th / 2) + ' MW'], ['主汽温度', '600 ℃'], ['主汽压力', '25.4 MPa'], ['供电煤耗', '276 g/kWh'], ['状态', badge('并网运行')]],
+  turbine: () => [['汽轮机', '2 × 660MW'], ['转速', '3000 r/min'], ['真空度', '-96.2 kPa'], ['状态', badge('运行')]],
+  cool: () => [['类型', '自然通风双曲线'], ['高度', '150 m'], ['循环水量', '68000 t/h'], ['出水温度', '29.6 ℃']],
+  chim: () => [['高度', '240 m'], ['SO₂', '12.4 mg/m³'], ['NOx', '28.1 mg/m³'], ['烟尘', '2.1 mg/m³'], ['排放', badge('超低排放达标')]],
+  coal: () => [['库存', '35.2 万吨'], ['可用天数', '21 天'], ['热值', '5500 kcal/kg'], ['自燃监测', badge('正常')]],
+  pv: () => [['装机', '200 MW'], ['实时出力', fmt(S.solar) + ' MW'], ['辐照度', fmt(S.solar * 5) + ' W/m²'], ['组件温度', fmt(22 + S.solar / 8) + ' ℃'], ['逆变器', '64 台在线'], ['状态', S.solar > 1 ? badge('发电中') : badge('夜间停机', 'off')]],
+  es: () => [['容量', '100MW / 200MWh'], ['功率', fmt(Math.abs(S.esP)) + ' MW'], ['工况', S.esP > 0 ? badge('放电 · 晚高峰支撑') : S.esP < 0 ? badge('充电 · 午间消纳') : badge('待机', 'off')], ['SOC', fmt(S.soc) + ' %'], ['电芯温度', '27.8 ℃']],
+  wind: o => { const i = o.userData.info.idx, p = S.wt[i] || 0; return [['额定', '5 MW'], ['实时出力', fmt(p, 2) + ' MW'], ['轮毂风速', fmt(S.wind * wtSeed[i]) + ' m/s'], ['转速', fmt(p ? 4 + p * 2.2 : 0) + ' rpm'], ['状态', S.wind * wtSeed[i] > 25 ? badge('切出保护', 'al') : p > 0 ? badge('发电中') : badge('待风', 'off')]]; },
+  gsu: () => [['电压', '20 / 500 kV'], ['容量', '780 MVA'], ['负载率', fmt(S.th / 15.6) + ' %'], ['油温', fmt(55 + S.th / 60) + ' ℃']],
+  sy: () => [['电压等级', '500 kV'], ['出线', '3 回'], ['上网功率', fmt(S.gen) + ' MW'], ['状态', pw('SY')]],
+  sw35: () => [['电压', '35 kV'], ['集电线路', '6 回'], ['状态', badge('运行')]],
+  tower: o => [['电压', '500 kV'], ['塔型', '酒杯型直线塔'], ['倾斜度', '0.12 %'], ['导线温度', fmt(32 + S.load / 90) + ' ℃'], ['在线监测', badge('正常')]],
+  drone: () => [['型号', 'UAV 多旋翼'], ['高度', '55 m'], ['电量', '76 %'], ['任务', '可见光 + 红外巡线'], ['缺陷识别', 'AI 实时']],
+  bay: () => [['电压', '500 kV'], ['断路器', badge('合位')], ['SF6 压力', '0.62 MPa'], ['电流', fmt(S.load * .12) + ' A']],
+  transformer: () => [['电压', '500 / 220 kV'], ['容量', '1000 MVA'], ['负载率', fmt(S.load * .62 / 20) + ' %'], ['油温', fmt(48 + S.load / 140) + ' ℃'], ['油色谱', badge('正常')], ['状态', pw('SUB')]],
+  gis: () => [['电压', '220 kV'], ['SF6 密度', '0.58 MPa'], ['局放', '3.1 pC'], ['状态', badge('运行')]],
+  cap: () => [['容量', '60 Mvar'], ['投切', badge('投入')], ['不平衡电流', '0.02 A']], reactor: () => [['容量', '60 Mvar'], ['温度', '52 ℃'], ['状态', badge('热备用', 'off')]],
+  ground: () => [['类型', '接地变 + 消弧线圈'], ['中性点电压', '1.2 V']], control: () => [['系统', '一体化监控 / 智能告警'], ['值班', '无人值守 + 远方集控'], ['通信', badge('正常')]],
+  protect: () => [['保护装置', '42 台'], ['定值区', '01 区'], ['状态', badge('正常')]], dist: () => [['电压', '35 kV'], ['开关柜', cabCount + ' 面'], ['告警', badge('1 面温度越限', 'al')], ['操作', '双击 / 下方按钮进入']],
+  cable: () => [['长度', '2.6 km'], ['护层环流', '3.4 A'], ['测温光纤', badge('正常')]], robot: () => [['任务', '例行巡视'], ['电量', '82 %'], ['识别', '表计/红外/声纹']],
+  ds: () => [['电压', '220 / 10 kV'], ['出线', '甲线 / 乙线'], ['甲线电流', fmt(feederI('A')) + ' A'], ['乙线电流', fmt(feederI('B')) + ' A'], ['状态', pw('DS')]],
+  dtx: () => [['电压', '220 / 10.5 kV'], ['容量', '63 MVA'], ['负载率', fmt((S.ev + S.hr + S.v1 + S.v2) / 63 * 100 * 6) + ' %'], ['状态', pw('DS')]],
+  switch: o => { const k = o.userData.info.key, cl = k === 'TIE' ? E['TIE-BE'].st === 'ok' : k === 'A1' ? E['A1-EVT'].st === 'ok' : E['B1-T1'].st === 'ok'; return [['类型', '智能柱上开关 (FTU)'], ['位置', cl ? badge('合闸', 'al') : badge('分闸')], ['馈线自动化', '集中型 FA'], ['通信', '5G 切片']]; },
+  poletx: o => { const k = o.userData.info.key, p = k === 'T1' ? S.v1 : S.v2; return [['容量', '400 kVA'], ['负载率', fmt(p * 1000 / 400 * 100 / 1.4) + ' %'], ['低压侧电压', powered[k] ? '228 V' : '0 V'], ['状态', pw(k)]]; },
+  boxtx: o => { const k = o.userData.info.key, p = k === 'EVT' ? S.ev : S.hr; return [['电压', '10 / 0.4 kV'], ['容量', k === 'EVT' ? '1600 kVA' : '1250 kVA ×2'], ['实时负荷', fmt(p * 1000, 0) + ' kW'], ['状态', pw(k)]]; },
+  evs: () => [['充电桩', '8 × 120 kW'], ['在充', powered.EV ? '5 辆' : '0'], ['功率', fmt(S.ev * 1000, 0) + ' kW'], ['V2G', S.h >= 18 && S.h < 21 ? badge('反向放电') : badge('有序充电')], ['状态', pw('EV')]],
+  hr: o => [['户数', '186 户'], ['实时负荷', fmt(S.hr * 1000 / 8, 0) + ' kW'], ['电梯/水泵', badge('正常')], ['状态', pw('HR')]],
+  villa: () => [['台区', 'V1 (T1) / V2 (T2)'], ['户数', '144 户'], ['屋顶光伏', fmt(SOLF(S.h, S.cloud) * 4.5, 0) + ' kW'], ['V1', pw('V1')], ['V2', pw('V2')]] };
+let infoObj = null;
+function showInfo(o) { const inf = o.userData.info; if (!inf) return; infoObj = o; $('#info').style.display = 'block'; $('#iTitle').textContent = inf.name; fillInfo();
+  const b = $('#iBtns'); b.innerHTML = ''; const add = (t, f) => { const d = document.createElement('div'); d.textContent = t; d.onclick = f; b.appendChild(d); };
+  if (inf.enter) add('进入配电室', () => goZone('room')); add('三维拓扑', () => setVB('topo', true)); add('关闭', hideInfo);
+  if (EC) { const base = 50 + Math.random() * 30; chs.info.setOption({ xAxis: { data: Array.from({ length: 24 }, (_, i) => i + 'h') }, series: [{ data: Array.from({ length: 24 }, (_, i) => +(base + 15 * Math.sin(i / 3.8) + Math.random() * 6).toFixed(1)) }] }); chs.info.resize(); } }
+function fillInfo() { if (!infoObj) return; const inf = infoObj.userData.info, f = FIELDS[inf.type]; const rows = f ? f(infoObj) : [['状态', badge('运行')]]; $('#iBody').innerHTML = rows.map(([k, v]) => `<div class="irow"><span>${k}</span><b>${v}</b></div>`).join(''); }
+function hideInfo() { infoObj = null; $('#info').style.display = 'none'; outline.selectedObjects = []; }
+$('#ix').onclick = hideInfo;
+// view buttons
+const vbOn = v => $(`.vbtn[data-v="${v}"]`).classList.contains('on');
+function setVB(v, on) { const b = $(`.vbtn[data-v="${v}"]`); b.classList.toggle('on', on);
+  if (v === 'flow') { flowOn = on; for (const f of [flowHV, flowCable, flowGen, flowFeeder, flowLV]) f.obj.visible = on; }
+  if (v === 'topo') { topoG.visible = on && !inRoom; if (on && !inRoom) { pushEv('三维设备拓扑叠加显示', '', null); } }
+  if (v === 'drone') { follow = on ? 'drone' : (follow === 'drone' ? null : follow); if (on) { if (inRoom) leaveRoom(); setVB('patrol', false); follow = 'drone'; } }
+  if (v === 'patrol') { if (on) { if (inRoom) leaveRoom(); $(`.vbtn[data-v="drone"]`).classList.remove('on'); follow = 'robot'; } else if (follow === 'robot') follow = null; }
+  if (v === 'roam') controls.autoRotate = on;
+  if (v === 'xray') { xray = on; world.traverse(o => { if (!o.isMesh || !o.material || o.material.isShaderMaterial) return; for (const m of [].concat(o.material)) { if (m.userData.x === undefined) m.userData.x = [m.transparent, m.opacity, m.depthWrite]; if (on) { m.transparent = true; m.opacity = Math.min(m.userData.x[1], .22); m.depthWrite = false; } else [m.transparent, m.opacity, m.depthWrite] = m.userData.x; m.needsUpdate = true; } }); }
+  if (v === 'label') labelsOn = on; }
+document.querySelectorAll('.vbtn').forEach(b => b.onclick = () => setVB(b.dataset.v, !b.classList.contains('on')));
+document.querySelectorAll('.nb').forEach(n => n.onclick = () => goZone(n.dataset.n));
+$('#topoH').onclick = () => $('#topo2d').classList.toggle('min');
+$('#bPlay').onclick = () => { S.play = !S.play; $('#bPlay').classList.toggle('on', S.play); $('#bPlay').textContent = S.play ? '⏸ 暂停时间' : '▶ 时间流逝'; };
+$('#bDR').onclick = demandResp; $('#bLight').onclick = lightning; $('#bFeeder').onclick = feederFault;
+const sT = $('#sTime'), sW = $('#sWind'), sC = $('#sCloud');
+sT.oninput = () => { S.h = +sT.value; updDay(); }; sW.oninput = () => { S.wind = +sW.value; updDay(); if (S.wind > 25) pushEv(`风速 ${S.wind}m/s 超切出风速，风机顺桨停机保护`, 'al', turbines[0].g); }; sC.oninput = () => { S.cloud = sC.value / 100; updDay(); };
+function syncCtl() { sT.value = S.h; $('#vTime').textContent = hhmm(S.h); $('#vWind').textContent = S.wind + ' m/s'; $('#vCloud').textContent = Math.round(S.cloud * 100) + ' %'; }
+// picking
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(); ray.params.Line.threshold = .3; ray.params.Points.threshold = 0;
+function pick(e) { mouse.set(e.clientX / W() * 2 - 1, -e.clientY / H() * 2 + 1); ray.setFromCamera(mouse, camera);
+  const list = inRoom ? [cabs] : pickables.filter(p => p !== cabs); const hit = ray.intersectObjects(list, true)[0]; if (!hit) return null;
+  if (hit.object === cabs) return { o: cabs, cab: hit.instanceId }; let o = hit.object; while (o && !o.userData.info) o = o.parent; return o ? { o } : null; }
+let hoverT = 0, downP = null;
+renderer.domElement.addEventListener('pointermove', e => { if (performance.now() - hoverT < 60) return; hoverT = performance.now(); const r = pick(e), tip = $('#tip');
+  if (r) { tip.style.display = 'block'; tip.style.left = e.clientX + 14 + 'px'; tip.style.top = e.clientY + 10 + 'px'; tip.textContent = r.cab !== undefined ? `开关柜 ${cabInfo[r.cab].id}${r.cab === ALARM_CAB ? ' ⚠ 温度越限' : ''}` : r.o.userData.info.name; renderer.domElement.style.cursor = 'pointer'; if (!infoObj && r.cab === undefined) outline.selectedObjects = [r.o]; }
+  else { tip.style.display = 'none'; renderer.domElement.style.cursor = ''; if (!infoObj) outline.selectedObjects = []; } });
+renderer.domElement.addEventListener('pointerdown', e => downP = [e.clientX, e.clientY]);
+renderer.domElement.addEventListener('pointerup', e => { if (!downP || Math.hypot(e.clientX - downP[0], e.clientY - downP[1]) > 5) return; const r = pick(e); if (!r) return;
+  if (r.cab !== undefined) { const c = cabInfo[r.cab]; infoObj = null; $('#info').style.display = 'block'; $('#iTitle').textContent = `开关柜 ${c.id}`; $('#iBody').innerHTML = [['电压', '35 kV'], ['断路器', r.cab === ALARM_CAB ? badge('合位') : badge('合位')], ['触头温度', r.cab === ALARM_CAB ? badge('68.2 ℃ 越限', 'al') : (30 + Math.random() * 6).toFixed(1) + ' ℃'], ['局放', '2.4 pC'], ['电流', (180 + Math.random() * 60).toFixed(0) + ' A']].map(([k, v]) => `<div class="irow"><span>${k}</span><b>${v}</b></div>`).join(''); $('#iBtns').innerHTML = '<div id="bOut">返回全景</div>'; $('#bOut').onclick = () => goZone('all'); flyTo(c.pos.clone().add(new V3(0, 3, c.pos.z < 0 ? 6 : -6)), c.pos.clone()); return; }
+  focus(r.o); });
+renderer.domElement.addEventListener('dblclick', e => { const r = pick(e); if (r && r.o.userData.info?.enter) goZone('room'); });
+
+/* =================== 场景告警 =================== */
+let alarmObj = null;
+function randAlarm() { if (inRoom || alarmObj) return; const pool = [...equip.transformer, ...equip.bay, ...(equip.dtx || []), ...(equip.boxtx || [])], o = pool[Math.floor(Math.random() * pool.length)];
+  const t = ['红外测温：接头温度 78℃ 越限', '油色谱乙炔含量异常', 'SF6 压力低告警', '局部放电幅值超阈值'][Math.floor(Math.random() * 4)]; alarmObj = o;
+  const c = new THREE.Box3().setFromObject(o).getCenter(new V3()); alarmRing.position.set(c.x, .3, c.z); alarmRing.visible = true; alarms++;
+  pushEv(`⚠ ${o.userData.info.name}：${t}`, 'al', o); later(9, () => { alarmRing.visible = false; alarmObj = null; alarms--; pushEv(`${o.userData.info.name} 告警已确认/消缺`, 'ok', o); }); }
+
+/* =================== 构建粒子 & 线 =================== */
+for (const f of [flowHV, flowCable, flowGen, flowFeeder, flowLV]) f.build(world);
+segs(wirePts, WIRE); segs(dashPts, new THREE.LineBasicMaterial({ color: 0x6f7f90, transparent: true, opacity: .6 }));
+const vecTmp = new V3();
+
+/* =================== 主循环 =================== */
+const clk = new THREE.Clock(); let fr = 0, acc = 0, slow = 0;
+function loop() { requestAnimationFrame(loop); const dt = Math.min(clk.getDelta(), .1), t = clk.elapsedTime; fr++;
+  if (S.play) { S.h = (S.h + dt / 12) % 24; }
+  acc += dt; if (acc > .25) { acc = 0; model(); solve(); drawTopo(); light(); syncCtl(); if (++slow % 4 === 0) { updPanel(); fillInfo(); sample(); updZoneChart(); if (slow % 40 === 0) updDay(); } }
+  if (anim) { const k = clamp((performance.now() - anim.s) / anim.d, 0, 1), e = ease(k); camera.position.lerpVectors(anim.p0, anim.p1, e); controls.target.lerpVectors(anim.t0, anim.t1, e); if (k >= 1) anim = null; }
+  // flows
+  if (flowOn && !inRoom) { flowHV.update(t, p => p.tag ? gateOf(p.tag) : E['SY-SUB'].dir); flowCable.update(t, p => p.tag ? gateOf(p.tag) : powered.SUB ? 1 : 0); flowFeeder.update(t, p => gateOf(p.tag)); flowLV.update(t, p => gateOf(p.tag));
+    flowGen.update(t, p => p.tag === 'PV' ? (S.solar > 1 ? 1 : 0) : p.tag === 'WF' ? (S.windP > .3 ? 1 : 0) : p.tag === 'ES' ? Math.sign(Math.round(S.esP)) : 1); }
+  if (topoG.visible) topoFlow.update(t, p => gateOf(p.tag));
+  // generation anims
+  const thk = S.th / 1320; steams[0].update(dt, S.wind / 28, .6 + thk); steams[1].update(dt, S.wind / 28, .6 + thk); steams[2].update(dt, S.wind / 28, 1);
+  turbines.forEach((tb, i) => { const p = S.wt[i] || 0; tb.rotor.rotation.z += dt * (p ? .6 + p * .22 : (S.wind * wtSeed[i] > 25 ? 0 : .05)); tb.led.visible = Math.sin(t * 4 + i) > 0; });
+  chim.userData.lights.forEach((l, i) => l.visible = Math.sin(t * 3 + i) > -.2);
+  // drone & robot
+  { const z = -275 + 150 * Math.sin(t * .07), z2 = -275 + 150 * Math.sin((t + .1) * .07); drone.position.set(10 + 5 * Math.sin(t * .5), 58 + Math.sin(t * 1.3) * 1.5, z); drone.rotation.y = z2 > z ? 0 : PI; drone.userData.rot.forEach((r, i) => r.rotation.y += dt * 40 * (i % 2 ? 1 : -1)); }
+  { const u = (t * 2.2 / patrolLen) % 1, p = patrolPath.getPointAt(u), q = patrolPath.getPointAt((u + .002) % 1); robot.position.copy(p); robot.lookAt(q.x, p.y, q.z); robot.userData.lid.rotation.y += dt * 3; }
+  if (follow === 'drone') { drone.getWorldPosition(vecTmp); controls.target.lerp(vecTmp, .1); camera.position.lerp(vecTmp.clone().add(new V3(45, 22, 40)), .05); }
+  if (follow === 'robot') { robot.getWorldPosition(vecTmp); controls.target.lerp(vecTmp, .12); const back = new V3(0, 0, -14).applyQuaternion(robot.quaternion); camera.position.lerp(vecTmp.clone().add(back).add(new V3(0, 9, 0)), .06); }
+  updCars(t); evLeds.forEach((l, i) => l.visible = powered.EV && (i % 3 !== 2 ? Math.sin(t * 3 + i) > -.5 : true));
+  riverMat.uniforms.uT.value = t; scanMat.uniforms.uT.value = t; if (alarmRing.visible) { const s = 1 + (t * 1.5 % 1) * 2.5; alarmRing.scale.setScalar(s); alarmRing.material.opacity = 1 - (t * 1.5 % 1); }
+  // room
+  if (inRoom) { railBot.position.x = Math.sin(t * .25) * 19; const c = new THREE.Color(Math.sin(t * 8) > 0 ? 0xff3030 : 0xffffff); cabs.setColorAt(ALARM_CAB, c); cabs.instanceColor.needsUpdate = true; roomFlow.p[0].pts[0].copy(railBot.position); roomFlow.p[0].len = roomFlow.p[0].pts[1].distanceTo(railBot.position); roomFlow.p[0].cum[1] = roomFlow.p[0].len; roomFlow.update(t); }
+  // shadows/fog follow
+  const dist = camera.position.distanceTo(controls.target); if (!inRoom) { scene.fog.near = dist * .7 + 100; scene.fog.far = dist * 3 + 900; }
+  const sd = sun.userData.dir || new V3(1, 1, .5).normalize(); sun.target.position.copy(controls.target); sun.position.copy(controls.target).addScaledVector(sd, 700);
+  const sc = clamp(dist * .5, 120, 700); Object.assign(sun.shadow.camera, { left: -sc, right: sc, top: sc, bottom: -sc }); sun.shadow.camera.updateProjectionMatrix();
+  // labels
+  if (fr % 15 === 1) { for (const l of labels) { let v = labelsOn; if (v) { if (l.userData.topo) v = topoG.visible; else { let p = l.parent; while (p) { if (!p.visible) { v = false; break; } p = p.parent; } if (v) { l.getWorldPosition(vecTmp); v = vecTmp.distanceTo(camera.position) < l.userData.md * (dist > 1200 ? 1.6 : 1); } } } l.visible = v; } }
+  controls.update(); composer.render(); labelR.render(scene, camera); }
+
+addEventListener('resize', () => { camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); composer.setSize(W(), H()); labelR.setSize(W(), H()); outline.setSize?.(W(), H()); Object.values(chs).forEach(c => c.resize()); });
+
+/* =================== 启动 =================== */
+prog(100, '数字孪生就绪');
+model(); solve(); drawTopo(); light(); updDay(); for (let i = 0; i < 20; i++) sample(); setZone('all'); syncCtl(); $('#bPlay').classList.add('on'); $('#bPlay').textContent = '⏸ 暂停时间';
+pushEv('全场景电网数字孪生系统启动 · 接入设备 1846 台', 'ok'); pushEv('发电侧 AGC 投入 · 新能源优先消纳', 'ok', units[0]); pushEv('10kV 配电自动化 FA 主站在线', 'ok', dsB);
+setInterval(randAlarm, 38000); later(12, randAlarm);
+loop(); setTimeout(() => { $('#loading').style.opacity = 0; setTimeout(() => $('#loading').remove(), 900); window.__ready = true; }, 400);
+flyTo(new V3(1100, 900, 800), new V3(200, 0, -300), .1);
+
+
+</script>
+</body>
+</html>
