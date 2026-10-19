@@ -111,6 +111,33 @@ nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;
 #inParts{display:flex;flex-wrap:wrap;gap:4px}.pi{padding:3px 8px;cursor:pointer;background:rgba(26,140,255,.15);border:1px solid rgba(53,214,255,.25);border-radius:2px}
 .pi:hover,.pi.on{background:rgba(255,159,46,.3);border-color:var(--o);color:#fff}
 #inHint{position:absolute;left:12px;bottom:10px;font-size:11px;color:#7aa9cc;pointer-events:none}
+
+body.clean .side,body.clean .kpis,body.clean .vbtns,body.clean #topo2d,body.clean .crumb,body.clean #info{opacity:0!important;pointer-events:none!important}
+body.clean .side.l{transform:translateX(-110%)}body.clean .side.r{transform:translateX(110%)}
+.kpis,.vbtns,#topo2d,.crumb{transition:opacity .5s}
+#bHide{position:fixed;right:16px;bottom:30px;z-index:7;padding:7px 14px;font-size:12px;cursor:pointer;color:#dff4ff;border:1px solid var(--o);border-radius:16px;background:linear-gradient(180deg,rgba(255,159,46,.55),rgba(80,30,0,.85));box-shadow:0 0 12px rgba(255,159,46,.5)}
+#bHide small{opacity:.7;margin-left:4px;border:1px solid rgba(255,255,255,.4);padding:0 4px;border-radius:3px;font-size:10px}
+#tqR{display:none;flex:1.7;min-height:0;overflow:auto}body.tqm #tqR{display:block}body.tqm #R>.panel:not(#tqR):not(.evp){display:none}body.tqm #R .evp{flex:1}
+.tqtabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}.tqt{flex:1 0 22%;text-align:center;padding:3px 0;font-size:11px;cursor:pointer;border:1px solid var(--bd);background:rgba(26,140,255,.18);border-radius:2px}
+.tqt.on{background:linear-gradient(180deg,rgba(255,159,46,.75),rgba(120,50,0,.8));border-color:var(--o);color:#fff}
+.tqkv{display:grid;grid-template-columns:1fr 1fr;gap:4px}.tqkv div{border:1px solid rgba(53,214,255,.22);background:rgba(10,40,80,.45);padding:3px 6px;font-size:10.5px;color:#9cc6ea}
+.tqkv b{display:block;font-family:Consolas,monospace;font-size:13px;color:#7fe7ff}.tqkv b.warn{color:#ff6b6b}.tqkv b.ok{color:var(--g)}
+.tqsub{margin:8px 0 4px;font-size:11.5px;color:#ffd59a;border-left:3px solid var(--o);padding-left:6px}
+.sqw{width:100%;height:34px;background:rgba(5,20,45,.6);border:1px solid rgba(53,214,255,.2)}.sqw path.run{stroke-dasharray:6 3;animation:dash .6s linear infinite}
+.tqprog{position:relative;height:14px;margin-top:5px;background:#0b2a4a;border:1px solid rgba(53,214,255,.3)}.tqprog i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#1a8cff,#3dff9e);transition:width .2s}
+.tqprog span{position:absolute;right:6px;top:0;font-size:10px;line-height:13px;color:#fff;font-family:Consolas,monospace}
+.tqlist div{display:flex;justify-content:space-between;gap:6px;font-size:10.5px;padding:3px 5px;margin:2px 0;background:rgba(26,140,255,.12)}.tqlist div.al{background:rgba(255,60,60,.18);color:#ff9a9a}.tqlist em{font-style:normal;color:#8fc6ee;white-space:nowrap}
+.tqbars div{display:flex;align-items:center;gap:6px;font-size:11px;margin:3px 0}.tqbars span{width:12px}.tqbars i{height:9px;border-radius:2px;display:block;max-width:70%}.tqbars b{font-family:Consolas,monospace;color:#7fe7ff;font-size:11px}
+.tqbox{margin-top:6px;padding:6px 8px;font-size:10.5px;line-height:1.6;background:rgba(255,60,60,.14);border:1px solid rgba(255,90,90,.5)}.tqbox.ok{background:rgba(61,255,158,.1);border-color:rgba(61,255,158,.5)}
+.tqord div{padding:4px 5px;margin:3px 0;background:rgba(26,140,255,.12);font-size:10.5px}.tqord p{display:flex;gap:3px;margin-top:3px}.tqord i{flex:1;text-align:center;font-style:normal;font-size:10px;padding:1px 0;background:#0b2a4a;color:#6f8faf;border-radius:2px}
+.tqord i.d{background:rgba(61,255,158,.35);color:#dfffee}.tqord i.c{background:rgba(255,159,46,.8);color:#fff;animation:blink .6s infinite alternate}
+.tqeff{width:100%;border-collapse:collapse;font-size:10.5px}.tqeff th,.tqeff td{border:1px solid rgba(53,214,255,.22);padding:3px 4px;text-align:center}.tqeff th{background:rgba(26,140,255,.25);color:#fff}.tqeff td:last-child{color:var(--g);font-family:Consolas,monospace}
+#tqMap{position:fixed;left:322px;right:430px;top:112px;bottom:132px;z-index:6;display:none;padding:32px 8px 6px}
+#tqMapX{position:absolute;right:10px;top:4px;cursor:pointer;color:#9fd8ff;font-size:13px;z-index:2}
+#tqSvg{width:100%;height:100%}#tqSvg text{font-size:11px;fill:#e6f6ff;text-anchor:middle;pointer-events:none}#tqSvg text.s{font-size:9.5px;fill:#9cc6ea}#tqSvg text.r{fill:#ff6b6b;font-weight:bold}
+#tqSvg .tqn{cursor:pointer}#tqSvg .tqn:hover rect,#tqSvg .tqn:hover circle{stroke:#fff;stroke-width:2.5}#tqSvg .blk{animation:blink .4s infinite alternate}
+#tqSvg.draw .tqe{stroke-dasharray:900;stroke-dashoffset:900;animation:drawIn 1.4s ease-out forwards}#tqSvg.draw .tqn{animation:fadeIn 1.2s}
+@keyframes drawIn{to{stroke-dashoffset:0}}@keyframes fadeIn{from{opacity:0}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
@@ -119,7 +146,7 @@ nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;
 <div id="loading"><h2>全场景电网数字孪生 加载中</h2><div class="bar"><i id="lb"></i></div><p id="lt" style="margin-top:10px;font-size:12px;color:#6f9cc2">初始化三维引擎…</p></div>
 <div id="c3d"></div><div id="labels"></div><div class="vignette"></div><div class="flash" id="flash"></div>
 <header><div class="title"><h1>全场景电网数字孪生 · 发输变配用</h1></div></header>
-<div class="kpis l"><div>总发电出力<b id="kGen">--</b></div><div>全网负荷<b id="kLoad">--</b></div><div>新能源占比<b id="kRen">--</b></div></div>
+<div class="kpis l"><div>总发电出力<b id="kGen">--</b></div><div>全网负荷<b id="kLoad">--</b></div><div>清洁能源占比<b id="kRen">--</b></div></div>
 <div class="kpis r"><div>线损率<b id="kLoss">--</b></div><div>供电可靠率<b id="kRel">99.998%</b></div><div>模拟时间<b id="kTime">--:--</b></div></div>
 <div class="crumb" id="crumb"></div>
 
@@ -136,7 +163,8 @@ nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;
 <div class="side r" id="R">
  <div class="panel"><div class="ph">电源结构<em>实时出力 MW</em></div><div class="chart" id="chMix" style="height:150px"></div></div>
  <div class="panel"><div class="ph">24h 负荷与新能源出力</div><div class="chart" id="chDay" style="height:150px"></div></div>
- <div class="panel" style="flex:1;min-height:0"><div class="ph">全网事件告警</div><div class="events" id="evs" style="height:calc(100% - 2px)"></div></div>
+ <div class="panel" id="tqR"><div class="ph">透明台区 · 七维透明管控</div><div class="tqtabs"></div><div class="tqc"></div></div>
+ <div class="panel evp" style="flex:1;min-height:0"><div class="ph">全网事件告警</div><div class="events" id="evs" style="height:calc(100% - 2px)"></div></div>
 </div>
 
 <div class="vbtns" id="vb">
@@ -150,6 +178,8 @@ nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;
 </div>
 <div class="panel min" id="topo2d"><div class="ph" style="cursor:pointer" id="topoH">电网设备拓扑（单线图）<em>点击节点定位 · 红合绿分 · 点此展开/折叠</em></div><svg id="svg" viewBox="0 -14 1000 192"></svg></div>
 <div id="subnav"></div>
+<div class="panel" id="tqMap"><div class="ph">一键成图 · V1 台区低压拓扑图<em id="tqMapS"></em></div><div id="tqMapX">✕ 关闭</div><svg id="tqSvg" viewBox="0 0 960 488" preserveAspectRatio="xMidYMid meet"></svg></div>
+<div id="bHide">🙈 隐藏数据 <small>H</small></div>
 <div id="inner"><div class="ihd"><b id="inTitle"></b><span id="inSub"></span><div id="inX">✕ 返回三维场景（Esc）</div></div><div id="innerC"><div id="inHint">拖拽旋转 · 滚轮缩放 · 点击部件查看详情（设备外壳已透明化）</div></div>
 <div id="iside"><div class="ih">设备概况</div><div id="inOv"></div><div class="ih">部件结构<span style="font-weight:normal;color:#7aa9cc;font-size:11px"> · 点击定位</span></div><div id="inParts"></div><div class="ih" id="inPh">部件详情</div><div id="inInfo"></div></div></div>
 <nav id="nav">
@@ -163,6 +193,7 @@ nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;
 <div id="info"><div class="panel"><div class="x" id="ix">✕</div><div class="ph" id="iTitle">设备</div><div id="iBody"></div><div class="chart" id="chInfo" style="height:100px"></div><div class="ibtn" id="iBtns"></div></div></div>
 <div id="tip"></div><div class="toast" id="toast"></div>
 <script type="module">
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
@@ -488,7 +519,7 @@ function makeBolt(to) { const P = []; let p = new V3(to.x + rnd(-40, 40), 420, t
 /* =================== 发电: 火电 + 风电 + 光伏 + 储能 =================== */
 prog(45, '建设发电侧：火电厂…');
 const genPoly = [[-410, -492], [180, -492], [180, -770], [-410, -770]]; pad(genPoly, 0xffb347);
-zoneLabel(-60, 190, -640, '发电 · 火电 / 风电 / 光伏 / 储能', 'gen');
+zoneLabel(-150, 210, -640, '发电 · 火电 / 核电 / 水电 / 风电 / 光伏 / 储能', 'gen');
 road(-400, -490, 175, -490, 8); road(-170, -490, -170, -765, 7); road(100, -490, 100, -765, 7);
 const SYZ = -505; gantry(SYZ, [-70, -40, -10, 20, 50, 80], 26, '500kV 升压站出线构架');
 chain[3].forEach(t => ['left', 'right'].forEach(s => t[s].forEach(a => { const b = new V3(a.x, 23, SYZ); strings([b]); wire(a, b, 4); })));
@@ -567,6 +598,76 @@ const wfLine = poleLine([[205, -512], [180, -512], [155, -512], [130, -512], [10
 for (const x of [-80, 88]) wire(new V3(x + (x < 0 ? 6 : -6), 5, -520), new V3(x < 0 ? -10 : 40, 4, -548), 3, flowGen, 20, wirePts, x < 0 ? 'PV' : 'WF');
 // distant mountains
 { const mm = new THREE.MeshBasicMaterial({ color: 0x0b2440, wireframe: true, transparent: true, opacity: .35 }); for (let i = 0; i < 18; i++) { const a = -PI * .1 - i / 18 * PI * .8, r = 1700 + rnd(0, 300); const m = new THREE.Mesh(new THREE.ConeGeometry(rnd(150, 320), rnd(120, 300), 7, 3), mm); m.position.set(200 + Math.cos(a) * r, 40, -300 + Math.sin(a) * r); scene.add(m); } }
+
+
+/* =================== 发电: 核电站 + 水电站 =================== */
+prog(62, '建设发电侧：核电站 / 水电站…');
+const ss = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const lakeMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: riverMat.uniforms, vertexShader: riverMat.vertexShader,
+  fragmentShader: 'uniform float uT;varying vec2 vUv;void main(){float w=sin(vUv.x*260.-uT*1.4+sin(vUv.y*30.)*3.)*.5+.5;vec3 c=mix(vec3(.02,.14,.3),vec3(.1,.45,.8),w*.35);gl_FragColor=vec4(c+pow(w,10.)*.2,.86);}' });
+// ---------- 核电站（滨海 · 2×1000MW 压水堆） ----------
+pad([[-700, -492], [-430, -492], [-430, -780], [-700, -780]], 0xff5c8a);
+road(-695, -486, -435, -486, 7); road(-575, -492, -575, -775, 6);
+{ const sea = new THREE.Mesh(new THREE.PlaneGeometry(1000, 340), riverMat); sea.rotation.set(-PI / 2, 0, PI / 2); sea.position.set(-885, -1.25, -640); world.add(sea);
+  const B = new MB(); B.box('concrete', -712, .4, -640, 4, 2.2, 280); for (const z of [-588, -688]) { B.box('concrete', -705, .2, z, 30, .8, 2); B.box('concrete', -705, .2, z + 12, 30, .8, 2); } B.build(world);
+  for (const z of [-588, -688]) { const ch = new THREE.Mesh(new THREE.PlaneGeometry(30, 10), lakeMat); ch.rotation.x = -PI / 2; ch.position.set(-705, .35, z + 6); world.add(ch); }
+  const lg = new THREE.Group(); lg.position.set(-800, 0, -560); world.add(lg); label(lg, '海水取 / 排水口 · 直流冷却', 8, 'small', null, 1100); }
+const nucU = [], nstacks = [];
+const domeMat = M(0xe9edf2, { roughness: .55, metalness: .05 });
+[[0, -600], [1, -700]].forEach(([i, z]) => {
+  const g = new THREE.Group(); g.position.set(-628, 0, z);
+  const cy = new THREE.Mesh(new THREE.CylinderGeometry(22, 22, 46, 48), domeMat); cy.position.y = 23; cy.castShadow = cy.receiveShadow = true; g.add(cy);
+  const dm = new THREE.Mesh(new THREE.SphereGeometry(22, 48, 16, 0, PI * 2, 0, PI / 2), domeMat); dm.position.y = 46; dm.castShadow = true; g.add(dm);
+  for (const y of [46, 30, 12]) { const r = new THREE.Mesh(new THREE.TorusGeometry(22.2, .45, 8, 72), MAT.steel); r.rotation.x = PI / 2; r.position.y = y; g.add(r); }
+  const hatch = new THREE.Mesh(G.box, MAT.dark); hatch.scale.set(5, 6, 1); hatch.position.set(18, 4, 12); g.add(hatch);
+  world.add(g); label(g, `${i + 1}# 核岛 · 反应堆厂房`, 76, 'small', g, 1500); reg(g, { name: `${i + 1}# 机组 核反应堆厂房（双层安全壳）`, type: 'reactor', idx: i }, 'reactor'); nucU.push(g);
+  const B = new MB(); B.box('wall', -668, 13, z, 22, 26, 44); B.box('roofGray', -668, 26.3, z, 22.4, .6, 44.4); B.box('wall', -628, 9, z + 34, 30, 18, 14); B.box('wall', -592, 11, z - 2, 12, 22, 34); B.build(world);
+  const fb = new THREE.Group(); fb.position.set(-628, 0, z + 34); world.add(fb); reg(fb, { name: `${i + 1}# 燃料厂房（乏燃料水池）`, type: 'nfuel', idx: i });
+  const ab = new THREE.Group(); ab.position.set(-668, 0, z); world.add(ab); reg(ab, { name: `${i + 1}# 核辅助厂房`, type: 'naux', idx: i });
+  const hb = building(-545, z, 62, 30, 34, 'blueRoof', `${i + 1}# 常规岛汽机房`, 'nturb', 'small', false, 900); hb.userData.info.idx = i;
+  const st = new THREE.Group(); const sc = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.6, 78, 16), new THREE.MeshStandardMaterial({ map: STRIPE, roughness: .7 })); sc.position.y = 39; sc.castShadow = true; st.add(sc);
+  const lt = new THREE.Mesh(G.sph, MAT.red); lt.position.y = 79; st.add(lt); nstacks.push(lt); st.position.set(-652, 0, z - 30); world.add(st); reg(st, { name: `${i + 1}# 烟囱式通风排放筒（辐射监测）`, type: 'nstack' });
+  const tx = transformer(-492, z + 4, `${i + 1}# 主变 26/500kV`, 1, 'ngsu', 'ngsu'); tx.userData.info.idx = i;
+  const d = new THREE.Mesh(G.box, MAT.gis); d.scale.set(1.6, 1.6, 30); d.position.set(-508, 6, z + 4); d.rotation.y = PI / 2; d.castShadow = true; world.add(d);
+  const r = new THREE.Mesh(G.box, MAT.gis); r.scale.set(1.6, 1.6, Math.abs(z + 4 + 517)); r.position.set(-478, 6, (z + 4 - 517) / 2); world.add(r); });
+zoneLabel(-565, 150, -650, '核电站 · 2×1000MW 压水堆', 'gen');
+gantry(-517, [-520, -490, -460], 24, '核电 500kV 开关站');
+const nT = [[-430, -478], [-320, -478], [-210, -478]].map(([x, z], k) => tower(x, z, PI / 2, 50, -1.4, `核电送出 500kV N${k + 1}# 杆塔`));
+const gExt = [-140, -105, -70]; gantry(SYZ, gExt, 26);
+const tw6 = t => [...t.left, ...t.right];
+{ const gp = Array.from({ length: 6 }, (_, k) => new V3(-518 + k * 11, 21, -517)); tw6(nT[0]).forEach((a, k) => { strings([a]); wire(gp[k], a, 4, flowGen, 30, wirePts, 'NU'); });
+  for (let i = 1; i < nT.length; i++) tw6(nT[i]).forEach((a, k) => { strings([a]); wire(tw6(nT[i - 1])[k], a, 6, flowGen, 30, wirePts, 'NU'); });
+  tw6(nT[2]).forEach((a, k) => wire(a, new V3(-138 + k * 6, 23, SYZ), 4, flowGen, 30, wirePts, 'NU')); }
+// ---------- 水电站（坝后式 · 4×150MW） ----------
+const hyH = (x, z) => { const d = Math.abs(x + 110), al = ss(-825, -890, z), edge = ss(-1165, -1100, z) * ss(262, 205, d);
+  return al * edge * (18 * ss(-889, -900, z) + ss(62, 170, d) * (98 + 12 * Math.sin(x / 19) * Math.cos(z / 27))) - 1.4; };
+{ const geo = new THREE.PlaneGeometry(530, 345, 106, 69); geo.rotateX(-PI / 2); const p = geo.attributes.position; for (let i = 0; i < p.count; i++) p.setY(i, hyH(p.getX(i) - 110, p.getZ(i) - 992)); geo.computeVertexNormals();
+  const t = new THREE.Mesh(geo, M(0x16383a, { roughness: .95, metalness: 0, flatShading: true })); t.position.set(-110, 0, -992); t.receiveShadow = true; world.add(t);
+  const wg = new THREE.WireframeGeometry(new THREE.PlaneGeometry(530, 345, 40, 26).rotateX(-PI / 2)); const pp = wg.attributes.position; for (let i = 0; i < pp.count; i++) pp.setY(i, hyH(pp.getX(i) - 110, pp.getZ(i) - 992) + .4);
+  const w = new THREE.LineSegments(wg, new THREE.LineBasicMaterial({ color: 0x2bd6b0, transparent: true, opacity: .1 })); w.position.set(-110, 0, -992); world.add(w); }
+const lake = new THREE.Mesh(new THREE.PlaneGeometry(330, 200), lakeMat); lake.rotation.x = -PI / 2; lake.position.set(-110, 52, -987); world.add(lake); reg(lake, { name: '水库 · 正常蓄水位 175m', type: 'lake' });
+const dam = new THREE.Group(); { const s = new THREE.Shape(); s.moveTo(0, 0); s.lineTo(-48, 0); s.lineTo(-6, 63); s.lineTo(0, 63); s.closePath();
+  const geo = new THREE.ExtrudeGeometry(s, { depth: 270, bevelEnabled: false }); geo.rotateY(PI / 2); const m = new THREE.Mesh(geo, M(0xb9c0c8, { roughness: .85, metalness: 0 })); m.castShadow = m.receiveShadow = true; dam.add(m);
+  const e = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0x8fd8ff, transparent: true, opacity: .35 })); dam.add(e);
+  dam.position.set(-245, -1.4, -885); world.add(dam);
+  const B = new MB(); for (let k = 0; k < 5; k++) { const x = -190 + k * 9; B.box('steel', x, 67, -881, 1.4, 8, 5); } B.box('steel', -172, 71, -881, 40, 1.2, 5); B.box('concrete', -110, 62.3, -882, 270, 1, 7);
+  for (const x of [-128, -116, -104, -92]) B.box('dark', x, 42, -886.5, 6, 8, 1.2); B.build(world); }
+label(dam, '混凝土重力坝 · 坝高 165m', 74, 'small', null, 1400); reg(dam, { name: '混凝土重力坝（坝后式厂房）', type: 'dam' });
+{ const ch = new THREE.Mesh(new THREE.PlaneGeometry(34, 76), lakeMat); ch.rotation.x = -Math.atan2(42, 63); ch.position.set(-172, 30.3, -857.5); ch.translateZ(.6); world.add(ch); }
+const hySteam = new Steam(new V3(-172, 1, -834), 22, 90, 10, 14, 0xffffff, .3);
+const penMat = M(0x5a6b7d, { metalness: .7, roughness: .35 });
+for (const x of [-128, -116, -104, -92]) { const c = new THREE.CatmullRomCurve3([new V3(x, 42, -862.6), new V3(x, 22, -849.3), new V3(x, 7, -839.2), new V3(x, 5, -831)]); const m = new THREE.Mesh(new THREE.TubeGeometry(c, 24, 1.6, 12), penMat); m.castShadow = true; world.add(m); reg(m, { name: '压力钢管 Φ8.0m', type: 'hpen' }); }
+const hyHouse = building(-110, -820, 66, 20, 20, 'blueRoof', '水电站主厂房 · 4×150MW', 'hydro', 'small', false, 1100);
+{ const tr = new THREE.Mesh(new THREE.PlaneGeometry(80, 16), lakeMat); tr.rotation.x = -PI / 2; tr.position.set(-110, -.9, -802); world.add(tr); }
+const hyTx = [transformer(-178, -822, '1# 主变 15.75/500kV', .8, 'hgsu', 'hgsu'), transformer(-198, -822, '2# 主变 15.75/500kV', .8, 'hgsu', 'hgsu')];
+gantry(-806, [-215, -190, -165], 22, '水电 500kV 出线场');
+for (const x of [-178, -198]) PH.forEach(p => wire(new V3(x + p * .8, 9, -821), new V3(x + p * 1.4, 19, -806), 2, null));
+const hT = [[-185, -765], [-185, -665], [-185, -565]].map(([x, z], k) => tower(x, z, 0, 50, -1.4, `水电送出 500kV N${k + 1}# 杆塔`));
+{ const gp = Array.from({ length: 6 }, (_, k) => new V3(-212 + k * 9, 19, -806)); tw6(hT[0]).forEach((a, k) => { strings([a]); wire(gp[k], a, 4, flowGen, 30, wirePts, 'HY'); });
+  for (let i = 1; i < hT.length; i++) tw6(hT[i]).forEach((a, k) => { strings([a]); wire(tw6(hT[i - 1])[k], a, 6, flowGen, 30, wirePts, 'HY'); });
+  tw6(hT[2]).forEach((a, k) => wire(a, new V3(-102 + k * 6, 23, SYZ), 5, flowGen, 30, wirePts, 'HY')); }
+zoneLabel(-110, 150, -985, '水电站 · 4×150MW 坝后式', 'gen');
+function genAnim(t, dt) { hySteam.update(dt, S.wind / 28, .4 + S.hydro / 600); nstacks.forEach((l, i) => l.visible = Math.sin(t * 3 + i * 2) > -.2); }
 
 
 /* =================== 变电 → 配电 联络线 =================== */
@@ -738,12 +839,12 @@ LDEF.forEach((L, li) => { const at = (s, n = 0, y = 7) => L.d.clone().multiplySc
   const lg = new THREE.Group(); lg.position.copy(at(70, -2, 0)); tq.add(lg); label(lg, L.n, 10, 'topo', m, 900).element.style.setProperty('--c', '#35d6ff'); tqFlow.add(pts, 14, 10, L.id);
   L.sides.forEach((sd, j) => { const s = 25 + j * 30, bid = `${L.id}-${j + 1}`, bm = tqMat(0x3dff9e), bp = [at(s, 0, 7), at(s, sd * 2, 6), at(s, sd * 44, 6)]; const bmesh = tTube(bp, .22, bm);
     for (let k = 14; k <= 44; k += 15) { const p = at(s, sd * k, 0); tqPoles.add('concrete', G.pole, p.x, 3.2, p.z, .6, 6.4, .6); }
-    const bel = tqEl(bmesh, { name: `支线 ${bid}（JKLYJ-1kV-4×70）`, type: 'tqb', id: bid }, el, [bm]); bel.users = []; TQ.branches.push(bel); tqFlow.add(bp, 8, 8, bid);
+    const bel = tqEl(bmesh, { name: `支线 ${bid}（JKLYJ-1kV-4×70）`, type: 'tqb', id: bid }, el, [bm]); bel.users = []; bel.s = s; bel.sd = sd; bel.L = L; TQ.branches.push(bel); tqFlow.add(bp, 8, 8, bid);
     const bl = new THREE.Group(); bl.position.copy(at(s, sd * 30, 0)); tq.add(bl); label(bl, '支线 ' + bid, 8.5, 'small', bmesh, 330);
     [18, 38].forEach((off, k) => { const xid = `BX-${li + 1}${j + 1}${k + 1}`, bc = at(s + 2.4, sd * off, 0), bxm = M(0xcfd8e2, { emissive: 0x0a3a7a, emissiveIntensity: .4 });
       const bx = new THREE.Mesh(G.box, bxm); bx.scale.set(1.2, 1.5, .5); bx.position.copy(bc).setY(1.9); if (!L.d.x) bx.rotation.y = PI / 2; tq.add(bx); tqPoles.add('steel', G.box, bc.x, .6, bc.z, .2, 1.2, .2);
       const dm = tqMat(0x9dffb8), dp = [at(s, sd * off, 6), at(s + 2.4, sd * off, 6), bc.clone().setY(2.7)]; tTube(dp, .09, dm); tqFlowU.add(dp, 4, 5, xid);
-      const xel = tqEl(bx, { name: `计量表箱 ${xid}（6 表位）`, type: 'tqm', id: xid }, bel, [dm, bxm]); xel.users = []; TQ.boxes.push(xel); label(bx, xid, 1.3, 'small', bx, 240);
+      const xel = tqEl(bx, { name: `计量表箱 ${xid}（6 表位）`, type: 'tqm', id: xid }, bel, [dm, bxm]); xel.users = []; xel.bc = bc.clone(); xel.off = off; TQ.boxes.push(xel); label(bx, xid, 1.3, 'small', bx, 240);
       for (let q = 0; q < 6; q++) { const row = q < 3 ? 1 : -1, col = q % 3, hc = at(s + row * 10, sd * (off + (col - 1) * 6.6), 0), ph = PHS[(uid + li) % 3];
         const hm = new THREE.MeshStandardMaterial({ color: 0x4fb4ff, transparent: true, opacity: .22, depthWrite: false, emissive: 0x0a3a7a, emissiveIntensity: .5 }), em = new THREE.LineBasicMaterial({ color: 0x7fdcff });
         const h = new THREE.Mesh(houseGeo, hm); h.position.copy(hc).setY(2.75); if (!L.d.x) h.rotation.y = PI / 2; tq.add(h); const e = new THREE.LineSegments(houseEdge, em); h.add(e);
@@ -751,21 +852,21 @@ LDEF.forEach((L, li) => { const at = (s, n = 0, y = 7) => L.d.clone().multiplySc
         const pv = Math.random() < .2; if (pv) { const pp = new THREE.Mesh(G.box, pvMat); pp.scale.set(5, .1, 2.2); pp.position.set(0, 4.3, .9); pp.rotation.x = -.5; h.add(pp); }
         const lm = new THREE.LineBasicMaterial({ color: PHC[ph], transparent: true, opacity: .9 }), lp = [bc.clone().setY(2), hc.clone().setY(2).lerp(bc.clone().setY(2), .15), hc.clone().setY(3.2)];
         const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), lm); tq.add(ln); tqFlowU.add(lp, 3, 3, 'U' + uid);
-        const u = { id: uid, no: `3302${String(10088 + uid * 37).padStart(8, '0')}`, n: `${xid}-${q + 1}`, ph, base: rnd(.5, 1.9), pv, pvk: pv ? rnd(4, 8) : 0, kwh: rnd(80, 320), bal: rnd(-20, 300), h, hm, em, lm, p: 0, v: 228, out: false, dist: off + s };
+        const u = { li, lp, ln, hc: hc.clone(), xel, path: [hc.clone().setY(3.2), bc.clone().setY(2.7), at(s, sd * off, 6), at(s, 0, 7), at(4, 0, 7), new V3(0, 3, 1.2)], id: uid, no: `3302${String(10088 + uid * 37).padStart(8, '0')}`, n: `${xid}-${q + 1}`, ph, base: rnd(.5, 1.9), pv, pvk: pv ? rnd(4, 8) : 0, kwh: rnd(80, 320), bal: rnd(-20, 300), h, hm, em, lm, p: 0, v: 228, out: false, dist: off + s };
         const uel = tqEl(h, { name: `居民用户 ${u.n}`, type: 'tqu', u }, xel, [lm]); uel.u = u; u.el = uel; TQ.users.push(u); xel.users.push(u); bel.users.push(u); el.users.push(u); uid++; } }); }); });
 tqPoles.build(tq); tqFlow.build(tq); tqFlowU.build(tq);
 label(tq, '透明台区 · 配变 → 出线 → 支线 → 表箱 → 用户', 34, 'zone', null, 99999);
 function tqModel() { const h = S.h, sol = Math.max(0, Math.sin(PI * (h - 6) / 12)) * (1 - S.cloud * .8), eve = Math.exp(-((h - 20) ** 2) / 5), mor = Math.exp(-((h - 7.5) ** 2) / 2), on = powered.V1 !== false;
   const ph = { A: 0, B: 0, C: 0 }; let tot = 0;
-  for (const u of TQ.users) { const live = on && !u.out; u.p = live ? u.base * (.35 + .95 * eve + .45 * mor) - u.pvk * sol * .4 : 0; u.v = live ? 229.5 - u.dist / 140 * 7 * (.6 + eve) + Math.sin(h * 3 + u.id) * .4 : 0; ph[u.ph] += u.p; tot += u.p;
+  for (const u of TQ.users) { const live = on && !u.out; u.p = live ? u.base * (.35 + .95 * eve + .45 * mor) - u.pvk * sol * .4 : 0; u.v = live ? 229.5 - u.dist / 140 * 7 * (.6 + eve) + Math.sin(h * 3 + u.id) * .4 - (TQ.lv && u.li === 1 ? (u.dist / 123) ** 1.6 * 34 * (TQ.lvFix ? .2 : 1) - (TQ.lvFix ? 3 : 0) : 0) : 0; ph[u.ph] += u.p; tot += u.p;
     const c = TQ.phase ? PHC[u.ph] : !live ? 0xff3030 : u.p < 0 ? 0xffe066 : 0x4fb4ff; u.hm.color.set(c); u.hm.emissive.set(!live ? 0x5a0000 : TQ.phase ? c : 0x0a3a7a); u.em.color.set(!live ? 0xff6060 : TQ.phase ? c : 0x7fdcff); u.hm.emissiveIntensity = TQ.phase ? .35 : .5; }
   const sum = a => a.reduce((s, u) => s + u.p, 0); for (const g of [...TQ.lines, ...TQ.boxes, ...TQ.branches]) g.P = sum(g.users);
-  TQ.ph = ph; TQ.loss = 2.6 + Math.abs(Math.sin(h * .7)) * .9; TQ.P = tot * (1 + TQ.loss / 100); const I = Object.values(ph).map(p => Math.abs(p) * 1000 / 220), mx = Math.max(...I), mn = Math.min(...I); TQ.I = I; const av = (I[0] + I[1] + I[2]) / 3; TQ.unb = av ? (mx - av) / av * 100 : 0; }
+  TQ.ph = ph; TQ.loss = 2.6 + Math.abs(Math.sin(h * .7)) * .9; TQ.P = tot * (1 + TQ.loss / 100); const I = Object.values(ph).map(p => Math.abs(p) * 1000 / 220), mx = Math.max(...I), mn = Math.min(...I); TQ.I = I; const av = (I[0] + I[1] + I[2]) / 3; TQ.unb = av ? (mx - av) / av * 100 : 0;  tqPost(); }
 const tqGate = p => { if (powered.V1 === false) return 0; if (p.tag[0] === 'U') { const u = TQ.users[+p.tag.slice(1)]; return u.out ? 0 : u.p < -.05 ? -1 : 1; } const el = TQ.els.find(e => e.info.id === p.tag); return el && el.off ? 0 : 1; };
 function tqTrace(sel) { const chain = new Set(); let e = sel; while (e) { chain.add(e); e = e.parent; } const sub = new Set(); if (sel) for (const x of TQ.els) { let p = x; while (p) { if (p === sel) { sub.add(x); break; } p = p.parent; } }
   for (const x of TQ.els) for (const m of x.mats) { const on = !sel || chain.has(x) || sub.has(x); m.opacity = on ? .95 : .12; if (m.emissiveIntensity !== undefined) m.emissiveIntensity = !sel ? .55 : chain.has(x) ? 1.6 : sub.has(x) ? .9 : .1; } }
 function tqFault() { if (TQ.out) return toast('台区研判进行中'); const b = TQ.branches.find(x => x.info.id === 'L3-2'); TQ.out = b; b.off = true; b.users.forEach(u => u.out = true); TQ.els.filter(x => { let p = x; while (p) { if (p === b) return true; p = p.parent; } return false; }).forEach(x => x.off = true);
-  b.mats[0].color.set(0xff3030); b.mats[0].emissive.set(0xff3030); alarms++; toast('HPLC 上报：12 只电表停电事件'); pushEv('⚡ 台区 V1：12 只智能电表上报停电事件（HPLC 秒级）', 'al', b.o);
+  b.mats[0].color.set(0xff3030); b.mats[0].emissive.set(0xff3030); alarms++; toast('HPLC 上报：12 只电表停电事件'); tqOrder('支线 L3-2 停电抢修（12 户）', 'fault'); TQ.tab = 'mgt'; pushEv('⚡ 台区 V1：12 只智能电表上报停电事件（HPLC 秒级）', 'al', b.o);
   later(2.5, () => pushEv('停电研判：配变/出线 L3 有电，支线 L3-2 分支开关跳闸，影响 12 户', 'al', b.o)); later(4.5, () => { pushEv('已自动生成抢修工单 GD-2024-0716，派发至网格化抢修班', '', b.o); toast('研判完成 · 故障定位至支线 L3-2，已派发抢修工单', true); });
   later(18, () => { b.off = false; TQ.els.forEach(x => x.off = false); b.users.forEach(u => u.out = false); b.mats[0].color.set(0x3dff9e); b.mats[0].emissive.set(0x3dff9e); TQ.out = null; alarms--; pushEv('支线 L3-2 抢修完成 · 12 户恢复供电', 'ok', b.o); toast('支线 L3-2 恢复供电', true); }); }
 const kW = v => fmt(v, 2) + ' kW';
@@ -893,7 +994,7 @@ const BUILD = {
     part('隔离开关 / 接地开关', ds, () => [['位置', ok('合闸')], ['操作机构', '电动'], ['操作次数', '642']], '隔离开关');
     part('SF6 断路器灭弧室', cb, () => [['额定开断', '50 kA'], ['SF6 压力', '0.62 MPa（20℃）'], ['微水', '126 μL/L'], ['位置', ok('合闸')], ['累计开断', '1.82 kA²·s']], '断路器');
     part('液压弹簧操动机构', mech, () => [['储能', ok('已储能')], ['分闸时间', '22 ms'], ['合闸时间', '48 ms']], '操动机构');
-    part('电流互感器 CT', ct, () => [['变比', '4000/1 A'], ['准确级', '5P30 / 0.2S'], ['二次电流', fmt(S.load * .12 / 4000, 3) + ' A']], 'CT');
+    part('电流互感器 CT', ct, () => [['变比', '4000/1 A'], ['准确级', '5P30 / 0.2S'], ['二次电流', fmt(S.load * .06 / 4000, 3) + ' A']], 'CT');
     part('快速接地开关', es, () => [['位置', badge('分闸', 'off')], ['联锁', ok('五防闭锁')]], '接地开关');
     part('电压互感器 VT', vt, () => [['变比', '220/√3 / 0.1/√3 kV'], ['二次电压', '58.1 V']], 'VT');
     part('出线套管', out, () => [['类型', '复合绝缘套管'], ['红外测温', temp(31)]], '出线套管');
@@ -989,7 +1090,7 @@ const BUILD = {
     tr('高压缸（HP）', -32, 2.2, 6, IM.orange, () => [['主汽', '600 ℃ / 25.4 MPa'], ['轴振', fmt(28 + Math.sin(clk.elapsedTime) * 2, 0) + ' μm'], ['胀差', '+2.1 mm']]);
     tr('中压缸（IP）', -23, 2.6, 7, IM.orange, () => [['再热汽', '620 ℃ / 4.2 MPa'], ['轴振', '31 μm']]);
     tr('低压缸 A（LP）', -11, 3.6, 9, IM.steel, () => [['排汽温度', '33 ℃'], ['轴振', '42 μm']]); tr('低压缸 B（LP）', 1, 3.6, 9, IM.steel, () => [['排汽温度', '33.4 ℃'], ['轴振', '39 μm']]);
-    tr('发电机（水氢氢冷却）', 15, 2.6, 12, IM.blue, () => [['出力', fmt(S.th / 2, 0) + ' MW'], ['机端电压', '20 kV'], ['氢压', '0.45 MPa'], ['定子线圈温度', temp(68)], ['功率因数', '0.93']]);
+    tr('发电机（水氢氢冷却）', 15, 2.6, 12, IM.blue, () => [['出力', fmt(c.p ? c.p() : S.th / 2, 0) + ' MW'], ['机端电压', '20 kV'], ['氢压', '0.45 MPa'], ['定子线圈温度', temp(68)], ['功率因数', '0.93']]);
     tr('励磁机', 25, 1.2, 4, IM.green, () => [['方式', '自并励静止励磁'], ['励磁电流', '4120 A']]);
     { const g = grp(); ic(g, IM.steel, -16, 3, 0, .3, 46, 0, PI / 2); part('轴系 / 盘车', g, () => [['转速', '3000 r/min'], ['偏心', '28 μm']], '轴系'); }
     { const g = grp(); for (const x of [-11, 1]) ib(g, im(0x7a8a9a), x, -5, 0, 10, 6, 10); part('凝汽器', g, () => [['真空', '-96.2 kPa'], ['端差', '3.1 ℃'], ['循环水温', '24 ℃']], '凝汽器'); }
@@ -998,7 +1099,80 @@ const BUILD = {
     { const g = grp(); for (let i = 0; i < 3; i++) ic(g, IM.white, 18 + i * 6, 4, -11, 1.1, 6); part('高压加热器 ×3', g, () => [['给水温度', '298 ℃'], ['水位', ok()]], '高加'); }
     { const g = grp(); for (const z of [-15, 15]) ib(g, IM.steel, 0, 22, z, 96, .6, .6); const br = ib(g, IM.orange, 0, 22.5, 0, 2, 1.2, 30); iAnims.push(t => br.position.x = Math.sin(t * .1) * 36); part('桥式起重机（行车）', g, [['额定起重', '125 t'], ['状态', badge('停放', 'off')]], '行车'); }
     { const g = grp(); const pc = new THREE.CatmullRomCurve3([new V3(-32, 6, -17), new V3(-32, 10, -12), new V3(-32, 6, -2)]); g.add(new THREE.Mesh(new THREE.TubeGeometry(pc, 20, .45, 10), IM.red)); part('主蒸汽管道', g, [['材质', 'P92'], ['温度', '600 ℃']], '主汽管道'); }
-    return { title: '火电厂 · 汽机房内部图', sub: '2 × 660MW 超超临界机组 · 汽轮发电机组运转层', cam: [55, 38, 55], tgt: [-4, 2, 0], gy: -8.2, ov: () => [['机组负荷', fmt(S.th / 2, 0) + ' MW'], ['热耗率', '7310 kJ/kWh'], ['厂用电率', '4.1 %'], ['AGC', ok('投入')], ['一次调频', ok('投入')]] }; },
+    return { title: c.title || '火电厂 · 汽机房内部图', sub: c.sub || '2 × 660MW 超超临界机组 · 汽轮发电机组运转层', cam: [55, 38, 55], tgt: [-4, 2, 0], gy: -8.2, ov: () => [['机组负荷', fmt(S.th / 2, 0) + ' MW'], ['热耗率', '7310 kJ/kWh'], ['厂用电率', '4.1 %'], ['AGC', ok('投入')], ['一次调频', ok('投入')]] }; },
+  /* ---- 核岛：压水堆反应堆厂房 ---- */
+  reactor(c) { const i = c.idx ?? 0, P = () => S.nuc / 2, fp = () => P() / 1000 * 100;
+    ib(iRoot, IM.dark, 0, -.3, 0, 74, .6, 60);
+    { const sm = new THREE.MeshPhysicalMaterial({ color: 0x9fc8f0, transparent: true, opacity: .07, depthWrite: false, side: THREE.DoubleSide }), lm = new THREE.LineBasicMaterial({ color: 0x7fc8ff, transparent: true, opacity: .35 });
+      const cy = new THREE.Mesh(new THREE.CylinderGeometry(22, 22, 40, 48, 1, true), sm); cy.position.y = 20; iRoot.add(cy); const dm = new THREE.Mesh(new THREE.SphereGeometry(22, 48, 16, 0, PI * 2, 0, PI / 2), sm); dm.position.y = 40; iRoot.add(dm);
+      const e1 = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.CylinderGeometry(22, 22, 40, 24, 1, true)), lm); e1.position.y = 20; iRoot.add(e1);
+      const e2 = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.SphereGeometry(22, 16, 6, 0, PI * 2, 0, PI / 2)), lm); e2.position.y = 40; iRoot.add(e2); }
+    const rpv = grp(), rvm = im(0xa9b6c4, { metalness: .75, roughness: .3, transparent: true, opacity: .42, depthWrite: false }); ic(rpv, rvm, 0, 9, 0, 2.4, 9); const bh = new THREE.Mesh(new THREE.SphereGeometry(2.4, 24, 12, 0, PI * 2, PI / 2, PI / 2), rvm); bh.position.y = 4.5; rpv.add(bh);
+    const th = new THREE.Mesh(new THREE.SphereGeometry(2.5, 24, 12, 0, PI * 2, 0, PI / 2), IM.steel); th.position.y = 13.5; rpv.add(th);
+    const core = grp(); const cm = new THREE.MeshStandardMaterial({ color: 0x2fa8ff, emissive: 0x1d8cff, emissiveIntensity: 1.4, transparent: true, opacity: .85 }); const cc = ic(core, cm, 0, 8.4, 0, 1.6, 4.2);
+    iAnims.push(t => { cm.emissiveIntensity = .9 + .6 * Math.sin(t * 2) * .5 + fp() / 100 * .6; });
+    const crdm = grp(); for (let x = -1.6; x <= 1.6; x += .8) for (let z = -1.6; z <= 1.6; z += .8) if (x * x + z * z < 3.2) ic(crdm, IM.dark, x, 17, z, .12, 6);
+    const shield = grp(); { const m = ic(shield, im(0x8a929b, { transparent: true, opacity: .22, depthWrite: false, metalness: 0 }), 0, 6.5, 0, 5.2, 13); m.geometry = new THREE.CylinderGeometry(5.2, 5.2, 13, 32, 1, true); }
+    const sgs = grp(), pumps = grp(), hot = grp(), cold = grp();
+    for (let k = 0; k < 3; k++) { const a = PI / 2 + k * PI * 2 / 3, sx = Math.cos(a) * 12, sz = Math.sin(a) * 12;
+      ic(sgs, IM.white, sx, 11, sz, 2, 16); ic(sgs, IM.white, sx, 22, sz, 2.9, 6); ic(sgs, IM.white, sx, 19, sz, 2, 2.2, 0, 0, 2.9); const cap = new THREE.Mesh(new THREE.SphereGeometry(2.9, 20, 10, 0, PI * 2, 0, PI / 2), IM.white); cap.position.set(sx, 25, sz); sgs.add(cap);
+      const pa = a + .55, px = Math.cos(pa) * 8.5, pz = Math.sin(pa) * 8.5; ic(pumps, IM.blue, px, 4.2, pz, 1.1, 3.2); ic(pumps, IM.orange, px, 6.6, pz, .8, 1.6);
+      const tube = (g, pts, m) => g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, .55, 10), m));
+      tube(hot, [new V3(Math.cos(a) * 2.4, 10, Math.sin(a) * 2.4), new V3(Math.cos(a) * 7, 10, Math.sin(a) * 7), new V3(sx, 4.5, sz), new V3(sx, 3.4, sz)], IM.red);
+      tube(cold, [new V3(sx + Math.cos(a + 1.2), 3.4, sz + Math.sin(a + 1.2)), new V3(px, 2.6, pz), new V3(px, 4, pz)], IM.blue);
+      tube(cold, [new V3(px, 3.4, pz), new V3(Math.cos(a + .25) * 5, 8.6, Math.sin(a + .25) * 5), new V3(Math.cos(a + .2) * 2.4, 8.6, Math.sin(a + .2) * 2.4)], IM.blue); }
+    const prz = grp(); { const a = PI / 2 + PI / 3, x = Math.cos(a) * 13, z = Math.sin(a) * 13; ic(prz, IM.white, x, 12, z, 1.5, 12); const s = new THREE.Mesh(G.sph, IM.white); s.scale.setScalar(1.5); s.position.set(x, 18, z); prz.add(s); }
+    const acc = grp(); for (let k = 0; k < 3; k++) { const a = PI / 2 + PI / 3 + k * PI * 2 / 3 + .5, s = new THREE.Mesh(G.sph, IM.white); s.scale.setScalar(2.2); s.position.set(Math.cos(a) * 17.5, 3.2, Math.sin(a) * 17.5); acc.add(s); }
+    const crane = grp(); { const r = new THREE.Mesh(new THREE.TorusGeometry(20.5, .35, 8, 64), IM.steel); r.rotation.x = PI / 2; r.position.y = 32; crane.add(r); const br = new THREE.Group(); br.position.y = 32.6; crane.add(br); ib(br, IM.orange, 0, 0, 0, 41, 1.2, 2.4); ib(br, IM.dark, 4, -.9, 0, 2, 1.2, 2.6); iAnims.push(t => br.rotation.y = t * .08); }
+    const msl = grp(); for (let k = 0; k < 3; k++) { const a = PI / 2 + k * PI * 2 / 3, sx = Math.cos(a) * 12, sz = Math.sin(a) * 12; msl.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new V3(sx, 27.5, sz), new V3(sx * .8 + 6, 30, sz * .8), new V3(23, 26, -6 + k * 3), new V3(34, 26, -6 + k * 3)]), 30, .5, 10), IM.orange)); }
+    const fuel = grp(); { const w = ib(fuel, new THREE.MeshStandardMaterial({ color: 0x1d8cff, emissive: 0x0a4aa0, emissiveIntensity: .7, transparent: true, opacity: .45 }), 32, 4, 12, 9, 7.6, 12); for (let x = 29; x <= 35; x += 1.5) for (let z = 7.5; z <= 16.5; z += 1.5) ib(fuel, IM.steel, x, 2, z, .9, 3.4, .9); ib(fuel, im(0x9aa5b1, { transparent: true, opacity: .25, depthWrite: false }), 32, 4, 12, 10, 8, 13); }
+    part('反应堆压力容器 RPV', rpv, () => [['设计压力', '17.23 MPa'], ['运行压力', '15.5 MPa'], ['入口 / 出口温度', '292 / 327 ℃'], ['材质', 'SA508-3 低合金钢 + 不锈钢堆焊'], ['状态', ok()]], 'RPV');
+    part('堆芯（177 组燃料组件）', core, () => [['热功率', fmt(fp() / 100 * 3150, 0) + ' MWt'], ['功率水平', fmt(fp()) + ' %FP'], ['硼浓度', fmt(1180 - fp() * 4, 0) + ' ppm'], ['轴向功率偏差 ΔI', '-1.8 %'], ['燃耗', '12,460 MWd/tU']], '堆芯');
+    part('控制棒驱动机构 CRDM', crdm, () => [['控制棒组件', '61 束'], ['R 棒位置', fmt(220 - (100 - fp()) * 1.2, 0) + ' 步'], ['停堆棒', ok('全提')], ['驱动', '磁力提升式']], 'CRDM');
+    part('生物屏蔽墙（堆腔）', shield, [['材质', '重混凝土 1.8m'], ['堆腔通风', ok()]], '屏蔽墙');
+    part('蒸汽发生器 ×3', sgs, () => [['型号', '立式 U 型管自然循环'], ['蒸汽压力', '6.7 MPa'], ['蒸汽流量', fmt(P() * 5.9, 0) + ' t/h'], ['二次侧水位', '50 %'], ['传热管泄漏', ok('无（N-16 监测）')]], '蒸汽发生器');
+    part('主泵 RCP ×3', pumps, () => [['类型', '轴封式混流泵'], ['转速', '1485 r/min'], ['流量', '23,790 m³/h'], ['轴封泄漏', '0.62 m³/h'], ['振动', fmt(42 + Math.sin(clk.elapsedTime) * 3, 0) + ' μm']], '主泵');
+    part('一回路热段', hot, [['温度', '327 ℃'], ['管径', 'Φ 787 mm'], ['LBB 泄漏监测', ok()]], '热段');
+    part('一回路冷段', cold, [['温度', '292 ℃'], ['管径', 'Φ 698 mm']], '冷段');
+    part('稳压器', prz, () => [['压力', fmt(15.5 + Math.sin(clk.elapsedTime * .4) * .03, 2) + ' MPa'], ['水位', '58 %'], ['电加热器', '投入 2 组'], ['安全阀', ok('关闭')]], '稳压器');
+    part('安注箱 ×3（非能动）', acc, [['压力', '4.2 MPa'], ['硼浓度', '2400 ppm'], ['状态', ok('备用')]], '安注箱');
+    part('环形吊车（极吊）', crane, [['额定起重', '220 t'], ['状态', badge('换料检修用', 'off')]], '环吊');
+    part('主蒸汽管道 → 常规岛', msl, () => [['蒸汽', '6.7 MPa / 283 ℃'], ['隔离阀 MSIV', ok('全开')], ['去向', '常规岛汽轮机']], '主蒸汽');
+    part('乏燃料水池（燃料厂房）', fuel, [['水温', '36 ℃'], ['水位', '+12.2 m'], ['贮存', '682 / 1200 组'], ['冷却', ok('2 列运行')]], '乏燃料池');
+    return { title: `${i + 1}# 核电机组 · 核岛反应堆厂房内部图`, sub: '华龙一号三环路压水堆 · 双层安全壳透明化', cam: [56, 40, 54], tgt: [4, 12, 0], ov: () => [['电功率', fmt(P(), 0) + ' MWe'], ['功率水平', fmt(fp()) + ' %FP'], ['安全壳压力', '101.4 kPa'], ['安全壳辐射', '0.12 μSv/h'], ['运行模式', P() < 960 ? badge('负荷跟踪') : badge('基荷满功率')], ['安全系统', ok('可用')]] }; },
+  /* ---- 水轮发电机组 ---- */
+  hydrounit(c) { const P = () => S.hydro / 4, op = () => clamp(P() / 150 * 100, 0, 100);
+    shell(30, 34, 24, 0, 4, 0, 0x7fc8ff, .035); ib(iRoot, im(0x2a3a4c, { transparent: true, opacity: .5, depthWrite: false }), 0, 6.8, 0, 30, .3, 24);
+    const pen = grp(); ic(pen, IM.steel, -14, 0, 7.4, 1.6, 22, 0, PI / 2);
+    const sc = grp(); { const t = new THREE.Mesh(new THREE.TorusGeometry(7.4, 1.7, 14, 56, PI * 1.8), im(0x7e8c9a, { metalness: .7, transparent: true, opacity: .75 })); t.rotation.x = PI / 2; sc.add(t); }
+    const gv = grp(); for (let k = 0; k < 24; k++) { const a = k / 24 * PI * 2, m = ib(gv, IM.orange, Math.cos(a) * 5, 0, Math.sin(a) * 5, .18, 1.6, 1.1); m.rotation.y = -a + .6; }
+    const run = new THREE.Group(); iRoot.add(run); ic(run, IM.cu, 0, 0, 0, 1.4, 2.2); for (let k = 0; k < 13; k++) { const a = k / 13 * PI * 2, b = new THREE.Mesh(G.box, IM.cu); b.scale.set(2.6, 1.8, .14); b.position.set(Math.cos(a) * 2.6, -.2, Math.sin(a) * 2.6); b.rotation.set(.5, -a, 0); run.add(b); }
+    const rg = grp(); rg.add(run); iRoot.remove(run);
+    const dt2 = grp(); { const m = ic(dt2, im(0x6d7884, { transparent: true, opacity: .55, depthWrite: false, metalness: .6 }), 0, -5.5, 0, 4.6, 9, 0, 0, 3); m.geometry = new THREE.CylinderGeometry(3, 4.6, 9, 28, 1, true); ib(dt2, im(0x6d7884, { transparent: true, opacity: .5, depthWrite: false }), 8, -11, 0, 14, 4, 9); }
+    const tail = grp(); ib(tail, lakeMat, 16, -11, 0, 2, 3.6, 8.6);
+    const shaft = grp(); const sh = ic(shaft, IM.steel, 0, 7, 0, .55, 12);
+    const gen = grp(); { const st = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 4.2, 48, 1, true), im(0x2c6fd6, { side: THREE.DoubleSide, metalness: .4 })); st.position.y = 12; gen.add(st); for (let k = 0; k < 36; k++) { const a = k / 36 * PI * 2; ib(gen, IM.cu, Math.cos(a) * 7.6, 12, Math.sin(a) * 7.6, .4, 3.6, .5).rotation.y = -a; } }
+    const rot = new THREE.Group(); rot.position.y = 12; iRoot.add(rot); ic(rot, IM.dark, 0, 0, 0, 6.2, 3.6); for (let k = 0; k < 28; k++) { const a = k / 28 * PI * 2; ib(rot, IM.red, Math.cos(a) * 6.5, 0, Math.sin(a) * 6.5, .9, 3.4, .5).rotation.y = -a; }
+    const rotG = grp(); rotG.add(rot); iRoot.remove(rot);
+    iAnims.push((t, d) => { const w = op() > 1 ? d * 2.2 : 0; run.rotation.y += w; rot.rotation.y += w; sh.rotation.y += w; });
+    const brk = grp(); for (let k = 0; k < 6; k++) { const a = k / 6 * PI * 2; ib(brk, IM.steel, Math.cos(a) * 5, 15, Math.sin(a) * 5, 10, .8, .9).rotation.y = -a; } ic(brk, IM.steel, 0, 15, 0, 1.6, 1.4);
+    const exc = grp(); ic(exc, IM.green, 0, 17.4, 0, 1.4, 2.6);
+    const gov = grp(); ib(gov, IM.white, 11, 8.5, -8, 2.4, 3.4, 1.4); ib(gov, IM.scr, 11, 9.4, -7.28, 1.2, .8, .02); ic(gov, IM.orange, 7.5, 8.2, -8, 1.1, 2.6);
+    const crane = grp(); for (const z of [-11, 11]) ib(crane, IM.steel, 0, 24, z, 30, .6, .6); const br = ib(crane, IM.orange, 0, 24.6, 0, 1.6, 1.2, 22); iAnims.push(t => br.position.x = Math.sin(t * .12) * 12);
+    part('压力钢管', pen, () => [['直径', 'Φ 8.0 m'], ['流速', fmt(3 + op() / 25, 1) + ' m/s'], ['压力', '1.12 MPa'], ['进水口闸门', ok('全开')]], '压力钢管');
+    part('蜗壳', sc, [['型式', '金属蜗壳'], ['包角', '345°'], ['进口压力', '1.10 MPa']], '蜗壳');
+    part('导水机构（活动导叶 ×24）', gv, () => [['导叶开度', fmt(op()) + ' %'], ['接力器行程', fmt(op() * 4.2, 0) + ' mm'], ['剪断销', ok('完好')]], '导叶');
+    part('混流式转轮', rg, () => [['型式', 'HL 混流式 · 13 叶片'], ['转速', op() > 1 ? '214.3 r/min' : '0'], ['水头', '112 m'], ['流量', fmt(op() / 100 * 152, 1) + ' m³/s'], ['空化', ok('无')]], '转轮');
+    part('尾水管', dt2, [['型式', '弯肘形'], ['真空度', '-0.04 MPa'], ['压力脉动', '2.1 %']], '尾水管');
+    part('主轴', shaft, () => [['摆度', fmt(0.12 + op() / 2000, 3) + ' mm'], ['水导瓦温', temp(52)]], '主轴');
+    part('发电机定子', gen, () => [['额定', '150 MW / 15.75 kV'], ['有功', fmt(P(), 1) + ' MW'], ['定子线圈温度', temp(64 + op() / 10)], ['局放', '18 pC']], '定子');
+    part('发电机转子（磁极 ×28）', rotG, () => [['磁极', '28 极'], ['励磁电流', fmt(800 + op() * 9, 0) + ' A'], ['空气间隙', '18.2 mm']], '转子');
+    part('上机架 / 推力轴承', brk, [['推力瓦温', temp(68)], ['机架振动', '0.03 mm']], '推力轴承');
+    part('励磁系统', exc, [['方式', '自并励静止可控硅'], ['PSS', ok('投入')]], '励磁');
+    part('调速器 / 油压装置', gov, () => [['调节模式', '开度 / 功率闭环'], ['一次调频', ok('投入')], ['油压', '6.3 MPa']], '调速器');
+    part('尾水渠', tail, [['尾水位', '62.4 m'], ['生态流量', ok('达标')]], '尾水');
+    part('桥式起重机', crane, [['额定起重', '2×400 t'], ['状态', badge('停放', 'off')]], '桥机');
+    return { title: '水电站 · 水轮发电机组内部剖视', sub: '坝后式厂房 · 混流式水轮机 150MW', cam: [34, 22, 36], tgt: [0, 3, 0], gy: -13.2, ov: () => [['全厂出力', fmt(S.hydro, 0) + ' MW'], ['运行机组', S.hyN + ' / 4 台'], ['库水位', fmt(S.lvl, 2) + ' m'], ['发电水头', '112 m'], ['调峰模式', S.hydro > 300 ? badge('顶峰发电') : badge('基荷 / 备用', 'off')], ['AGC', ok('投入')]] }; },
   /* ---- 主控室（大型场所内部图） ---- */
   ctrlroom(c) { ib(iRoot, im(0x1b2735), 0, -.1, 0, 30, .2, 18); shell(30, 6, 18, 0, 3, 0, 0x7fc8ff, .04);
     const tex = canvasTex(1024, 384, g => { g.fillStyle = '#04122a'; g.fillRect(0, 0, 1024, 384); g.strokeStyle = '#1f5fa8'; for (let x = 0; x < 1024; x += 170) g.strokeRect(x + 2, 2, 166, 380); g.strokeStyle = '#ff6b3d'; g.lineWidth = 3; g.beginPath(); g.moveTo(40, 80); g.lineTo(980, 80); g.stroke(); g.strokeStyle = '#ffb347'; g.beginPath(); g.moveTo(40, 200); g.lineTo(980, 200); g.stroke();
@@ -1012,12 +1186,12 @@ const BUILD = {
     rack('主变保护屏', 7, im(0xd9d4cc), 6, [['装置', 'PST-1200 双重化'], ['差流', '0.02 Ie']]);
     { const g = grp(); for (let i = 0; i < 6; i++) { ib(g, IM.dark, 3 + i, 1.1, 5, .8, 2.2, .6); for (let k = 0; k < 6; k++) { const l = ib(g, IM.scrB, 3 + i, .4 + k * .3, 5.31, .5, .04, .01); } } part('通信屏（SDH / 调度数据网）', g, [['光传输', 'SDH 2.5G 双环'], ['调度数据网', ok('双平面在线')], ['安全分区', 'Ⅰ/Ⅱ/Ⅲ 区隔离']], '通信屏'); }
     { const g = grp(); for (let i = 0; i < 3; i++) ib(g, IM.dark, 3 + i, 1.1, 7, .8, 2.2, .6); part('一体化监控服务器', g, [['系统', '智能变电站一体化监控'], ['冗余', '双机热备'], ['CPU 负载', '23 %']], '监控服务器'); }
-    part('调度大屏（LED 拼接）', vw, () => [['分辨率', '7680 × 2160'], ['显示', '一次接线 / 潮流 / 告警'], ['全站负荷', fmt(S.load * .62, 0) + ' MW']], '调度大屏');
+    part('调度大屏（LED 拼接）', vw, () => [['分辨率', '7680 × 2160'], ['显示', '一次接线 / 潮流 / 告警'], ['全站负荷', fmt(S.load * .3, 0) + ' MW']], '调度大屏');
     part('运行监控工作站 ×6', ws, () => [['值班', '2 人 · 远方集控'], ['告警', alarms ? al(alarms + ' 条未确认') : ok('无')]], '监控工作站');
     part('五防工作站', wf, [['功能', '防误闭锁 · 顺控操作'], ['今日操作票', '3 张']], '五防');
     return { title: '变电站主控室 · 内部图', sub: '一体化监控 · 保护 · 通信 · 远方集控', cam: [16, 13, 16], tgt: [0, 1.5, 0], ov: () => [['值班模式', '无人值守 + 远方集控'], ['遥信/遥测', '18,642 点'], ['告警', alarms ? al(alarms + ' 条') : ok('无')], ['网络安全', ok('正常')]] }; } };
 const INNER = {
-  transformer: o => ['xfmr', { name: o.userData.info.name, hv: '500 kV', lv: '220 kV', cap: '1000 MVA', In: 2624, load: () => E['SY-SUB'].dir ? S.load * .62 / 20 : 0 }],
+  transformer: o => ['xfmr', { name: o.userData.info.name, hv: '500 kV', lv: '220 kV', cap: '1000 MVA', In: 2624, load: () => E['SY-SUB'].dir ? S.load * .3 / 20 : 0 }],
   gsu: o => ['xfmr', { name: o.userData.info.name, hv: '500 kV', lv: '20 kV', cap: '780 MVA', In: 22500, load: () => S.th / 15.6 }], sy: o => INNER.gsu({ userData: { info: { name: '1#升压变 20/500kV' } } }),
   dtx: o => ['xfmr', { name: o.userData.info.name, hv: '220 kV', lv: '10.5 kV', cap: '63 MVA', In: 3464, load: () => (S.ev + S.hr + S.v1 + S.v2) / 63 * 100 * 6 }],
   tqx: o => ['xfmr', { name: 'V1 台区 1# 公变 S13-M-400/10', hv: '10 kV', lv: '0.4 kV', cap: '400 kVA', In: 577, p0: '0.48 kW', load: () => TQ.P / 4 / .9 }],
@@ -1087,18 +1261,19 @@ function drawTopo() { for (const e of EDGES) { const c = e.st === 'fault' ? 'fau
 
 /* =================== 功率模型 =================== */
 const S = { h: 16.2, wind: 9, cloud: .15, dr: false, play: true, solar: 0, windP: 0, esP: 0, th: 0, load: 0, loss: 0, wt: [], ev: 0, hr: 0, v1: 0, v2: 0, soc: 62 };
-const LOADF = h => 820 + 260 * Math.exp(-((h - 10) ** 2) / 6) + 360 * Math.exp(-((h - 19.5) ** 2) / 5) - 180 * Math.exp(-((h - 3.5) ** 2) / 8);
+const LOADF0 = h => 820 + 260 * Math.exp(-((h - 10) ** 2) / 6) + 360 * Math.exp(-((h - 19.5) ** 2) / 5) - 180 * Math.exp(-((h - 3.5) ** 2) / 8);
+const LOADF = h => LOADF0(h) * 1.9 + 400;
 const SOLF = (h, cl) => 200 * Math.max(0, Math.sin(PI * (h - 6) / 12)) * (1 - cl * .8);
 const wtSeed = turbines.map((_, i) => .85 + .3 * ((i * 37 % 10) / 10));
 const WTP = v => v < 3 || v > 25 ? 0 : v >= 12 ? 5 : 5 * ((v - 3) / 9) ** 3;
 const WINDF = (h, w) => turbines.reduce((a, _, i) => a + WTP(w * wtSeed[i] * (1 + .12 * Math.sin(h * .9 + i))), 0);
 const ESF = (h, sol) => h >= 10 && h < 15 && sol > 60 ? -60 : h >= 18 && h < 21.5 ? 80 : 0;
 function model() { const h = S.h; S.solar = SOLF(h, S.cloud); S.wt = turbines.map((_, i) => WTP(S.wind * wtSeed[i] * (1 + .12 * Math.sin(h * .9 + i)))); S.windP = S.wt.reduce((a, b) => a + b, 0);
-  S.esP = ESF(h, S.solar); S.load = LOADF(h) * (S.dr ? .9 : 1); S.loss = S.load * .021; S.th = clamp(S.load + S.loss - S.solar - S.windP - S.esP, 400, 1320);
+  S.esP = ESF(h, S.solar); S.load = LOADF(h) * (S.dr ? .9 : 1); S.loss = S.load * .021; { const mo = Math.exp(-((h - 9.5) ** 2) / 4), ev2 = Math.exp(-((h - 19.5) ** 2) / 5); S.hydro = 600 * clamp(.12 + .58 * ev2 + .35 * mo, 0, 1); S.hyN = Math.min(4, Math.ceil(S.hydro / 150 - .05)); S.lvl = 174.2 - S.hydro / 600 * .35; const Rr = S.load + S.loss - S.solar - S.windP - S.esP - S.hydro; S.nuc = clamp(Rr - 900, 1300, 1960); S.th = clamp(Rr - S.nuc, 300, 1320); }
   const day = Math.max(0, Math.sin(PI * (h - 6) / 12)), eve = Math.exp(-((h - 20) ** 2) / 6);
   S.ev = powered.EV ? 0.25 + .7 * Math.exp(-((h - 13) ** 2) / 10) + .5 * eve : 0; S.hr = powered.HR ? 1.6 + 1.8 * eve + .6 * day : 0;
   S.v1 = powered.V1 ? .12 + .22 * eve - .08 * day * (1 - S.cloud) : 0; S.v2 = powered.V2 ? .16 + .3 * eve - .1 * day * (1 - S.cloud) : 0;
-  S.soc = clamp(S.soc - S.esP * .00012, 8, 96); S.gen = S.th + S.solar + S.windP + Math.max(0, S.esP); }
+  S.soc = clamp(S.soc - S.esP * .00012, 8, 96); S.gen = S.th + S.nuc + S.hydro + S.solar + S.windP + Math.max(0, S.esP); }
 const fmt = (v, d = 1) => (+v).toFixed(d);
 const hhmm = h => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.floor((h % 1) * 60)).padStart(2, '0')}`;
 
@@ -1107,7 +1282,7 @@ const EC = window.echarts; const chs = {};
 const ax = { axisLine: { lineStyle: { color: '#2a5a8a' } }, axisLabel: { color: '#8fc6ee', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(53,214,255,.08)' } } };
 if (EC) { chs.mix = EC.init($('#chMix')); chs.day = EC.init($('#chDay')); chs.zone = EC.init($('#chZone')); chs.info = EC.init($('#chInfo'));
   chs.mix.setOption({ tooltip: { trigger: 'item' }, legend: { orient: 'vertical', right: 0, top: 'middle', textStyle: { color: '#9cc6ea', fontSize: 11 }, itemWidth: 10, itemHeight: 10 },
-    series: [{ type: 'pie', radius: ['48%', '74%'], center: ['34%', '50%'], label: { show: false }, itemStyle: { borderColor: '#061630', borderWidth: 2 }, color: ['#ff8a3d', '#3dd6ff', '#ffe066', '#a77bff'], data: [] }] });
+    series: [{ type: 'pie', radius: ['48%', '74%'], center: ['34%', '50%'], label: { show: false }, itemStyle: { borderColor: '#061630', borderWidth: 2 }, color: ['#ff8a3d', '#ff5c8a', '#4f7dff', '#3dd6ff', '#ffe066', '#a77bff'], data: [] }] });
   const hrsX = Array.from({ length: 48 }, (_, i) => i / 2);
   chs.day.setOption({ grid: { left: 36, right: 8, top: 22, bottom: 20 }, tooltip: { trigger: 'axis' }, legend: { top: 0, textStyle: { color: '#9cc6ea', fontSize: 10 }, itemWidth: 12, itemHeight: 6 },
     xAxis: { type: 'category', data: hrsX.map(h => hhmm(h)), ...ax, axisLabel: { ...ax.axisLabel, interval: 11 } }, yAxis: { type: 'value', ...ax },
@@ -1119,8 +1294,8 @@ if (EC) { chs.mix = EC.init($('#chMix')); chs.day = EC.init($('#chDay')); chs.zo
 function updDay() { if (!EC) return; const xs = Array.from({ length: 48 }, (_, i) => i / 2);
   chs.day.setOption({ series: [{ data: xs.map(h => Math.round(LOADF(h) * (S.dr ? .9 : 1))), markLine: { symbol: 'none', silent: true, label: { show: false }, lineStyle: { color: '#ff9f2e', type: 'solid' }, data: [{ xAxis: Math.floor(S.h * 2) }] } }, { data: xs.map(h => Math.round(SOLF(h, S.cloud))) }, { data: xs.map(h => Math.round(WINDF(h, S.wind))) }] }); }
 const hist = { t: [] }, ZSER = {
-  all: [['全网负荷 MW', () => S.load, '#35d6ff'], ['新能源 MW', () => S.solar + S.windP, '#3dff9e']], gen: [['火电 MW', () => S.th, '#ff8a3d'], ['风电 MW', () => S.windP, '#3dd6ff'], ['光伏 MW', () => S.solar, '#ffe066']],
-  trans: [['500kV 线路潮流 MW', () => E['SY-SUB'].dir ? S.load * .62 : 0, '#ff6b3d']], sub: [['主变负载率 %', () => E['SY-SUB'].dir ? S.load * .62 / 2000 * 100 : 0, '#ffb347']],
+  all: [['全网负荷 MW', () => S.load, '#35d6ff'], ['新能源 MW', () => S.solar + S.windP, '#3dff9e']], gen: [['火电 MW', () => S.th, '#ff8a3d'], ['核电 MW', () => S.nuc, '#ff5c8a'], ['水电 MW', () => S.hydro, '#4f7dff'], ['风电 MW', () => S.windP, '#3dd6ff'], ['光伏 MW', () => S.solar, '#ffe066']],
+  trans: [['500kV 线路潮流 MW', () => E['SY-SUB'].dir ? S.load * .3 : 0, '#ff6b3d']], sub: [['主变负载率 %', () => E['SY-SUB'].dir ? S.load * .3 / 2000 * 100 : 0, '#ffb347']],
   tq: [['台区负荷 kW', () => TQ.P, '#3dff9e'], ['线损率 %', () => TQ.loss, '#ffe066']], dist: [['甲线电流 A', () => feederI('A'), '#3dff9e'], ['乙线电流 A', () => feederI('B'), '#ffe066']], user: [['高层 MW', () => S.hr, '#35d6ff'], ['EV MW', () => S.ev, '#3dff9e'], ['低压台区 MW', () => S.v1 + S.v2, '#ffe066']],
   room: [['A 排温度 ℃', () => 28 + Math.sin(clk.elapsedTime * .3) * 1.5, '#35d6ff'], ['告警柜温度 ℃', () => 61 + Math.sin(clk.elapsedTime * .9) * 3, '#ff4d4d']] };
 const feederI = f => { const p = f === 'A' ? (E['DS-A1'].dir ? S.ev + S.hr + (E['TIE-BE'].st === 'ok' ? S.v1 * (powered.V1 ? 1 : 0) + S.v2 : 0) : 0) : (E['DS-B1'].dir ? (E['B1-T1'].dir ? S.v1 : 0) + (E['T1-T2'].dir > 0 ? S.v2 : 0) : 0); return p * 1000 / (1.732 * 10.5); };
@@ -1131,19 +1306,19 @@ function updZoneChart() { if (!EC) return; const z = curZone; chs.zone.setOption
 /* =================== 面板 KPI =================== */
 const ZT = { all: '全网概览 · 发输变配用', gen: '发电侧 · 多能互补电源', trans: '输电 · 500kV 输电走廊', sub: '变电 · 500kV 枢纽变电站', dist: '配电 · 10kV 配电网自愈', user: '用户 · 智慧社区用能', room: '配电 · 10kV 开关站配电室', tq: '配电 · 透明台区 V1（1# 公变 400kVA）' };
 const ZK = {
-  tq: () => [['用户数', TQ.users.length, '户', 0], ['台区负荷', TQ.P, 'kW', 1], ['负载率', TQ.P / 4 / .9, '%', 1], ['线损率', TQ.loss, '%', 2], ['三相不平衡', TQ.unb, '%', 1, TQ.unb > 15 ? 'warn' : ''], ['停电户数', TQ.users.filter(u => u.out).length, '户', 0, TQ.out ? 'warn' : 'ok'], ['光伏户数', TQ.users.filter(u => u.pvk > 0).length, '户', 0]],
-  all: () => [['总发电', S.gen, 'MW'], ['全网负荷', S.load, 'MW'], ['新能源出力', S.solar + S.windP, 'MW'], ['储能', S.esP, S.esP < 0 ? 'MW 充' : 'MW 放'], ['在线设备', 1846, '台', 0], ['告警', alarms, '条', 0, alarms ? 'warn' : 'ok']],
-  gen: () => [['火电', S.th, 'MW'], ['风电', S.windP, 'MW'], ['光伏', S.solar, 'MW'], ['储能 SOC', S.soc, '%'], ['风速', S.wind, 'm/s'], ['在运风机', S.wt.filter(v => v > 0).length, '/10', 0]],
-  trans: () => [['线路潮流', E['SY-SUB'].dir ? S.load * .62 : 0, 'MW'], ['导线温度', 32 + S.load / 90, '℃'], ['弧垂裕度', 3.2, 'm'], ['杆塔', 14, '基', 0], ['覆冰', 0, 'mm'], ['状态', E['SY-SUB'].st === 'ok' ? '运行' : '跳闸', '', 0, E['SY-SUB'].st === 'ok' ? 'ok' : 'warn']],
-  sub: () => [['主变负载率', E['SY-SUB'].dir ? S.load * .62 / 20 : 0, '%'], ['油温', 48 + S.load / 140, '℃'], ['母线电压', E['SY-SUB'].dir ? 525.3 : 0, 'kV'], ['频率', 50 + Math.sin(clk.elapsedTime) * .012, 'Hz', 3], ['间隔', 5, '个', 0], ['巡检', '进行中', '', 0, 'ok']],
+  tq: () => [['用户数', TQ.users.length, '户', 0], ['台区负荷', TQ.P, 'kW', 1], ['负载率', TQ.P / 4 / .9, '%', 1], ['线损率', TQ.loss, '%', 2], ['三相不平衡', TQ.unb, '%', 1, TQ.unb > 15 ? 'warn' : ''], ['停电户数', TQ.users.filter(u => u.out).length, '户', 0, TQ.out ? 'warn' : 'ok'], ['拓扑一致率', TQ.cons ?? 100, '%', 2, (TQ.cons ?? 100) < 100 ? 'warn' : 'ok'], ['电压合格率', TQ.vOk ?? 100, '%', 2, (TQ.vOk ?? 100) < 100 ? 'warn' : 'ok']],
+  all: () => [['总发电', S.gen, 'MW'], ['全网负荷', S.load, 'MW'], ['新能源出力', S.solar + S.windP, 'MW'], ['储能', S.esP, S.esP < 0 ? 'MW 充' : 'MW 放'], ['核电', S.nuc, 'MW'], ['水电', S.hydro, 'MW'], ['在线设备', 2318, '台', 0], ['告警', alarms, '条', 0, alarms ? 'warn' : 'ok']],
+  gen: () => [['火电', S.th, 'MW'], ['核电', S.nuc, 'MW'], ['水电', S.hydro, 'MW'], ['库水位', S.lvl, 'm', 2], ['风电', S.windP, 'MW'], ['光伏', S.solar, 'MW'], ['储能 SOC', S.soc, '%'], ['风速', S.wind, 'm/s'], ['在运风机', S.wt.filter(v => v > 0).length, '/10', 0]],
+  trans: () => [['线路潮流', E['SY-SUB'].dir ? S.load * .3 : 0, 'MW'], ['导线温度', 32 + S.load / 190, '℃'], ['弧垂裕度', 3.2, 'm'], ['杆塔', 14, '基', 0], ['覆冰', 0, 'mm'], ['状态', E['SY-SUB'].st === 'ok' ? '运行' : '跳闸', '', 0, E['SY-SUB'].st === 'ok' ? 'ok' : 'warn']],
+  sub: () => [['主变负载率', E['SY-SUB'].dir ? S.load * .3 / 20 : 0, '%'], ['油温', 48 + S.load / 290, '℃'], ['母线电压', E['SY-SUB'].dir ? 525.3 : 0, 'kV'], ['频率', 50 + Math.sin(clk.elapsedTime) * .012, 'Hz', 3], ['间隔', 5, '个', 0], ['巡检', '进行中', '', 0, 'ok']],
   dist: () => [['甲线电流', feederI('A'), 'A'], ['乙线电流', feederI('B'), 'A'], ['自愈状态', fault ? '处理中' : '正常', '', 0, fault ? 'warn' : 'ok'], ['联络开关', E['TIE-BE'].st === 'ok' ? '合' : '分', '', 0], ['配变数', 4, '台', 0], ['供电率', Object.keys(NODES).filter(k => powered[k]).length / Object.keys(NODES).length * 100, '%']],
   user: () => [['社区负荷', S.ev + S.hr + S.v1 + S.v2, 'MW', 2], ['EV 充电', S.ev, 'MW', 2], ['在充车辆', powered.EV ? 5 : 0, '辆', 0], ['屋顶光伏', SOLF(S.h, S.cloud) * .0045, 'MW', 2], ['停电户数', (powered.V1 ? 0 : 60) + (powered.V2 ? 0 : 84), '户', 0, powered.V1 && powered.V2 ? 'ok' : 'warn'], ['需求响应', S.dr ? '执行中' : '待命', '', 0]],
   room: () => [['开关柜', cabCount, '面', 0], ['告警柜', 1, '面', 0, 'warn'], ['室温', 26.4, '℃'], ['湿度', 48, '%', 0], ['SF6', 0, 'ppm', 0, 'ok'], ['挂轨机器人', '巡视', '', 0, 'ok']] };
 function updPanel() { $('#zTitle').textContent = ZT[curZone]; $('#zKpi').innerHTML = ZK[curZone]().map(([k, v, u, d = 1, c = '']) => `<div>${k}<b class="${c}">${typeof v === 'number' ? fmt(v, d) : v}<small>${u}</small></b></div>`).join('');
-  $('#zChartT').textContent = '实时曲线 · ' + ZT[curZone].split(' · ')[0];
-  $('#kGen').textContent = fmt(S.gen, 0) + ' MW'; $('#kLoad').textContent = fmt(S.load, 0) + ' MW'; $('#kRen').textContent = fmt((S.solar + S.windP) / S.gen * 100) + '%'; $('#kLoss').textContent = fmt(2.1 + (S.load - 900) / 5000, 2) + '%';
+  tqPanel(); $('#zChartT').textContent = '实时曲线 · ' + ZT[curZone].split(' · ')[0];
+  $('#kGen').textContent = fmt(S.gen, 0) + ' MW'; $('#kLoad').textContent = fmt(S.load, 0) + ' MW'; $('#kRen').textContent = fmt((S.gen - S.th) / S.gen * 100) + '%'; $('#kLoss').textContent = fmt(2.1 + (S.load - 1800) / 10000, 2) + '%';
   $('#kTime').textContent = hhmm(S.h); $('#kRel').textContent = fault || E['SY-SUB'].st !== 'ok' ? '99.991%' : '99.998%';
-  if (EC) chs.mix.setOption({ series: [{ data: [{ name: '火电', value: Math.round(S.th) }, { name: '风电', value: Math.round(S.windP) }, { name: '光伏', value: Math.round(S.solar) }, { name: '储能', value: Math.round(Math.max(0, S.esP)) }] }] }); }
+  if (EC) chs.mix.setOption({ series: [{ data: [{ name: '火电', value: Math.round(S.th) }, { name: '核电', value: Math.round(S.nuc) }, { name: '水电', value: Math.round(S.hydro) }, { name: '风电', value: Math.round(S.windP) }, { name: '光伏', value: Math.round(S.solar) }, { name: '储能', value: Math.round(Math.max(0, S.esP)) }] }] }); }
 
 /* =================== 事件 =================== */
 let alarms = 0;
@@ -1179,27 +1354,27 @@ function demandResp() { if (S.dr) return; S.dr = true; $('#bDR').classList.add('
 let curZone = 'all', inRoom = false, follow = null, anim = null, labelsOn = true, flowOn = true, xray = false;
 const ease = t => t < .5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 function flyTo(pos, tgt, dur = 1.6) { anim = { p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: tgt, s: performance.now(), d: dur * 1000 }; }
-const PRE = { all: [[1100, 900, 800], [200, 0, -300]], gen: [[300, 260, -330], [0, 0, -640]], trans: [[230, 140, -180], [10, 20, -280]], sub: [[150, 120, 170], [0, 0, -5]], dist: [[480, 130, 190], [420, 0, 20]], user: [[830, 210, 290], [650, 0, 20]] };
+const PRE = { all: [[1050, 1050, 760], [80, 0, -380]], gen: [[330, 820, -120], [-190, 0, -770]], trans: [[230, 140, -180], [10, 20, -280]], sub: [[150, 120, 170], [0, 0, -5]], dist: [[480, 130, 190], [420, 0, 20]], user: [[830, 210, 290], [650, 0, 20]] };
 const SUBS = {
   all: [['汽机房内部图', () => openInner('turbinehall')], ['500kV 主控室', () => openInner('ctrlroom')], ['10kV 配电室', () => goZone('room')], ['透明台区', () => goZone('tq')]],
-  gen: [['汽机房内部图', () => openInner('turbinehall')], ['风机机舱', () => openInner('nacelle', { idx: 5 })], ['储能舱', () => openInner('bess')], ['光伏逆变器', () => openInner('inverter')], ['升压变内部', () => openInner(...INNER.gsu(gsu[0]))]],
+  gen: [['核岛反应堆内部', () => openInner('reactor', { idx: 0 })], ['水轮发电机组', () => openInner('hydrounit', {})], ['核电站', () => focus(nucU[0])], ['水电站', () => focus(dam)], ['汽机房内部图', () => openInner('turbinehall')], ['风机机舱', () => openInner('nacelle', { idx: 5 })], ['储能舱', () => openInner('bess')], ['光伏逆变器', () => openInner('inverter')], ['升压变内部', () => openInner(...INNER.gsu(gsu[0]))]],
   trans: [['杆塔在线监测', () => focus(monDev)], ['无人机巡线', () => setVB('drone', true)]],
   sub: [['主控室内部图', () => openInner('ctrlroom')], ['主变压器内部', () => openInner(...INNER.transformer(equip.transformer[0]))], ['GIS 间隔内部', () => openInner('gis')], ['35kV 开关柜', () => openInner('kyn', { name: '35kV 站用开关柜' })]],
   dist: [['10kV 开关站配电室', () => goZone('room')], ['透明台区', () => goZone('tq')], ['箱变内部', () => openFor(BTx)], ['柱上开关内部', () => openInner('polesw', { name: '分段开关 B1', key: 'B1' })], ['环网柜', () => openFor(rmu)], ['配电主变内部', () => openInner(...INNER.dtx(equip.dtx[0]))]],
   user: [['透明台区', () => goZone('tq')], ['表箱内部', () => openInner('meterbox', { name: '户外计量表箱', n: 6 })], ['充电桩内部', () => openInner('charger')], ['用户储能', () => openInner('bess')]],
   room: [['← 返回配电网', () => goZone('dist')], ['告警开关柜内部', () => openInner('kyn', { id: cabInfo[ALARM_CAB].id, alarm: true, name: '10kV 开关柜 ' + cabInfo[ALARM_CAB].id })], ['透明台区', () => goZone('tq')]],
-  tq: [['← 返回配电网', () => goZone('dist')], ['配变内部', () => openInner(...INNER.tqx())], ['JP 柜内部', () => openInner(...INNER.jp())], ['表箱内部', () => openInner('meterbox', { name: TQ.boxes[0].info.name, users: TQ.boxes[0].users })], ['⚡ 停电研判', () => tqFault(), 'red'], ['相位着色', () => { TQ.phase = !TQ.phase; toast(TQ.phase ? '已按 A/B/C 相着色用户' : '已关闭相位着色', true); }]] };
+  tq: [['← 返回配电网', () => goZone('dist')], ['🔍 拓扑识别', () => tqIdent()], ['🗺 一键成图', () => tqMapShow(!TQ.mapOpen)], ['🔀 拓扑异动', () => tqMove()], ['📉 低电压溯源', () => tqLowV()], ['⚡ 停电研判', () => tqFault(), 'red'], ['🎨 相位着色', () => { TQ.phase = !TQ.phase; TQ.vmap = false; toast(TQ.phase ? '已按 A/B/C 相着色用户' : '已关闭相位着色', true); }], ['📋 管理闭环', () => { TQ.tab = 'mgt'; tqPanel(); }]] };
 function setZone(z) { curZone = z; const nz = z === 'room' || z === 'tq' ? 'dist' : z; document.querySelectorAll('.nb').forEach(n => n.classList.toggle('on', n.dataset.n === nz));
   $('#crumb').innerHTML = `<span data-z="all">全网</span>${nz !== 'all' ? ' / <span data-z="dist">' + ZT[nz].split(' · ')[0] + '</span>' : ''}${nz !== z ? ' / ' + (z === 'room' ? '配电室' : '透明台区') : ''}`; document.querySelectorAll('#crumb span').forEach(s => s.onclick = () => goZone(s.dataset.z === 'dist' ? nz : 'all'));
   const sn = $('#subnav'); sn.innerHTML = ''; (SUBS[z] || []).forEach(([t, f, c]) => { const d = document.createElement('div'); d.className = 'sb' + (c ? ' ' + c : ''); d.textContent = t; d.onclick = f; sn.appendChild(d); }); sn.style.display = (SUBS[z] || []).length ? 'flex' : 'none';
   updPanel(); updZoneChart(); }
 function goZone(z) { follow = null; setVB('drone', false); setVB('patrol', false); if (z === 'room' || z === 'tq') return enterSub(z); if (inRoom) leaveSub(); setZone(z); const [p, t] = PRE[z]; flyTo(new V3(...p), new V3(...t)); hideInfo(); }
 let subMode = null;
-function enterSub(m) { hideInfo(); fr = 0; if (inRoom) leaveSub(); inRoom = true; subMode = m; world.visible = false; topoG.visible = false; grid.visible = m === 'tq'; room.visible = m === 'room'; tq.visible = m === 'tq'; setZone(m); anim = null; scene.fog.near = 400; scene.fog.far = 2000;
+function enterSub(m) { hideInfo(); fr = 0; if (inRoom) leaveSub(); inRoom = true; subMode = m; document.body.classList.toggle('tqm', m === 'tq'); world.visible = false; topoG.visible = false; grid.visible = m === 'tq'; room.visible = m === 'room'; tq.visible = m === 'tq'; setZone(m); anim = null; scene.fog.near = 400; scene.fog.far = 2000;
   if (m === 'room') { camera.position.set(0, 30, 36); controls.target.set(0, 0, 0); controls.maxDistance = 90; toast('已进入 10kV 开关站配电室 · 红色闪烁为告警开关柜 · 双击开关柜看内部', true); }
   else { camera.position.set(150, 120, 170); controls.target.set(0, 0, 15); controls.maxDistance = 600; tqTrace(null); toast('透明台区：单击设备查看供电路径与运行数据 · 双击查看内部结构', true); }
   $('#topo2d').style.opacity = 0; }
-function leaveSub() { fr = 0; inRoom = false; subMode = null; world.visible = true; grid.visible = true; room.visible = false; tq.visible = false; topoG.visible = vbOn('topo'); controls.maxDistance = 2600; $('#topo2d').style.opacity = 1; tqTrace(null); }
+function leaveSub() { fr = 0; document.body.classList.remove('tqm'); if (TQ.mapOpen) tqMapShow(false); inRoom = false; subMode = null; world.visible = true; grid.visible = true; room.visible = false; tq.visible = false; topoG.visible = vbOn('topo'); controls.maxDistance = 2600; $('#topo2d').style.opacity = 1; tqTrace(null); }
 const enterRoom = () => enterSub('room'), leaveRoom = leaveSub;
 function isIn(o, g) { while (o) { if (o === g) return true; o = o.parent; } return false; }
 function centerOf(o) { const b = new THREE.Box3().setFromObject(o); if (o === cabs) return null; return { c: b.getCenter(new V3()), r: Math.max(8, b.getSize(new V3()).length() / 2) }; }
@@ -1220,10 +1395,10 @@ const FIELDS = { ...TQF, ...EXF,
   gsu: () => [['电压', '20 / 500 kV'], ['容量', '780 MVA'], ['负载率', fmt(S.th / 15.6) + ' %'], ['油温', fmt(55 + S.th / 60) + ' ℃']],
   sy: () => [['电压等级', '500 kV'], ['出线', '3 回'], ['上网功率', fmt(S.gen) + ' MW'], ['状态', pw('SY')]],
   sw35: () => [['电压', '35 kV'], ['集电线路', '6 回'], ['状态', badge('运行')]],
-  tower: o => [['电压', '500 kV'], ['塔型', '酒杯型直线塔'], ['倾斜度', '0.12 %'], ['导线温度', fmt(32 + S.load / 90) + ' ℃'], ['在线监测', badge('正常')]],
+  tower: o => [['电压', '500 kV'], ['塔型', '酒杯型直线塔'], ['倾斜度', '0.12 %'], ['导线温度', fmt(32 + S.load / 190) + ' ℃'], ['在线监测', badge('正常')]],
   drone: () => [['型号', 'UAV 多旋翼'], ['高度', '55 m'], ['电量', '76 %'], ['任务', '可见光 + 红外巡线'], ['缺陷识别', 'AI 实时']],
-  bay: () => [['电压', '500 kV'], ['断路器', badge('合位')], ['SF6 压力', '0.62 MPa'], ['电流', fmt(S.load * .12) + ' A']],
-  transformer: () => [['电压', '500 / 220 kV'], ['容量', '1000 MVA'], ['负载率', fmt(S.load * .62 / 20) + ' %'], ['油温', fmt(48 + S.load / 140) + ' ℃'], ['油色谱', badge('正常')], ['状态', pw('SUB')]],
+  bay: () => [['电压', '500 kV'], ['断路器', badge('合位')], ['SF6 压力', '0.62 MPa'], ['电流', fmt(S.load * .06) + ' A']],
+  transformer: () => [['电压', '500 / 220 kV'], ['容量', '1000 MVA'], ['负载率', fmt(S.load * .3 / 20) + ' %'], ['油温', fmt(48 + S.load / 290) + ' ℃'], ['油色谱', badge('正常')], ['状态', pw('SUB')]],
   gis: () => [['电压', '220 kV'], ['SF6 密度', '0.58 MPa'], ['局放', '3.1 pC'], ['状态', badge('运行')]],
   cap: () => [['容量', '60 Mvar'], ['投切', badge('投入')], ['不平衡电流', '0.02 A']], reactor: () => [['容量', '60 Mvar'], ['温度', '52 ℃'], ['状态', badge('热备用', 'off')]],
   ground: () => [['类型', '接地变 + 消弧线圈'], ['中性点电压', '1.2 V']], control: () => [['系统', '一体化监控 / 智能告警'], ['值班', '无人值守 + 远方集控'], ['通信', badge('正常')]],
@@ -1300,10 +1475,10 @@ function loop() { requestAnimationFrame(loop); const dt = Math.min(clk.getDelta(
   if (IV.open) { renderInner(t, dt); return; }
   // flows
   if (flowOn && !inRoom) { flowHV.update(t, p => p.tag ? gateOf(p.tag) : E['SY-SUB'].dir); flowCable.update(t, p => p.tag ? gateOf(p.tag) : powered.SUB ? 1 : 0); flowFeeder.update(t, p => gateOf(p.tag)); flowLV.update(t, p => gateOf(p.tag));
-    flowGen.update(t, p => p.tag === 'PV' ? (S.solar > 1 ? 1 : 0) : p.tag === 'WF' ? (S.windP > .3 ? 1 : 0) : p.tag === 'ES' ? Math.sign(Math.round(S.esP)) : 1); }
+    flowGen.update(t, p => p.tag === 'PV' ? (S.solar > 1 ? 1 : 0) : p.tag === 'WF' ? (S.windP > .3 ? 1 : 0) : p.tag === 'ES' ? Math.sign(Math.round(S.esP)) : p.tag === 'HY' ? (S.hydro > 5 ? 1 : 0) : 1); }
   if (topoG.visible) topoFlow.update(t, p => gateOf(p.tag));
   // generation anims
-  const thk = S.th / 1320; steams[0].update(dt, S.wind / 28, .6 + thk); steams[1].update(dt, S.wind / 28, .6 + thk); steams[2].update(dt, S.wind / 28, 1);
+  const thk = S.th / 1320; steams[0].update(dt, S.wind / 28, .6 + thk); steams[1].update(dt, S.wind / 28, .6 + thk); steams[2].update(dt, S.wind / 28, 1); genAnim(t, dt);
   turbines.forEach((tb, i) => { const p = S.wt[i] || 0; tb.rotor.rotation.z += dt * (p ? .6 + p * .22 : (S.wind * wtSeed[i] > 25 ? 0 : .05)); tb.led.visible = Math.sin(t * 4 + i) > 0; });
   chim.userData.lights.forEach((l, i) => l.visible = Math.sin(t * 3 + i) > -.2);
   // drone & robot
@@ -1314,7 +1489,7 @@ function loop() { requestAnimationFrame(loop); const dt = Math.min(clk.getDelta(
   updCars(t); evLeds.forEach((l, i) => l.visible = powered.EV && (i % 3 !== 2 ? Math.sin(t * 3 + i) > -.5 : true));
   riverMat.uniforms.uT.value = t; scanMat.uniforms.uT.value = t; if (alarmRing.visible) { const s = 1 + (t * 1.5 % 1) * 2.5; alarmRing.scale.setScalar(s); alarmRing.material.opacity = 1 - (t * 1.5 % 1); }
   // room
-  if (subMode === 'tq' && flowOn) { tqFlow.update(t, tqGate); tqFlowU.update(t, tqGate); }
+  if (subMode === 'tq') tqAnim(t, dt); if (subMode === 'tq' && flowOn) { tqFlow.update(t, tqGate); tqFlowU.update(t, tqGate); }
   if (subMode === 'room') { railBot.position.x = Math.sin(t * .25) * 19; const c = new THREE.Color(Math.sin(t * 8) > 0 ? 0xff3030 : 0xffffff); cabs.setColorAt(ALARM_CAB, c); cabs.instanceColor.needsUpdate = true; roomFlow.p[0].pts[0].copy(railBot.position); roomFlow.p[0].len = roomFlow.p[0].pts[1].distanceTo(railBot.position); roomFlow.p[0].cum[1] = roomFlow.p[0].len; roomFlow.update(t); }
   // shadows/fog follow
   const dist = camera.position.distanceTo(controls.target); if (!inRoom) { scene.fog.near = dist * .7 + 100; scene.fog.far = dist * 3 + 900; }
@@ -1326,14 +1501,155 @@ function loop() { requestAnimationFrame(loop); const dt = Math.min(clk.getDelta(
 
 addEventListener('resize', () => { camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); composer.setSize(W(), H()); labelR.setSize(W(), H()); outline.setSize?.(W(), H()); Object.values(chs).forEach(c => c.resize()); });
 
+/* =================== 透明台区 · 七维透明（拓扑/运行/设备/电源/网络/市场/管理） =================== */
+Object.assign(TQ, { abn: new Set(), changes: [], ident: null, idDone: false, vmap: false, lv: false, lvFix: false, hplc: false, tab: 'topo', mapOpen: false, cons: 100, unbFix: false,
+  orders: [{ id: 'GD-0712', t: '用户 BX-232-5 电压越下限核查', st: 3, k: 'v' }, { id: 'GD-0715', t: '表箱 BX-311 门磁开启告警', st: 2, k: 'd' }] });
+const tqAt = (L, s, n, y) => L.d.clone().multiplyScalar(s).addScaledVector(L.nv, n).setY(y);
+// ---- 新增设备：智能分支开关 / 治理装置 / 运维模块 / 储能 / 充电桩 / 电缆分支箱 / 云主站 ----
+TQ.branches.forEach(b => { const p = tqAt(b.L, b.s, b.sd * 3.4, 5.4), m = new THREE.Mesh(G.box, M(0x2b3440, { emissive: 0x0a3a7a, emissiveIntensity: .4 })); m.scale.set(.9, 1.1, .7); m.position.copy(p); tq.add(m);
+  const led = new THREE.Mesh(G.sph, new THREE.MeshBasicMaterial({ color: 0x3dff9e })); led.scale.setScalar(.24); led.position.copy(p).add(new V3(0, .8, 0)); tq.add(led); b.led = led;
+  b.sw = tqEl(m, { name: `智能分支开关 SW-${b.info.id}（量测 · 拓扑识别 · HPLC）`, type: 'tqsw', id: 'SW-' + b.info.id, br: b }, b.parent); label(m, '分支开关', 1.3, 'small', m, 160); });
+const tqBox = (x, y, z, w, h, d, c, name, type, lbl, md = 300) => { const m = new THREE.Mesh(G.box, M(c, { roughness: .5, emissive: 0x0a2a5a, emissiveIntensity: .3 })); m.scale.set(w, h, d); m.position.set(x, y, z); tq.add(m); const e = tqEl(m, { name, type }, elJP); if (lbl) label(m, lbl, h / 2 + .6, 'small', m, md); return e; };
+tqBox(3.4, 1.15, 1.2, 1.4, 2.3, .8, 0xe8eef5, '三相不平衡治理装置（SVG + 智能换相）', 'tqunb', '不平衡治理');
+const envEl = tqBox(-3.1, 1.1, 1.2, .9, 2.2, .6, 0xdfe6ee, '智能运维模块（烟感 / 温湿度 / 水浸 / 门磁 / 视频）', 'tqenv', '运维模块');
+{ const s = new THREE.Mesh(G.sph, new THREE.MeshBasicMaterial({ color: 0x35d6ff })); s.scale.setScalar(.25); s.position.set(0, 3.45, 1.2); tq.add(s); TQ.envLed = s; }
+const tqES = tqBox(-16, 1.3, -12, 4, 2.6, 2, 0xf2f5f8, '台区储能柜 100kW / 215kWh', 'tqes', '储能 100kW/215kWh', 500);
+const tqEV = [tqBox(14, .95, -12, .8, 1.9, .5, 0xeef2f6, '交流充电桩 #1（7kW · 有序充电）', 'tqev', '充电桩 ×2', 500), tqBox(16.5, .95, -12, .8, 1.9, .5, 0xeef2f6, '交流充电桩 #2（7kW · 有序充电）', 'tqev')];
+tqBox(tqAt(TQ.lines[0].L, 96, 0, 0).x + 3, .8, 3, 1.6, 1.6, .8, 0x6d8a5a, '低压电缆分支箱 DFW-1（L1 末端）', 'tqcb', '电缆分支箱');
+{ const cm = tqMat(0xa77bff); tTube([new V3(-1.2, .3, 1.6), new V3(-16, .3, 1.6), new V3(-16, .3, -11)], .12, cm); tTube([new V3(1.2, .3, 1.6), new V3(15, .3, 1.6), new V3(15, .3, -11.7)], .12, cm); }
+const cloud = new THREE.Group(); cloud.position.set(0, 48, -34); tq.add(cloud);
+{ const cmat = new THREE.MeshBasicMaterial({ color: 0x35d6ff, transparent: true, opacity: .18, depthWrite: false }), wm = new THREE.MeshBasicMaterial({ color: 0x7fe9ff, wireframe: true, transparent: true, opacity: .35 });
+  for (const [x, y, r] of [[0, 0, 6], [-6, -1.5, 4.4], [6, -1.5, 4.6], [-2.5, 2.8, 4], [3, 2.2, 4.2]]) { for (const m of [cmat, wm]) { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 10), m); s.position.set(x, y, 0); cloud.add(s); } }
+  const hit = new THREE.Mesh(new THREE.BoxGeometry(18, 10, 8), new THREE.MeshBasicMaterial({ visible: false })); cloud.add(hit); tqEl(cloud, { name: '云主站（配电自动化主站 / 营销系统 / 电网管理平台）', type: 'tqcloud' }, null);
+  label(cloud, '云主站 · 配自主站 / 营销系统 / 电网管理平台', 9, '', cloud, 99999); }
+const tqUp = new Flow(0xffe066, 1.4); tqUp.add([new V3(0, 3.6, 1.2), new V3(0, 20, -12), new V3(0, 43, -34)], 8, 18, 'up'); tqUp.add([new V3(1, 43, -34), new V3(1, 20, -12), new V3(1, 3.6, 1.2)], 6, 14, 'dn'); tqUp.build(tq);
+{ const P = [new V3(0, 3.6, 1.2), new V3(0, 20, -12), new V3(0, 43, -34)]; const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(new THREE.CatmullRomCurve3(P).getPoints(30)), new THREE.LineDashedMaterial({ color: 0x7fe9ff, dashSize: 1.2, gapSize: .8, transparent: true, opacity: .7 })); l.computeLineDistances(); tq.add(l);
+  const lg = new THREE.Group(); lg.position.set(0, 0, -12); tq.add(lg); label(lg, '4G / 5G 切片上行', 22, 'small', null, 800); }
+// HPLC 组网
+const hplcG = new THREE.Group(); hplcG.visible = false; tq.add(hplcG);
+{ const hm = new THREE.LineDashedMaterial({ color: 0x35d6ff, dashSize: .8, gapSize: .6, transparent: true, opacity: .75 }); const add = (a) => { const b = new V3(0, 3.4, 1.2), m = a.clone().lerp(b, .5).setY(10 + a.distanceTo(b) * .08); const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(new THREE.QuadraticBezierCurve3(a, m, b).getPoints(24)), hm); l.computeLineDistances(); hplcG.add(l); };
+  TQ.boxes.forEach(x => add(x.bc.clone().setY(2.7))); TQ.branches.forEach(b => add(tqAt(b.L, b.s, b.sd * 3.4, 5.9))); }
+// 拓扑识别 特征电流脉冲
+const idPts = new Float32Array(TQ.users.length * 3).fill(-9999), idGeo = new THREE.BufferGeometry(); idGeo.setAttribute('position', new THREE.BufferAttribute(idPts, 3));
+const idObj = new THREE.Points(idGeo, new THREE.PointsMaterial({ size: 2.2, map: GLOW, color: 0xffe066, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); idObj.frustumCulled = false; idObj.visible = false; tq.add(idObj);
+TQ.users.forEach(u => { const c = [0]; for (let i = 1; i < u.path.length; i++) c.push(c[i - 1] + u.path[i].distanceTo(u.path[i - 1])); u.pc = c; });
+function pathAt(u, f) { const d = f * u.pc.at(-1); let j = 1; while (j < u.pc.length - 1 && u.pc[j] < d) j++; const a = u.path[j - 1], b = u.path[j]; return a.clone().lerp(b, (d - u.pc[j - 1]) / ((u.pc[j] - u.pc[j - 1]) || 1)); }
+function tqIdent() { if (TQ.ident) return toast('拓扑识别进行中'); TQ.tab = 'topo'; TQ.ident = { t0: clk.elapsedTime, n: 0 }; TQ.users.forEach(u => { u.idf = 0; }); idObj.visible = true; hplcG.visible = true;
+  toast('融合终端下发拓扑识别指令 · 电表注入特征电流（工频周期调制脉冲）', true); pushEv('🔍 台区 V1 启动拓扑自动识别：108 只电表依次发送特征电流信号', 'ok', tqJP); tqPanel(); }
+function tqIdentDone() { idObj.visible = false; hplcG.visible = TQ.hplc; TQ.ident = null; TQ.idDone = true; TQ.idTime = hhmm(S.h);
+  toast('拓扑识别完成：108 / 108 户，户变 / 相位 / 表箱关系一致率 100%', true); pushEv('拓扑识别完成：户变关系 108、相位 108、分支 9、表箱 18，已同步营销档案', 'ok', tqJP); tqPanel(); if (TQ.mapOpen) tqDraw(); }
+// 拓扑异动
+function relink(u, nb) { const ob = u.xel; for (const e of [ob, ob.parent, ob.parent.parent]) { const i = e.users.indexOf(u); if (i >= 0) e.users.splice(i, 1); } for (const e of [nb, nb.parent, nb.parent.parent]) e.users.push(u);
+  u.xel = nb; u.el.parent = nb; u.dist = nb.off + nb.parent.s; const bc = nb.bc; u.lp[0].copy(bc).setY(2); u.lp[1].copy(u.hc).setY(2).lerp(bc.clone().setY(2), .15); u.ln.geometry.setFromPoints(u.lp);
+  const fp = tqFlowU.p.find(p => p.tag === 'U' + u.id); if (fp) { fp.cum = [0]; for (let i = 1; i < fp.pts.length; i++) fp.cum.push(fp.cum[i - 1] + fp.pts[i].distanceTo(fp.pts[i - 1])); fp.len = fp.cum.at(-1); }
+  const b = nb.parent, L = b.L; u.path = [u.hc.clone().setY(3.2), bc.clone().setY(2.7), tqAt(L, b.s, b.sd * nb.off, 6), tqAt(L, b.s, 0, 7), tqAt(L, 4, 0, 7), new V3(0, 3, 1.2)]; const c = [0]; for (let i = 1; i < u.path.length; i++) c.push(c[i - 1] + u.path[i].distanceTo(u.path[i - 1])); u.pc = c; }
+function tqMove() { if (TQ.abn.size) return toast('上一处拓扑异动正在核查中'); const cand = TQ.users.filter(u => !u.out); const u = cand[(Math.random() * cand.length) | 0], from = u.xel;
+  const tos = TQ.boxes.filter(b => b !== from && b.parent.parent === from.parent.parent); const to = tos[(Math.random() * tos.length) | 0];
+  relink(u, to); TQ.abn.add(u); const ch = { t: hhmm(S.h), u: u.n, from: from.info.id, to: to.info.id, st: '待核查' }; TQ.changes.unshift(ch); TQ.changes.length = Math.min(TQ.changes.length, 6); TQ.tab = 'topo';
+  alarms++; toast(`拓扑异动：电表 ${u.n} 由 ${from.info.id} 改接至 ${to.info.id}`); pushEv(`🔀 拓扑异动监视：电表 ${u.no.slice(-6)}（${u.n}）表箱关系变化 ${from.info.id} → ${to.info.id}`, 'al', u.h);
+  tqOrder(`户变关系异动核查 ${u.n}`, 'm'); tqTrace(u.el); if (TQ.mapOpen) tqDraw(); tqPanel();
+  later(9, () => { TQ.abn.delete(u); ch.st = '已核查 · 档案已同步'; alarms--; pushEv(`异动核查完成：${u.n} 现场改接属实，营销档案 / GIS 已自动更新`, 'ok', u.h); toast('拓扑异动已闭环 · 营配档案自动更新', true); tqTrace(null); if (TQ.mapOpen) tqDraw(); tqPanel(); }); }
+// 低电压溯源
+function tqLowV() { TQ.lv = true; TQ.lvFix = false; TQ.vmap = true; TQ.phase = false; TQ.tab = 'run'; tqModel(); const live = TQ.users.filter(u => !u.out); const w = live.reduce((a, u) => u.v < a.v ? u : a, live[0]); TQ.lvW = w;
+  tqTrace(w.el); flyTo(new V3(-150, 95, 120), new V3(-60, 0, 0)); const n = live.filter(u => u.v < 198).length; TQ.lvN0 = n;
+  toast(`低电压溯源：${n} 户电压低于 198V，最低 ${fmt(w.v, 1)}V（${w.n}）`); pushEv(`📉 低电压告警：L2 西出线末端 ${n} 户电压越下限，最低 ${fmt(w.v, 1)}V`, 'al', w.h);
+  later(2, () => pushEv('溯源分析：L2 供电半径 123m 超长 + 支线 L2-3 晚高峰负荷集中 + C 相过载', '', w.h)); tqOrder(`L2 末端低电压治理（${n} 户）`, 'v'); tqPanel(); }
+function tqLvFix() { if (!TQ.lv) return; TQ.lvFix = true; toast('治理完成：分接开关上调 1 档 + L2-3 换相 + 末端调压器投入，电压恢复合格', true); pushEv('低电压治理：分接开关 +2.5%、L2-3 支线 4 户 C→A 换相、末端调压器投入，电压合格率 100%', 'ok', TQ.lvW?.h); tqTrace(null);
+  later(12, () => { TQ.lv = false; TQ.vmap = false; tqPanel(); }); tqPanel(); }
+function tqBalance() { const ph = { A: 0, B: 0, C: 0 }; TQ.users.forEach(u => ph[u.ph] += Math.max(0, u.p)); const s = Object.keys(ph).sort((a, b) => ph[b] - ph[a]); const mv = TQ.users.filter(u => u.ph === s[0]).sort((a, b) => b.p - a.p).slice(0, 3);
+  mv.forEach(u => { u.ph = s[2]; u.lm.color.set(PHC[u.ph]); }); TQ.unbFix = true; toast(`三相不平衡治理：智能换相开关将 3 户由 ${s[0]} 相切换至 ${s[2]} 相`, true); pushEv(`⚖ 三相不平衡治理：${mv.map(u => u.n).join('、')} 换相 ${s[0]}→${s[2]}`, 'ok', tqJP); if (TQ.mapOpen) tqDraw(); }
+// 管理闭环 工单
+let gdN = 716; function tqOrder(t, k) { const o = { id: 'GD-0' + gdN++, t, st: 0, k }; TQ.orders.unshift(o); TQ.orders.length = Math.min(TQ.orders.length, 5); const step = s => () => { o.st = s; tqPanel(); };
+  later(1.5, step(1)); later(k === 'fault' ? 5 : 4, step(2)); later(k === 'fault' ? 18.5 : 10, step(3)); }
+// 每帧动画
+function tqAnim(t, dt) { if (TQ.ident) { const el = t - TQ.ident.t0; let n = 0; TQ.users.forEach((u, k) => { const f = (el - k * .085) / 1.3; if (f >= 0 && f <= 1) { const p = pathAt(u, f); idPts[k * 3] = p.x; idPts[k * 3 + 1] = p.y; idPts[k * 3 + 2] = p.z; } else idPts[k * 3 + 1] = -9999;
+      if (f > 1) { if (!u.idf) u.idf = t; n++; } if (f > 0 && f < .25) { u.hm.emissive.set(0xffe066); u.hm.emissiveIntensity = 1.2; } else if (u.idf && t - u.idf < .5) { u.hm.color.set(0x3dff9e); u.hm.emissive.set(0x3dff9e); u.hm.emissiveIntensity = 1; } });
+    idGeo.attributes.position.needsUpdate = true; TQ.ident.n = n; const pe = $('#tqProg'); if (pe) { pe.style.width = n / TQ.users.length * 100 + '%'; $('#tqProgT').textContent = `${n} / ${TQ.users.length}`; } if (n >= TQ.users.length) tqIdentDone(); }
+  for (const u of TQ.abn) { const on = Math.sin(t * 10) > 0; u.hm.color.set(on ? 0xff9f2e : 0xff3030); u.hm.emissive.set(on ? 0xff6a00 : 0x5a0000); u.hm.emissiveIntensity = 1; u.lm.color.set(on ? 0xff9f2e : 0xffffff); }
+  if (TQ.envLed) TQ.envLed.visible = Math.sin(t * 5) > 0; TQ.branches.forEach(b => b.led.material.color.set(b.off ? (Math.sin(t * 8) > 0 ? 0xff3030 : 0x330000) : 0x3dff9e));
+  if (flowOn) tqUp.update(t, () => 1); }
+// tqModel 后处理（电压热力 / 低电压场景）
+function tqPost() { const live = TQ.users.filter(u => !u.out); TQ.vOk = live.length ? live.filter(u => u.v >= 198 && u.v <= 235.4).length / live.length * 100 : 0; TQ.vLow = live.filter(u => u.v < 198).length; TQ.vMin = live.length ? Math.min(...live.map(u => u.v)) : 0;
+  TQ.cons = (TQ.users.length - TQ.abn.size) / TQ.users.length * 100; TQ.pvCap = TQ.users.reduce((a, u) => a + u.pvk, 0); TQ.pvP = TQ.users.reduce((a, u) => a + Math.max(0, u.base * 0 + (u.p < 0 ? -u.p : 0)), 0) + TQ.users.reduce((a, u) => a + (u.pvk ? u.pvk * Math.max(0, Math.sin(PI * (S.h - 6) / 12)) * (1 - S.cloud * .8) * .4 : 0), 0) * 0;
+  TQ.pvGen = TQ.users.reduce((a, u) => a + u.pvk * Math.max(0, Math.sin(PI * (S.h - 6) / 12)) * (1 - S.cloud * .8) * .4, 0);
+  TQ.esP = S.h >= 10 && S.h < 15 ? -40 * Math.min(1, TQ.pvGen / 40) : S.h >= 18 && S.h < 22 ? 60 : 0; TQ.evP = (S.h >= 22 || S.h < 6) ? 14 : S.h >= 18 ? 7 : 3.5;
+  if (TQ.vmap) for (const u of TQ.users) { if (u.out) continue; const k = clamp((u.v - 188) / (228 - 188), 0, 1); u.hm.color.setHSL(k * .33, 1, .5); u.hm.emissive.setHSL(k * .33, 1, .3); u.hm.emissiveIntensity = .8; u.em.color.setHSL(k * .33, 1, .6); } }
+// ---- 一键成图（2D 自动布局） ----
+function tqDraw() { const svg = $('#tqSvg'), rows = []; TQ.lines.forEach(L => TQ.branches.filter(b => b.parent === L).forEach(b => TQ.boxes.filter(x => x.parent === b).forEach(x => rows.push(x))));
+  const RH = 23.5, Y0 = 56, y = {}; rows.forEach((x, i) => y[x.info.id] = Y0 + i * RH); TQ.branches.forEach(b => { const ys = TQ.boxes.filter(x => x.parent === b).map(x => y[x.info.id]); y[b.info.id] = (ys[0] + ys.at(-1)) / 2; });
+  TQ.lines.forEach(L => { const ys = TQ.branches.filter(b => b.parent === L).map(b => y[b.info.id]); y[L.info.id] = (ys[0] + ys.at(-1)) / 2; }); const yT = (y.L1 + y.L3) / 2;
+  const X = { t: 46, l: 175, b: 305, x: 440, m: 545 }, phc = { A: '#ffd23a', B: '#3dff9e', C: '#ff5050' }; let h = '';
+  const el = (x1, y1, x2, y2, c, w = 2, cls = '') => `<path class="tqe ${cls}" d="M${x1} ${y1} H${(x1 + x2) / 2} V${y2} H${x2}" stroke="${c}" stroke-width="${w}" fill="none"/>`;
+  TQ.lines.forEach(L => { h += el(X.t + 26, yT, X.l - 30, y[L.info.id], '#35d6ff', 3); TQ.branches.filter(b => b.parent === L).forEach(b => { h += el(X.l + 30, y[L.info.id], X.b - 28, y[b.info.id], b.off ? '#ff3030' : '#3dff9e', 2.4, b.off ? 'blk' : '');
+    TQ.boxes.filter(x => x.parent === b).forEach(x => { h += el(X.b + 28, y[b.info.id], X.x - 24, y[x.info.id], b.off ? '#ff3030' : '#9dffb8', 1.6); x.users.forEach((u, q) => { const cx = X.m + q * 62, cy = y[x.info.id]; h += `<line x1="${q ? cx - 52 : X.x + 24}" y1="${cy}" x2="${cx - 7}" y2="${cy}" stroke="${u.out ? '#666' : phc[u.ph]}" stroke-width="1.2" opacity=".7"/>`; }); }); }); });
+  h += `<g class="tqn" data-f="x"><rect x="${X.t - 30}" y="${yT - 22}" width="60" height="44" rx="4" fill="#0b3a7a" stroke="#35d6ff" stroke-width="2"/><text x="${X.t}" y="${yT - 3}">1# 公变</text><text x="${X.t}" y="${yT + 12}" class="s">400kVA</text></g>`;
+  TQ.lines.forEach(L => { const yy = y[L.info.id]; h += `<g class="tqn" data-e="${L.info.id}"><rect x="${X.l - 30}" y="${yy - 11}" width="60" height="22" rx="3" fill="#06305e" stroke="#35d6ff"/><text x="${X.l}" y="${yy + 4}">${L.L.n.split(' ')[0]} ${L.L.n.split(' ')[1].slice(0, 1)}</text></g>`; });
+  TQ.branches.forEach(b => { const yy = y[b.info.id]; h += `<g class="tqn" data-e="${b.info.id}"><rect x="${X.b - 28}" y="${yy - 10}" width="56" height="20" rx="10" fill="${b.off ? '#5a0000' : '#063e2a'}" stroke="${b.off ? '#ff3030' : '#3dff9e'}"/><text x="${X.b}" y="${yy + 4}">${b.info.id}</text></g>`; });
+  rows.forEach(x => { const yy = y[x.info.id]; h += `<g class="tqn" data-e="${x.info.id}"><rect x="${X.x - 24}" y="${yy - 8.5}" width="48" height="17" fill="#18324f" stroke="#9fd8ff"/><text x="${X.x}" y="${yy + 4}" class="s">${x.info.id.slice(3)}</text></g>`;
+    x.users.forEach((u, q) => { const cx = X.m + q * 62, ab = TQ.abn.has(u); h += `<g class="tqn tqm ${ab ? 'blk' : ''}" data-u="${u.id}"><title>${u.n} · 户号 ${u.no} · ${u.ph} 相 · ${u.out ? '停电' : fmt(u.v, 1) + 'V'}</title><circle cx="${cx}" cy="${yy}" r="7" fill="${u.out ? '#555' : phc[u.ph]}" stroke="${ab ? '#ff3030' : u.pvk ? '#fff' : '#0b1f3a'}" stroke-width="${ab ? 3 : 1.5}"/><text x="${cx + 18}" y="${yy + 3.5}" class="s">${u.no.slice(-4)}</text>${ab ? `<text x="${cx}" y="${yy - 10}" class="s r">异动</text>` : ''}</g>`; }); });
+  h += `<g class="lg" transform="translate(16,14)">${[['#ffd23a', 'A 相'], ['#3dff9e', 'B 相'], ['#ff5050', 'C 相'], ['#555', '停电'], ['#fff', '光伏户(白圈)'], ['#ff3030', '异动/异常']].map(([c, t], i) => `<circle cx="${i * 96 + 6}" cy="6" r="6" fill="${c}"/><text x="${i * 96 + 16}" y="10" class="s" style="text-anchor:start">${t}</text>`).join('')}<text x="610" y="10" class="s" style="text-anchor:start">配变 1 · 出线 3 · 分支 9 · 表箱 18 · 电表 108 · 拓扑一致率 ${fmt(TQ.cons, 2)}%</text></g>`;
+  svg.innerHTML = h; svg.classList.remove('draw'); void svg.getBoundingClientRect(); svg.classList.add('draw');
+  svg.querySelectorAll('.tqn').forEach(g => g.onclick = () => { const d = g.dataset; const o = d.u !== undefined ? TQ.users[+d.u].h : d.e ? TQ.els.find(e => e.info.id === d.e)?.o : tqX; if (o) focus(o); }); }
+function tqMapShow(on) { TQ.mapOpen = on; $('#tqMap').style.display = on ? 'block' : 'none'; if (on) { tqDraw(); $('#tqMapS').textContent = `自动生成 · ${hhmm(S.h)} · 数据源：融合终端拓扑识别 + HPLC`; if (!TQ.idDone) pushEv('一键成图：基于融合终端拓扑识别结果自动生成低压拓扑图', 'ok', tqJP); } }
+$('#tqMapX').onclick = () => tqMapShow(false);
+// ---- 七维透明面板 ----
+const TABS = [['topo', '拓扑'], ['run', '运行'], ['dev', '设备'], ['src', '电源'], ['net', '网络'], ['mkt', '市场'], ['mgt', '管理']];
+const R2 = rows => `<div class="tqkv">${rows.map(([k, v, c = '']) => `<div><span>${k}</span><b class="${c}">${v}</b></div>`).join('')}</div>`;
+const BT = list => `<div class="btns">${list.map(([t, a, c = '']) => `<div class="btn ${c}" data-act="${a}">${t}</div>`).join('')}</div>`;
+const sqw = (w, h) => { let d = `M0 ${h}`, x = 0; const bits = '1011001110100101100111010'; for (const b of bits) { const yy = b === '1' ? 3 : h; d += ` V${yy} H${x += w / bits.length}`; } return d; };
+const TABF = {
+  topo: () => `${R2([['拓扑一致率', fmt(TQ.cons, 2) + ' %', TQ.cons < 100 ? 'warn' : 'ok'], ['户变关系', '108 / 108'], ['相位识别', '108 / 108'], ['最近识别', TQ.idTime || '02:00 自动']])}
+    <div class="tqsub">特征电流信号（工频周期调制）${TQ.ident ? ' · 识别中' : ''}</div><svg class="sqw" viewBox="0 0 268 34"><path d="${sqw(268, 30)}" stroke="#ffe066" stroke-width="1.6" fill="none" class="${TQ.ident ? 'run' : ''}"/></svg>
+    <div class="tqprog"><i id="tqProg" style="width:${TQ.ident ? TQ.ident.n / 1.08 : TQ.idDone ? 100 : 0}%"></i><span id="tqProgT">${TQ.ident ? TQ.ident.n : TQ.idDone ? 108 : 0} / 108</span></div>
+    ${BT([['🔍 拓扑识别', 'ident'], ['🗺 一键成图', 'map'], ['🔀 模拟异动', 'move'], [TQ.hplc ? '隐藏 HPLC 组网' : '显示 HPLC 组网', 'hplc']])}
+    <div class="tqsub">拓扑变动记录</div><div class="tqlist">${TQ.changes.length ? TQ.changes.map(c => `<div class="${c.st === '待核查' ? 'al' : ''}"><span>${c.t} ${c.u}：${c.from}→${c.to}</span><em>${c.st}</em></div>`).join('') : '<div><span>近 30 天无户变关系变动</span><em>✓</em></div>'}</div>`,
+  run: () => { const I = TQ.I || [0, 0, 0], mx = Math.max(...I, 1); return `${R2([['台区负荷', fmt(TQ.P, 1) + ' kW'], ['负载率', fmt(TQ.P / 4 / .9) + ' %'], ['电压合格率', fmt(TQ.vOk, 2) + ' %', TQ.vOk < 100 ? 'warn' : 'ok'], ['低电压户数', TQ.vLow + ' 户', TQ.vLow ? 'warn' : 'ok'], ['最低电压', fmt(TQ.vMin, 1) + ' V', TQ.vMin < 198 ? 'warn' : ''], ['三相不平衡', fmt(TQ.unb) + ' %', TQ.unb > 15 ? 'warn' : '']])}
+    <div class="tqsub">三相电流 (A)</div><div class="tqbars">${['A', 'B', 'C'].map((p, i) => `<div><span>${p}</span><i style="width:${I[i] / mx * 100}%;background:${['#ffd23a', '#3dff9e', '#ff5050'][i]}"></i><b>${fmt(I[i], 0)}</b></div>`).join('')}</div>
+    ${TQ.lv ? `<div class="tqbox ${TQ.lvFix ? 'ok' : ''}"><b>${TQ.lvFix ? '✔ 已治理' : '⚠ 低电压溯源结果'}</b><br>位置：L2 西出线 → 支线 L2-3 末端（${TQ.lvW?.n || ''}）<br>原因：供电半径 123m 超长；晚高峰负荷集中；C 相过载<br>建议：① 配变分接开关上调 1 档 ② L2-3 支线 4 户换相 C→A ③ 末端加装调压器 / 储能</div>` : ''}
+    ${BT([['📉 低电压溯源', 'lowv'], TQ.lv && !TQ.lvFix ? ['🛠 一键治理', 'lvfix'] : [TQ.vmap ? '关闭电压热力' : '电压热力图', 'vmap'], ['🎨 相位着色', 'phase'], ['⚖ 不平衡治理', 'bal']])}`; },
+  dev: () => R2([['配变健康指数', '92 分', 'ok'], ['配变油温', fmt(42 + TQ.P / 8) + ' ℃'], ['JP 柜进线开关', '合闸 · 52.1 ℃'], ['融合终端 TTU', '在线 · CPU 18%', 'ok'], ['智能分支开关', `${TQ.branches.filter(b => !b.off).length} / 9 合闸`, TQ.out ? 'warn' : ''], ['电缆分支箱', '1 台 · 正常'], ['计量表箱', '18 个'], ['智能电表', `${TQ.users.filter(u => !u.out).length} / 108 在线`], ['无功补偿', `${Math.round(4 + TQ.P / 40)} / 8 组`], ['不平衡治理', TQ.unbFix ? '换相完成' : '自动运行'], ['烟感 / 水浸', '正常 / 无'], ['温湿度', '26.4℃ / 55%']]) + BT([['配变内部', 'inx'], ['JP 柜内部', 'injp'], ['表箱内部', 'inbox'], ['储能柜内部', 'ines']]),
+  src: () => { const ld = Math.max(TQ.P, 0); return R2([['光伏户数', TQ.users.filter(u => u.pvk).length + ' 户'], ['光伏装机', fmt(TQ.pvCap, 1) + ' kWp'], ['光伏出力', fmt(TQ.pvGen, 1) + ' kW'], ['光伏渗透率', fmt(TQ.pvCap / 400 * 100) + ' %'], ['可开放容量', fmt(400 * .8 - TQ.pvCap, 0) + ' kW', 'ok'], ['反向重过载', TQ.pvGen > ld * 1.2 ? '风险' : '无', TQ.pvGen > ld * 1.2 ? 'warn' : 'ok'], ['储能', (TQ.esP < 0 ? '充电 ' : TQ.esP > 0 ? '放电 ' : '待机 ') + fmt(Math.abs(TQ.esP), 0) + ' kW'], ['充电桩', fmt(TQ.evP, 1) + ' kW · 有序']])
+    + `<div class="tqsub">源网荷储协同：午间储能消纳光伏 · 晚峰放电削峰 · 充电桩谷时有序充电</div>`; },
+  net: () => { const on = TQ.users.filter(u => !u.out).length; return R2([['HPLC 通信成功率', fmt(TQ.out ? 99.1 : 99.82, 2) + ' %', 'ok'], ['电表在线率', fmt(on / 1.08, 1) + ' %', on < 108 ? 'warn' : 'ok'], ['日采集成功率', '99.96 %'], ['平均时延', '0.8 s'], ['组网层级', '最大 3 级中继'], ['终端在线', '融合终端 1 · 分支开关 9'], ['上行通道', '4G/5G 切片 + 光纤'], ['停电事件上报', '≤ 1 min']]) + BT([[TQ.hplc ? '隐藏 HPLC 组网' : '显示 HPLC 组网', 'hplc']]); },
+  mkt: () => { const h = S.h, per = h >= 8 && h < 11 || h >= 18 && h < 23 ? '峰' : h >= 23 || h < 7 ? '谷' : '平', low = TQ.users.filter(u => u.bal < 20); return R2([['营配贯通率', fmt(95.4 + TQ.cons / 100 * 1.4, 1) + ' %', 'ok'], ['电费回收率', '99.7 %'], ['当前时段', per + ' · ' + { 峰: '0.86', 平: '0.56', 谷: '0.28' }[per] + ' 元/kWh'], ['余额预警', low.length + ' 户', low.length ? 'warn' : ''], ['光伏上网', fmt(TQ.pvGen * .6, 1) + ' kW'], ['可调资源', fmt(100 + TQ.evP + TQ.pvGen * .3, 0) + ' kW · VPP']]) + `<div class="tqsub">余额不足用户（远程费控提醒）</div><div class="tqlist">${low.slice(0, 3).map(u => `<div><span>${u.n} · 户号 ${u.no.slice(-6)}</span><em>${fmt(u.bal, 1)} 元</em></div>`).join('')}</div>`; },
+  mgt: () => `<div class="tqsub">管理闭环：发现 → 派发 → 处理 → 评价</div><div class="tqord">${TQ.orders.map(o => `<div><span>${o.id} ${o.t}</span><p>${['发现', '派发', '处理', '评价'].map((s, i) => `<i class="${i < o.st ? 'd' : i === o.st ? 'c' : ''}">${s}</i>`).join('')}</p></div>`).join('')}</div>
+    <div class="tqsub">预期成效</div><table class="tqeff"><tr><th>指标</th><th>目标</th><th>当前</th></tr>${[['拓扑一致率', '≥ 98%', fmt(TQ.cons, 1) + '%'], ['低电压发生率', '↓ ≥ 30%', '↓ 36%'], ['平均复电时长', '↓ ≥ 25%', '↓ 31%'], ['工单及时处置率', '↑ ≥ 40%', '↑ 44%'], ['营配贯通率', '≥ 95%', fmt(95.4 + TQ.cons / 100 * 1.4, 1) + '%'], ['运维成本', '↓ ≥ 20%', '↓ 22%']].map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</table>` };
+function tqPanel() { if (curZone !== 'tq') return; const p = $('#tqR'); p.querySelector('.tqtabs').innerHTML = TABS.map(([k, t]) => `<div class="tqt ${TQ.tab === k ? 'on' : ''}" data-tab="${k}">${t}透明</div>`).join(''); p.querySelector('.tqc').innerHTML = TABF[TQ.tab](); }
+const ACT = { ident: tqIdent, map: () => tqMapShow(!TQ.mapOpen), move: tqMove, hplc: () => { TQ.hplc = !TQ.hplc; hplcG.visible = TQ.hplc || !!TQ.ident; toast(TQ.hplc ? 'HPLC 宽带载波组网拓扑已显示' : '已隐藏 HPLC 组网', true); }, lowv: tqLowV, lvfix: tqLvFix,
+  vmap: () => { TQ.vmap = !TQ.vmap; TQ.phase = false; }, phase: () => { TQ.phase = !TQ.phase; TQ.vmap = false; }, bal: tqBalance, inx: () => openInner(...INNER.tqx()), injp: () => openInner(...INNER.jp()), inbox: () => openInner('meterbox', { name: TQ.boxes[0].info.name, users: TQ.boxes[0].users }), ines: () => openInner('bess', {}) };
+$('#tqR').addEventListener('click', e => { const t = e.target.closest('[data-tab]'), a = e.target.closest('[data-act]'); if (t) TQ.tab = t.dataset.tab; if (a && ACT[a.dataset.act]) ACT[a.dataset.act](); tqPanel(); });
+Object.assign(FIELDS, {
+  tqsw: o => { const b = o.userData.info.br; return [['类型', '智能量测分支开关 · 160A'], ['状态', b.off ? badge('跳闸', 'al') : badge('合闸')], ['分支电流', fmt(Math.abs(b.P) * 1000 / 380 / 1.732, 0) + ' A'], ['功能', '拓扑识别 / 停电上报 / 线损分段'], ['通信', 'HPLC · 在线']]; },
+  tqunb: () => [['类型', 'SVG 静止无功 + 智能换相'], ['补偿电流', fmt(TQ.unb * 1.2, 1) + ' A'], ['三相不平衡度', fmt(TQ.unb) + ' %'], ['功率因数', '0.98'], ['状态', badge('自动运行')]],
+  tqenv: () => [['烟感', badge('正常')], ['温度 / 湿度', '26.4 ℃ / 55 %'], ['水浸', badge('无')], ['门磁', badge('关闭')], ['视频', badge('在线')]],
+  tqes: () => [['容量', '100 kW / 215 kWh'], ['功率', (TQ.esP < 0 ? '充电 ' : TQ.esP > 0 ? '放电 ' : '待机 ') + fmt(Math.abs(TQ.esP), 0) + ' kW'], ['策略', '光伏消纳 + 晚峰削峰 + 末端电压支撑'], ['SOC', fmt(S.soc) + ' %']],
+  tqev: () => [['额定', '7 kW 交流'], ['功率', fmt(TQ.evP / 2, 1) + ' kW'], ['策略', '谷时有序充电'], ['状态', badge('在线')]], tqcb: () => [['类型', 'DFW 低压电缆分支箱'], ['出线', '4 回'], ['温度', '28.6 ℃']],
+  tqcloud: () => [['配电自动化主站', badge('在线')], ['营销系统', '档案同步 · 营配贯通'], ['电网管理平台', '工单闭环'], ['接入终端', '融合终端 1 / 分支开关 9 / 电表 108']] });
+Object.assign(INNER, { tqsw: o => ['polesw', { name: o.userData.info.name, key: 'B1' }], tqes: o => ['bess', {}], tqev: o => ['charger', {}], reactor: o => ['reactor', { idx: o.userData.info.idx }], nfuel: o => ['reactor', { idx: o.userData.info.idx }], naux: o => ['reactor', { idx: o.userData.info.idx }],
+  nturb: o => ['turbinehall', { title: `${(o.userData.info.idx || 0) + 1}# 核电常规岛 · 汽机房内部图`, sub: '1000MW 半速汽轮发电机组（1500 r/min）', p: () => S.nuc / 2 }], ngsu: o => ['xfmr', { name: o.userData.info.name, hv: '500 kV', lv: '26 kV', cap: '1170 MVA', In: 25980, load: () => S.nuc / 2 / 10.5 }],
+  hydro: o => ['hydrounit', {}], dam: o => ['hydrounit', {}], hpen: o => ['hydrounit', {}], hgsu: o => ['xfmr', { name: o.userData.info.name, hv: '500 kV', lv: '15.75 kV', cap: '360 MVA', In: 13200, load: () => S.hydro / 2 / 3.4 }] });
+Object.assign(FIELDS, {
+  reactor: o => [['堆型', '华龙一号 压水堆'], ['电功率', fmt(S.nuc / 2, 0) + ' MWe'], ['功率水平', fmt(S.nuc / 20) + ' %FP'], ['一回路压力', '15.5 MPa'], ['堆芯出口温度', '327 ℃'], ['运行模式', S.nuc / 2 < 960 ? badge('负荷跟踪') : badge('满功率')], ['操作', '双击查看核岛内部']],
+  nturb: () => [['汽轮机', '1000MW 半速 1500 r/min'], ['出力', fmt(S.nuc / 2, 0) + ' MW'], ['冷却', '海水直流冷却'], ['状态', badge('运行')]], ngsu: () => [['电压', '26 / 500 kV'], ['容量', '1170 MVA'], ['负载率', fmt(S.nuc / 2 / 10.5) + ' %'], ['状态', badge('运行')]],
+  nstack: () => [['高度', '78 m'], ['惰性气体', '< 0.1 % 限值'], ['碘 / 气溶胶', badge('正常')], ['厂界剂量率', '0.09 μSv/h']], nfuel: () => [['乏燃料池水温', '36 ℃'], ['贮存', '682 / 1200 组'], ['冷却', badge('2 列运行')]], naux: () => [['系统', '化容 / 废物处理 / 余热排出'], ['状态', badge('正常')]],
+  hydro: () => [['装机', '4 × 150 MW'], ['实时出力', fmt(S.hydro, 0) + ' MW'], ['运行机组', S.hyN + ' / 4'], ['库水位', fmt(S.lvl, 2) + ' m'], ['发电水头', '112 m'], ['模式', S.hydro > 300 ? badge('顶峰发电') : badge('基荷运行')], ['操作', '双击查看水轮发电机组']],
+  dam: () => [['坝型', '混凝土重力坝'], ['坝高', '165 m'], ['库水位', fmt(S.lvl, 2) + ' m'], ['坝体位移', '1.8 mm'], ['渗流量', '12.4 L/s'], ['泄洪闸', badge('关闭（生态放流）')]], lake: () => [['总库容', '39.3 亿 m³'], ['库水位', fmt(S.lvl, 2) + ' m'], ['入库流量', '1260 m³/s'], ['出库流量', fmt(80 + S.hydro * 1.9, 0) + ' m³/s']],
+  hpen: () => [['直径', 'Φ 8.0 m'], ['流量', fmt(S.hydro / 600 * 600, 0) + ' m³/s'], ['钢管应力', badge('正常')]], hgsu: () => [['电压', '15.75 / 500 kV'], ['容量', '360 MVA'], ['负载率', fmt(S.hydro / 2 / 3.4) + ' %']] });
+
+/* =================== 隐藏数据（纯净视图） =================== */
+function setClean(on) { document.body.classList.toggle('clean', on); $('#bHide').innerHTML = on ? '📊 显示数据 <small>H</small>' : '🙈 隐藏数据 <small>H</small>'; if (on) hideInfo(); }
+$('#bHide').onclick = () => setClean(!document.body.classList.contains('clean'));
+addEventListener('keydown', e => { if ((e.key === 'h' || e.key === 'H') && !IV.open && e.target.tagName !== 'INPUT') setClean(!document.body.classList.contains('clean')); });
+
 /* =================== 启动 =================== */
 prog(100, '数字孪生就绪');
 model(); solve(); drawTopo(); light(); updDay(); for (let i = 0; i < 20; i++) sample(); setZone('all'); syncCtl(); $('#bPlay').classList.add('on'); $('#bPlay').textContent = '⏸ 暂停时间';
 pushEv('全场景电网数字孪生系统启动 · 接入设备 1846 台', 'ok'); pushEv('发电侧 AGC 投入 · 新能源优先消纳', 'ok', units[0]); pushEv('10kV 配电自动化 FA 主站在线', 'ok', dsB);
 setInterval(randAlarm, 38000); later(12, randAlarm);
-window.__t = { goZone, openInner, closeInner, openFor, INNER, equip, BTx, rmu, TQ, tqFault };
+window.__t = { setClean, tqIdent, tqMapShow, tqMove, tqLowV, tqLvFix, tqBalance, S, nucU, dam, focus, flyTo, V3, camera, controls, goZone, openInner, closeInner, openFor, INNER, equip, BTx, rmu, TQ, tqFault };
 loop(); setTimeout(() => { $('#loading').style.opacity = 0; setTimeout(() => $('#loading').remove(), 900); window.__ready = true; }, 400);
 flyTo(new V3(1100, 900, 800), new V3(200, 0, -300), .1);
+
 
 
 </script>
